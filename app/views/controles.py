@@ -49,3 +49,10 @@ class Control_Asistencia(BaseHandler):
 				ct.set(**form)
 				commit()
 		self.write(dumps(True if ct else False))
+
+@route('/controles/modificar_neo')
+class ModificarNeo(BaseHandler):
+	@db_session
+	def get(self):
+		neo = Recien_Nacido.get(**self.form2Dict())
+		self.render('controles/neo_modificar.html', neo=neo, to_ddmmyy=to_ddmmyy)

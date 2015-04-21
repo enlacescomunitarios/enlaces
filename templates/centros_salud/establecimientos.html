@@ -38,7 +38,7 @@
 		<tbody>
 			{% for cs in centros %}
 			<tr>
-				<td><a href="#" title="Modificar">{{cs}}</a></td>
+				<td><a href="/centros_salud/modificar_establecimiento?id_cen={{cs.id_cen}}" title="Modificar">{{cs}}</a></td>
 				<td>{{cs.ubicado}}</td>
 				<td>{{cs.tipo}}</td>
 				<td>{{'{}'.format(cs.encargado or '')}}</td>

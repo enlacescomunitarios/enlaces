@@ -33,12 +33,18 @@
 				location.href='/embarazos/conf_interr?id_emb='+o_key.id_emb;
 			}
 		});
+		$('.edit').on({
+			click:function(e){
+				e.preventDefault();
+				location.href='/controles/modificar_neo?id_rcn='+o_key.id_rcn;
+			}
+		});
 		$('#custom').customPaginator({height:'auto'});
 	});
 </script>
 {% end %}
 {% block breadcrumbs %}
-<ul id="breadcrumbs" class="breadcrumb" data-key='{"id_per":{{neo.embarazo.embarazada.id_per}},"id_emb":{{neo.embarazo.id_emb}}}'>
+<ul id="breadcrumbs" class="breadcrumb" data-key='{"id_per":{{neo.embarazo.embarazada.id_per}},"id_emb":{{neo.embarazo.id_emb}},"id_rcn":{{neo.id_rcn}}}'>
 	<li><a href="/">Inicio</a></li>
 	<li><a href="/embarazadas/gestion">Embarazadas</a></li>
 	<li><a href="#" class="back">Madre: {{neo.embarazo.embarazada}}</a></li>
@@ -64,6 +70,10 @@
 </div>
 <div class="btn-actions">
 	<a href="#" class="back btn btn-sm btn-warning">Regresar</a>
+	<a href="#" class="edit btn btn-sm btn-primary">Editar</a>
+	{% if neo.activo %}
+	<a href="#" class="delete btn btn-sm btn-danger">Inhabilitar</a>
+	{% end %}
 </div>
 <div class="fix-table">
 	<table id="custom" class="table table-striped table-hover table-bordered table-condensed" width="99.8%" cellspacing="0">

@@ -1,0 +1,46 @@
+{% extends "../base.html" %}
+{% block header_section %}
+<script type="text/javascript" src="{{ static_url("js/shortcuts.min.js") }}"></script>
+<script type="text/javascript" charset="iso-8859-1" src="{{ static_url("js/jquery.maskedinput.min.js") }}"></script>
+<script type="text/javascript">
+	$(function(){
+		var o_key = $('#breadcrumbs').data('key');
+		$('#breadcrumbs').removeAttr('data-key');
+		$('.back').on({
+			click:function(e){
+				e.preventDefault();
+				location.href='/controles/gestion?id_rcn='+o_key.id_rcn;
+			}
+		});
+	});
+</script>
+{% end %}
+{% block breadcrumbs %}
+<ul id="breadcrumbs" class="breadcrumb" data-key='{"id_emb":{{neo.embarazo.id_emb}},"id_rcn":{{neo.id_rcn}},"str":"{{neo.__str__()}}"}'>
+	<li><a href="/">Inicio</a></li>
+	<li class="active">Modificar</li>
+</ul>
+{% end %}
+{% block left-content %}
+<form>
+	{% module xsrf_form_html() %}
+	<input type="hidden" name="id_rcn" value="{{neo.id_rcn}}" readonly>
+	<legend>Modificar Datos</legend>
+	<fieldset class="form-group has-feedback">
+		<label>Nombres:</label>
+		<input type="text" name="nombres" value="{{'{}'.format(neo.nombres or '')}}" class="form-control input-sm only_p_names" required>
+	</fieldset>
+	<fieldset class="form-group has-feedback">
+		<label>Apellidos:</label>
+		<input type="text" name="apellidos" value="{{neo.apellidos}}" class="form-control input-sm only_p_lastnames" required>
+	</fieldset>
+	<fieldset class="form-group has-feedback">
+		<label>Fecha de Nacimiento:</label>
+		<input type="text" name="f_nac" value="{{neo.f_nac}}" class="form-control input-sm only_p_lastnames" required>
+	</fieldset>
+	<fieldset class="form-group">
+		<button type="button" class="back btn btn-sm btn-warning">Regresar</button>
+		<button type="submit" class="btn btn-sm btn-primary">Actualizar</button>
+	</fieldset>
+</form>
+{% end %}

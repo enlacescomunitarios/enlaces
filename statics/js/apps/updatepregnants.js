@@ -1,3 +1,7 @@
+/*!
+ * auhtor: Luis Eduardo Miranda Barja
+ * (C) 2015 - mbarjaedu13@gmail.com
+ */
 $(function(){
 	var checkfields = $('form').data('key'),
 		ldetnias = function(etnias){
