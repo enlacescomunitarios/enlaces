@@ -1,0 +1,78 @@
+{% extends "../base.html" %}
+{% block header_section %}
+<style type="text/css" media="all">
+	#container>div{
+		display: -webkit-box;
+		display: -webkit-flex;
+		display: -moz-box;
+		display: -ms-flexbox;
+		display: flex;
+	}
+	body #container form{
+		min-width: 280px !important;
+		max-width: 360px !important;
+		padding: 30px !important;
+	}
+	#alertLogin{
+		margin:  15px 0 !important;
+		margin-top: 0 !important;
+		display: none;
+	}
+</style>
+<script type="text/javascript" src="{{ static_url("js/shortcuts.min.js") }}"></script>
+<script type="text/javascript">
+	$(function(){
+		var alertbox = $('.alert-Box').clone();
+		$('.alert-Box').html('');
+		$('form').on({
+			submit:function(e){
+				e.preventDefault();
+				e.stopPropagation();
+				var oform = $(this), btn_submit = $('button[type=submit]');
+				btn_submit.disable();
+				$.post(
+					'/login',
+					data = oform.form2Dict(),
+					function(response){
+						if(response){
+							location.href='/';
+						} else{
+							btn_submit.enable();
+							$('input').tooltip('hide');
+							$('.alert-Box').html(alertbox.html()).find('#alertLogin').show();
+						}
+					}
+				);
+			}
+		});
+	});
+</script>
+{% end %}
+{% block user_actions %}{% end %}
+{% block content %}
+<div>
+	<form>
+		{% module xsrf_form_html() %}
+		<legend>Inciar Sesión</legend>
+		<fieldset class="form-group">
+			<label for="inputLogin">Usuario:</label>
+			<input type="text" name="login" id="inputLogin" class="form-control input-sm only_login" required>
+		</fieldset>
+		<fieldset class="form-group">
+			<label for="inputPasswd">Contraseña:</label>
+			<input type="password" name="passwd" id="inputPasswd" class="form-control input-sm only_passwd" required>
+		</fieldset>
+		<div class="alert-Box">
+			<div id="alertLogin" class="alert alert-danger alert-dismissible">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				Usuario o Contraseña incorrectos!
+			</div>
+		</div>
+		<fieldset class="form-group">
+			<button type="submit" class="btn btn-sm btn-primary btn-block">Ingresar</button>
+		</fieldset>
+	</form>
+</div>
+{% end %}

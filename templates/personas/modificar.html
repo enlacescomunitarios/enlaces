@@ -1,0 +1,214 @@
+{% extends "../base.html" %}
+{% block header_section %}
+<style type="text/css">
+	@media (max-width: 380px){
+		#addContact, #delContact{
+			font-family: 'FontAwesome';
+		}
+		#addContact:before{content:"\f067";}
+		#delContact:before{content:"\f00d";}
+	}
+	@media (min-width: 381px){
+		#addContact, #delContact{
+			font-family: inherit;
+			font-size: 12px;
+			line-height: 1.5;
+		}
+		#addContact:before{content:"Adiconar";}
+		#delContact:before{content:"Eliminar";}
+	}
+</style>
+<script type="text/javascript" src="{{ static_url("js/shortcuts.min.js") }}"></script>
+<script type="text/javascript">
+	$(function(){
+		$('#back').on({
+			click:function(e){
+				e.preventDefault();
+				location.href='/personas/gestion';
+			}
+		});
+		var ctelf = +$('input[name=telf]').val(), o_telf = $('input[name=telf]'), checkfields = $('form').data('key'), contactFields = $('.contactForm').clone().html(),
+			ldRedes = function(redes){
+				var selectRed = $('#red'), options = [$('<option value="-1">-- Elija Una --</option>')];
+				for (var i = 0; i < redes.length; i++) {
+					var red = redes[i], opt_red = $('<option/>', {'value':red.id_red, 'text':red.nombre}).data('municipios', red.municipios);
+					//opt_red.data('municipios',red.municipios).attr({'value':red.id_red}).text(red.nombre);
+					if(checkfields.id_red==red.id_red){
+						opt_red.attr('selected',true);
+					}
+					options.push(opt_red);
+				}
+				selectRed.html(options);
+			},
+			ldMunicipios = function(municipios){
+				var selectMunicipio = $('#municipio'), options = [$('<option value="-1">-- Elija Uno --</option>')];
+				for (var i = 0; i < municipios.length; i++) {
+					var mup = municipios[i], opt_mup = $('<option/>', {'value':mup.id_mup, 'text':mup.nombre}).data('comunidades', mup.comunidades);
+					//opt_mup.data('comunidades', mup.comunidades).attr('value',mup.id_mup).text(mup.nombre);
+					if(checkfields.id_mup==mup.id_mup){
+						opt_mup.attr('selected',true);
+					}
+					options.push(opt_mup);
+				}
+				selectMunicipio.html(options);
+			},
+			ldComunidades = function(comunidades){
+				var selectComunidad = $('#comunidad'), options = [$('<option value="-1">-- Elija Uno --</option>')];
+				for (var i = 0; i < comunidades.length; i++) {
+					var com = comunidades[i], opt_com = $('<option/>', {'value':com.id_com, 'text':com.nombre});
+					//opt_com.attr('value',com.id_com).text(com.nombre);
+					if(checkfields.id_com==com.id_com){
+						opt_com.attr('selected',true);
+					}
+					options.push(opt_com);
+				}
+				selectComunidad.html(options);
+			};
+		if(checkfields.is_pregnant){
+			$.post(
+				'/redes_salud/geografia',
+				data = {'_xsrf':$('input[name=_xsrf]').val()},
+				function(response){
+					$('#red').html(ldRedes(response)).on({
+						change:function(){
+							var o_val = +$(this).val(), municipios = $(this).find('option[value="'+o_val+'"]').data('municipios');
+							if(o_val>0){
+								$('#municipio').html(ldMunicipios(municipios)).on({
+									change:function(){
+										var o_val = +$(this).val();
+										if(o_val>0){
+											comunidades = $(this).find('option[value="'+o_val+'"]').data('comunidades');
+											$('#comunidad').html(ldComunidades(comunidades));
+										} else{
+											$('#comunidad').html('<option value="-1">-- Elija Una --</option>');
+										}
+									}
+								}).change();
+							} else{
+								$('#municipio').html('<option value="-1">-- Elija Uno --</option>');
+								$('#comunidad').html('<option value="-1">-- Elija Una --</option>');
+							}
+						}
+					}).change();
+				}
+			);
+		} else{
+			$('.locations').disable().hide();
+		}
+		o_telf.on({
+			blur:function(e){
+				var ttelf = $(this).val();
+				if(ctelf != +ttelf && ttelf.length==8){
+					$.post(
+						'/personas/v_telf',
+						data = {'_xsrf':$('input[name=_xsrf]').val(), 'telf':ttelf},
+						function(response){
+							//console.log(response);
+							if(response){
+								o_telf.val('');
+							}
+						}
+					);
+				}
+			}
+		});
+		console.log(contactFields);
+		$('form').on('click', '#addContact', function(e){
+			e.preventDefault();
+			$(this).removeClass('btn-info').addClass('btn-danger').prop('id','delContact');
+			$('.contactForm').html(contactFields);
+		});
+		$('form').on('click', '#delContact', function(e){
+			e.preventDefault();
+			$(this).removeClass('btn-danger').addClass('btn-info').prop('id','addContact');
+			$('.contactForm').html('');
+		});
+	});
+</script>
+{% end %}
+{% block content %}
+<form action="/personas/modificar" method="POST" data-key='{{checkfields}}'>
+	{% module xsrf_form_html() %}
+	<input type="hidden" name="id_per" value="{{pr.id_per}}" readonly>
+	<fieldset>
+		<legend class="text-center">Modificar Datos</legend>
+	</fieldset>
+	<fieldset class="form-group locations">
+		<label>Red de Salud:</label>
+		<select id="red" class="form-control input-sm" required>
+			<option value="-1">-- Elija Una --</option>
+		</select>
+	</fieldset>
+	<div  class='row'>
+		<fieldset class="form-group col-sm-6 locations">
+			<label>Municpio:</label>
+			<select id="municipio" class="form-control input-sm" required>
+				<option value="-1">-- Elija Uno --</option>
+			</select>
+		</fieldset>
+		<fieldset class="form-group col-sm-6 locations">
+			<label>Comunidad:</label>
+			<select name="id_com" id="comunidad" class="form-control input-sm" required>
+				<option value="-1">-- Elija Una --</option>
+			</select>
+		</fieldset>
+	</div>
+	<div class="row">
+		<fieldset class="form-group has-feedback col-sm-4">
+			<label>Celular:</label>
+			<input type="text" name="telf" value="{{pr.telf or ''}}" class="form-control input-sm only_cell_phone">
+			<span class="form-control-feedback"></span>
+		</fieldset>
+		<fieldset class="form-group has-feedback col-sm-8">
+			<label>Nombre:</label>
+			<input type="text" name="nombre" value="{{pr.nombre}}" class="form-control input-sm only_p_names" required>
+			<span class="form-control-feedback"></span>
+		</fieldset>
+	</div>
+	<div class="row">
+		<fieldset class="form-group has-feedback col-sm-6">
+			<label>Apellido Paterno:</label>
+			<input type="text" name="ap_pat" value="{{pr.ap_pat or ''}}" class="form-control input-sm only_p_lastnames">
+			<span class="form-control-feedback"></span>
+		</fieldset>
+		<fieldset class="form-group has-feedback col-sm-6">
+			<label>Apellido Materno:</label>
+			<input type="text" name="ap_mat" value="{{pr.ap_mat}}" class="form-control input-sm only_p_lastnames" required>
+			<span class="form-control-feedback"></span>
+		</fieldset>
+	</div>
+	<fieldset>
+		<legend>Contacto&nbsp;<i id="delContact" class="btn btn-xs btn-danger fa"></i></legend>
+	</fieldset>
+	<div class="contactForm">
+		<div class="row">
+			<fieldset class="form-group has-feedback col-sm-4">
+				<label>Celular:</label>
+				<input type="text" name="c_telf" value="{% if pr.contacto %}{{pr.contacto.telf}}{% end %}" class="form-control input-sm only_cell_phone" required>
+				<span class="form-control-feedback"></span>
+			</fieldset>
+			<fieldset class="form-group has-feedback col-sm-8 optional">
+				<label>Nombre:</label>
+				<input type="text" name="c_nombre" value="{% if pr.contacto %}{{pr.contacto.nombre}}{% end %}" class="form-control input-sm only_p_names" required>
+				<span class="form-control-feedback"></span>
+			</fieldset>
+		</div>
+		<div class="row">
+			<fieldset class="form-group has-feedback optional col-sm-6">
+				<label>Apellido Paterno:</label>
+				<input type="text" name="c_ap_pat" value="{% if pr.contacto %}{{pr.contacto.ap_pat or ''}}{% end %}" class="form-control input-sm only_p_lastnames">
+				<span class="form-control-feedback"></span>
+			</fieldset>
+			<fieldset class="form-group has-feedback optional col-sm-6">
+				<label>Apellido Materno:</label>
+				<input type="text" name="c_ap_mat" value="{% if pr.contacto %}{{pr.contacto.ap_mat}}{% end %}" class="form-control input-sm only_p_lastnames" required>
+				<span class="form-control-feedback"></span>
+			</fieldset>
+		</div>
+	</div>
+	<fieldset class="form-group">
+		<button type="submit" class="btn btn-sm btn-primary">Guardar</button>
+		<button type="button" id="back" class="btn btn-sm btn-danger">Cancelar</button>
+	</fieldset>
+</form>
+{% end %}

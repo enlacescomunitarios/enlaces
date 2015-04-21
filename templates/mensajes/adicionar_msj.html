@@ -1,0 +1,95 @@
+{% extends "../base.html" %}
+{% block header_section %}
+<script type="text/javascript" src="{{ static_url("js/shortcuts.min.js") }}"></script>
+<script type="text/javascript">
+	$(function(){
+		$('.message-menu').addClass('active');
+		$('#back, .back').on({
+			click:function(e){
+				e.preventDefault();
+				location.href='/mensajes/gestion';
+			}
+		});
+		var nro_control = $('input[name=nro_control]'), prtn = nro_control.closest('.form-group'), feedback = $(prtn).find('.form-control-feedback');
+		$('#tipo').on({
+			change:function(e){
+				var oval = +$(this).val();
+				nro_control.val('');
+				prtn.removeClass('has-success has-error');
+				feedback.removeClass('fa-check fa-times');
+				if(oval==5){
+					nro_control.attr('name','titulo').removeClass('only_msg_number').addClass('only_g_names').prev().text('Título:').end();
+				}
+				else if(oval==3){
+					nro_control.attr('name','nro_control').removeClass('only_g_names').addClass('only_msg_number').prev().text('Semana:').end();
+				}
+				else if(oval==4){
+					nro_control.attr('name','nro_control').removeClass('only_g_names').addClass('only_msg_number').prev().text('Día:').end();
+				} else{
+					nro_control.attr('name','nro_control').removeClass('only_g_names').addClass('only_msg_number').prev().text('Nro. de Control:').end();
+				}
+			}
+		});
+		$('form').on({
+			submit:function(e){
+				e.preventDefault();
+				e.stopPropagation();
+				var oform = $(this), btn_submit = oform.find('button[type=submit]');
+				btn_submit.disable().hide();
+				$.post(
+					'/mensajes/adicionar_msj',
+					data = oform.form2Dict(),
+					function(response){
+						if(response){
+							location.href='/mensajes/gestion';
+						} else{
+							prtn.removeClass('has-success').addClass('has-error');
+							feedback.removeClass('fa-check').addClass('fa-times');
+							btn_submit.enable().show();
+						}
+					}
+				);
+			}
+		});
+	});
+</script>
+{% end %}
+{% block breadcrumbs %}
+<ul id="breadcrumbs" class="breadcrumb">
+	<li><a href="/">Inicio</a></li>
+	<li><a href="#" class="back">Mensajes</a></li>
+	<li class="active">Nuevo Mensaje</li>
+</ul>
+{% end %}
+{% block left-content %}
+<form>
+	{% module xsrf_form_html() %}
+	<legend class="text-center">Nuevo Mensaje</legend>
+	<div class="row">
+		<fieldset class="form-group col-sm-6">
+			<label>Tipo:</label>
+			<select name="tipo" id="tipo" class="form-control input-sm" required>
+				<option value="-1">-- Elija Uno --</option>
+				<option value="1">Pre-Natal</option>
+				<option value="2">Post-Natal</option>
+				<option value="3">Prom. Pre-Natal</option>
+				<option value="4">Prom. Post-Natal</option>
+				<option value="5">Extra-Ordinario</option>
+			</select>
+		</fieldset>
+		<fieldset class="form-group has-feedback col-sm-6">
+			<label>Nro. de Control:</label>
+			<input type="text" name="nro_control" class="form-control input-sm only_msg_number" required>
+			<span class="form-control-feedback"></span>
+		</fieldset>
+	</div>
+	<fieldset class="form-group">
+		<label>Tenor:</label>
+		<textarea name="tenor" class="form-control input-sm only_msg_content" rows="3" required></textarea>
+	</fieldset>
+	<fieldset class="form-group">
+		<button type="button" id="back" class="btn btn-sm btn-warning">Regresar</button>
+		<button type="submit" class="btn btn-sm btn-primary">Guardar</button>
+	</fieldset>
+</form>
+{% end %}

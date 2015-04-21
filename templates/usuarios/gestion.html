@@ -1,0 +1,57 @@
+{% extends "../base.html" %}
+{% block header_section %}
+<link href="{{ static_url("css/dataTables.bootstrap.min.css") }}" rel="stylesheet" media="all">
+<link href="{{ static_url("css/sweet-alert.min.css") }}" rel="stylesheet" media="all">
+<script type="text/javascript" charset="iso-8859-1" src="{{ static_url("js/jquery.dataTables.min.js") }}"></script>
+<script type="text/javascript" src="{{ static_url("js/dataTables.bootstrap.min.js") }}"></script>
+<script type="text/javascript" src="{{ static_url("js/customPaginator.min.js") }}"></script>
+<script type="text/javascript" src="{{ static_url("js/shortcuts.min.js") }}"></script>
+<script type="text/javascript">
+	$(function(){
+		$('.manager-menu, .user-sub').addClass('active');
+		$('#custom').customPaginator({height:'auto'});
+	});
+</script>
+{% end %}
+{% block breadcrumbs %}
+<ul id="breadcrumbs" class="breadcrumb">
+	<li><a href="/">Inicio</a></li>
+	<li class="active">Usuarios</li>
+</ul>
+{% end %}
+{% block left-content %}
+<div class="btn-actions">
+	<a href="/usuarios/nuevo_usuario" class="btn btn-sm btn-primary">Nuevo Usuario</a>
+</div>
+<div class="fix-table">
+	<table id="custom" class="table table-striped table-hover table-bordered table-condensed" width="99.8%" cellspacing="0">
+		<thead>
+			<tr>
+				<th colspan="6" class="text-center">Usuarios</th>
+			</tr>
+			<tr>
+				<th>Usuario</th>
+				<th>Celular</th>
+				<th>Persona</th>
+				<th>Rol</th>
+				<th>Asignación</th>
+				<th>Estado</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for us in usuarios %}
+			<tr>
+				<td><a href="/usuarios/modificar_usuario?persona={{us.persona.id_per}}" title="Modificar">{{us.login}}</a></td>
+				<td>{{us.persona.telf}}</td>
+				<td>{{us.persona}}</td>
+				<td>{{us.rol}}</td>
+				<td>
+					{% if us.alcance==u'1' %}Global{% elif us.red_salud %}{{'Red {}'.format(us.red_salud)}}{% elif us.municipio %}{{'Municipio {}'.format(us.municipio)}}{% elif us.centro_salud %}{{'Establecimiento {}'.format(us.centro_salud)}}{% else %}{{''}}{% end %}
+				</td>
+				<td class="activo">{% if us.activo %}Habilitado{% else %}Inhabilitado{% end %}</td>
+			</tr>
+			{% end %}
+		</tbody>
+	</table>
+</div>
+{% end %}

@@ -1,0 +1,128 @@
+{% extends "../base.html" %}
+{% block header_section %}
+<link href="{{ static_url("css/datetimepicker.min.css") }}" rel="stylesheet" media="all">
+<link href="{{ static_url("css/sweet-alert.min.css") }}" rel="stylesheet" media="all">
+<script type="text/javascript" src="{{ static_url("js/shortcuts.min.js") }}"></script>
+<script type="text/javascript" src="{{ static_url("js/apps/updatepregnants.min.js") }}"></script>
+<script type="text/javascript" charset="iso-8859-1" src="{{ static_url("js/moment.min.js") }}"></script>
+<script type="text/javascript" src="{{ static_url("js/datetimepicker.min.js") }}"></script>
+<script type="text/javascript" charset="iso-8859-1" src="{{ static_url("js/jquery.maskedinput.min.js") }}"></script>
+<script type="text/javascript" charset="iso-8859-1" src="{{ static_url("js/sweet-alert.min.js") }}"></script>
+<script type="text/javascript">
+	$(function(){
+		$('.pregnant-menu').addClass('active');
+		$('#back, .back').on({
+			click:function(e){
+				e.preventDefault();
+				location.href='/embarazos/gestion?id_per='+$('input[name=id_per]').val();
+			}
+		});
+		$('input[name=f_nac]').mask('99/99/9999').on({
+			'click focusin':function(e){
+				$(this).datetimepicker({
+					locale: 'es',
+					format: 'DD/MM/YYYY'
+				});
+			}
+		});
+	});
+</script>
+{% end %}
+{% block breadcrumbs %}
+<ul id="breadcrumbs" class="breadcrumb">
+	<li><a href="/">Inicio</a></li>
+	<li><a href="/embarazadas/gestion">Embarazadas</a></li>
+	<li><a href="#" class="back">{{pr}}</a></li>
+	<li class="active">Modificar Embarazada</li>
+</ul>
+{% end %}
+{% block left-content %}
+<form class="big-form" data-key='{{checkfields}}'>
+	{% module xsrf_form_html() %}
+	<input type="hidden" name="id_per" value="{{pr.id_per}}" readonly>
+	<div class="inner-container">
+		<div class="left-side">
+			<legend>Datos de Embarazada</legend>
+			<div class="row">
+				<fieldset class="form-group has-feedback col-sm-4">
+					<label>Celular:</label>
+					<input type="text" name="telf" value="{{pr.telf or ''}}" class="form-control input-sm only_cell_phone">
+					<span class="form-control-feedback"></span>
+				</fieldset>
+			</div>
+			<div class="row">
+				<fieldset class="form-group has-feedback col-sm-6">
+					<label>Nombre(s):</label>
+					<input type="text" name="nombres" value="{{pr.nombres}}" class="form-control input-sm only_p_names" required>
+					<span class="form-control-feedback"></span>
+				</fieldset>
+				<fieldset class="form-group has-feedback col-sm-6">
+					<label>Apellido(s):</label>
+					<input type="text" name="apellidos" value="{{pr.apellidos}}" class="form-control input-sm only_p_lastnames" required>
+					<span class="form-control-feedback"></span>
+				</fieldset>
+			</div>
+			<div class="row">
+				<fieldset class="form-group has-feedback col-sm-6">
+					<label>Fecha de Nacimiento:</label>
+					<input type="text" name="f_nac" value="{{'{}'.format(to_ddmmyy(pr.f_nac) if pr.f_nac else '')}}" class="form-control input-sm only_date" required>
+					<span class="form-control-feedback"></span>
+				</fieldset>
+				<fieldset class="form-group has-feedback col-sm-6">
+					<label>CI:</label>
+					<input type="text" name="ci" value="{{pr.ci or ''}}" class="form-control input-sm only_ci">
+					<span class="form-control-feedback"></span>
+				</fieldset>
+			</div>
+			<fieldset class="form-group">
+				<label>Nación Indígena:</label>
+				<select name="id_etn" id="etnia" class="form-control input-sm" required>
+					<option value="-1">-- Elija Una --</option>
+				</select>
+			</fieldset>
+			<fieldset class="form-group locations">
+				<label>Red de Salud:</label>
+				<select id="red" class="form-control input-sm" required>
+					<option value="-1">-- Elija Una --</option>
+				</select>
+			</fieldset>
+			<div  class='row'>
+				<fieldset class="form-group col-sm-6 locations">
+					<label>Municpio:</label>
+					<select id="municipio" class="form-control input-sm" required>
+						<option value="-1">-- Elija Uno --</option>
+					</select>
+				</fieldset>
+				<fieldset class="form-group col-sm-6 locations">
+					<label>Comunidad:</label>
+					<select name="id_com" id="comunidad" class="form-control input-sm" required>
+						<option value="-1">-- Elija Una --</option>
+					</select>
+				</fieldset>
+			</div>
+		</div>
+		<div class="right-side">
+			<legend class="contact-name">Contacto</legend>
+			<fieldset class="form-group has-feedback">
+				<label>Celular:</label>
+				<input type="text" name="c_telf" value="{{pr.contacto.telf if pr.contacto else ''}}" class="form-control input-sm only_cell_phone" required>
+				<span class="form-control-feedback"></span>
+			</fieldset>
+			<div class="row">
+				<fieldset class="form-group col-sm-6 optional" disabled>
+					<label>Nombre(s):</label>
+					<label class="form-control input-sm">{% if pr.contacto %}{{pr.contacto.nombres}}{% end %}</label>
+				</fieldset>
+				<fieldset class="form-group has-feedback col-sm-6 optional" disabled>
+					<label>Apellido(s):</label>
+					<label class="form-control input-sm">{% if pr.contacto %}{{pr.contacto.apellidos}}{% end %}</label>
+				</fieldset>
+			</div>
+		</div>
+	</div>
+	<fieldset class="form-group">
+		<button type="button" id="back" class="btn btn-sm btn-warning">Regresar</button>
+		<button type="submit" class="btn btn-sm btn-primary">{% if pr.activo %}Actualizar{% else %}Habilitar{% end %}</button>
+	</fieldset>
+</form>
+{% end %}

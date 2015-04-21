@@ -1,0 +1,113 @@
+{% extends "../base.html" %}
+{% block header_section %}
+<link href="{{ static_url("css/datetimepicker.min.css") }}" rel="stylesheet" media="all">
+<script type="text/javascript" src="{{ static_url("js/shortcuts.min.js") }}"></script>
+<script type="text/javascript" charset="iso-8859-1" src="{{ static_url("js/moment.min.js") }}"></script>
+<script type="text/javascript" src="{{ static_url("js/datetimepicker.min.js") }}"></script>
+<script type="text/javascript" charset="iso-8859-1" src="{{ static_url("js/jquery.maskedinput.min.js") }}"></script>
+<script type="text/javascript">
+	$(function(){
+		$('.pregnant-menu').addClass('active');
+		$('#back, .back').on({
+			click:function(e){
+				e.preventDefault();
+				//location.href='/embarazadas/gestion';
+				location.href='/embarazos/gestion?id_per='+$('input[name=id_per]').val();
+			}
+		});
+		$('input[name=fecha], input[name=f_notf], input[name=f_conf]').mask('99/99/9999').on({
+			'click focusin':function(e){
+				$(this).datetimepicker({
+					locale:'es',
+					format: 'DD/MM/YYYY'
+				});
+			}
+		});
+		$('.optional').disable().hide();
+		$('.yes, .no').on({
+			click:function(e){
+				var oconf = $(this);
+				if(+oconf.val()==1){
+					$('.no').removeAttr('checked');
+					$('.optional').enable().show();
+				} else{
+					$('.yes').removeAttr('checked');
+					$('.optional').disable().hide();
+				}
+			}
+		});
+		$('form').on({
+			submit:function(e){
+				e.preventDefault();
+				e.stopPropagation();
+				var oform = $(this);
+				//console.log($(this).form2Dict());
+				$.post(
+					'/embarazadas/defuncion',
+					data = oform.form2Dict(),
+					function(response){
+						if(response){
+							//location.href='/embarazadas/gestion';
+							location.href='/embarazos/gestion?id_per='+$('input[name=id_per]').val();
+						}
+					}
+				);
+			}
+		});
+	});
+</script>
+{% end %}
+{% block breadcrumbs %}
+<ul id="breadcrumbs" class="breadcrumb">
+	<li><a href="/">Inicio</a></li>
+	<li><a href="/embarazadas/gestion">Embarazadas</a></li>
+	<li><a href="#" class="back">{{em}}</a></li>
+	<li class="active">Registro de Defunción</li>
+</ul>
+{% end %}
+{% block left-content %}
+<form>
+	{% module xsrf_form_html() %}
+	<input type="hidden" name="id_per" value="{{em.id_per}}" readonly>
+	<legend>Registro de Defunción</legend>
+	<div class="row">
+		<fieldset class="form-group has-feedback col-sm-6">
+			<label>Fecha de Defunción:</label>
+			<input type="text" name="fecha" class="form-control input-sm only_date" required>
+			<span class="form-control-feedback"></span>
+			<p class="help-block">Día/Mes/Año</p>
+		</fieldset>
+		<fieldset class="form-group has-feedback col-sm-6">
+			<label>Fecha de Notificación:</label>
+			<input type="text" name="f_notf" class="form-control input-sm only_date" required>
+			<span class="form-control-feedback"></span>
+			<p class="help-block">Día/Mes/Año</p>
+		</fieldset>
+	</div>
+	<fieldset class="form-group">
+		<label>Observación de Notificación:</label>
+		<textarea name="obs_notf" class="form-control input-sm only_comments" row="4" required></textarea>
+	</fieldset>
+	<div class="row">
+		<fieldset class="form-group col-sm-5">
+			<label for="_confirm">Desea confirmar?</label><br>
+			<label class="radio-inline"><input type="radio" name="_confirm" id="_confirm" value="1" class="yes"> Si</label>
+			<label class="radio-inline"><input type="radio" name="_confirm" id="_confirm" value="0" class="no" checked> No</label>
+		</fieldset>
+		<fieldset class="form-group has-feedback optional col-sm-7">
+			<label>Fecha de Confirmación:</label>
+			<input type="text" name="f_conf" class="form-control input-sm only_date" required>
+			<span class="form-control-feedback"></span>
+			<p class="help-block">Día/Mes/Año</p>
+		</fieldset>
+	</div>
+	<fieldset class="form-group optional">
+		<label>Observación de Notificación:</label>
+		<textarea name="obs_conf" class="form-control input-sm only_comments" row="4" required></textarea>
+	</fieldset>
+	<fieldset class="form-group">
+		<button type="button" id="back" class="btn btn-sm btn-warning">Regresar</button>
+		<button type="submit" class="btn btn-sm btn-primary">Guardar</button>
+	</fieldset>
+</form>
+{% end %}

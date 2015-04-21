@@ -1,0 +1,105 @@
+{% extends "../base.html" %}
+{% block header_section %}
+<link href="{{ static_url("css/dataTables.bootstrap.min.css") }}" rel="stylesheet" media="all">
+<script type="text/javascript" charset="iso-8859-1" src="{{ static_url("js/jquery.dataTables.min.js") }}"></script>
+<script type="text/javascript" src="{{ static_url("js/dataTables.bootstrap.min.js") }}"></script>
+<script type="text/javascript" src="{{ static_url("js/customPaginator.min.js") }}"></script>
+<script type="text/javascript">
+	$(function(){
+		$('.pregnant-menu').addClass('active');
+		var o_key = $('#breadcrumbs').data('key');
+		$('#breadcrumbs').removeAttr('data-key');
+		$('.back').on({
+			click:function(e){
+				e.preventDefault();
+				location.href='/embarazos/gestion?id_per='+o_key.id_per;
+			}
+		});
+		$('.born').on({
+			click:function(e){
+				e.preventDefault();
+				location.href='/embarazos/reg_parto?id_emb='+o_key.id_emb;
+			}
+		});
+		$('.interrupt').on({
+			click:function(e){
+				e.preventDefault();
+				location.href='/embarazos/interrumpir?id_emb='+o_key.id_emb;
+			}
+		});
+		$('.confirm').on({
+			click:function(e){
+				e.preventDefault();
+				location.href='/embarazos/conf_interr?id_emb='+o_key.id_emb;
+			}
+		});
+		$('#custom').customPaginator({height:'auto'});
+	});
+</script>
+{% end %}
+{% block breadcrumbs %}
+<ul id="breadcrumbs" class="breadcrumb" data-key='{"id_per":{{pr.id_per}},"id_emb":{{em.id_emb}}}'>
+	<li><a href="/">Inicio</a></li>
+	<li><a href="/embarazadas/gestion">Embarazadas</a></li>
+	<li><a href="#" class="back">{{pr}}</a></li>
+	<li class="active">Controles</li>
+</ul>
+{% end %}
+{% block left-content %}
+<div class="detail-card">
+	<div class="row">
+		<div class="col-sm-12">
+			<dl class="dl-horizontal">
+				<dt>Embarazada:</dt>
+				<dd>{{pr}}</dd>
+				<dt>Parto Probable:</dt>
+				<dd>{{to_ddmmyy(em.parto_prob)}}</dd>
+				<dt>Parto Institucional:</dt>
+				<dd>{{'{}'.format(to_ddmmyy(em.parto_inst) if em.parto_inst else '')}}</dd>
+				<dt>Estado:</dt>
+				<dd>{{pregnancy_status(em)[1]}}</dd>
+			</dl>
+		</div>
+	</div>
+</div>
+<div class="btn-actions">
+	<a href="#" class="back btn btn-sm btn-warning">Regresar</a>
+	{% if pregnancy_status(em)[0]==1 %}
+	<a href="#" class="born btn btn-sm btn-primary">Registrar Parto</a>
+	<a href="#" class="interrupt btn btn-sm btn-danger">Interrupción</a>
+	{% elif pregnancy_status(em)[0]==2 or pregnancy_status(em)[0]==4 %}
+	<a href="#" class="confirm btn btn-sm btn-danger">Interrupción</a>
+	{% end %}
+</div>
+<div class="fix-table">
+	<table id="custom" class="table table-striped table-hover table-bordered table-condensed" width="99.8%" cellspacing="0">
+		<thead>
+			<tr>
+				<th colspan="5" class="text-center">Controles</th>
+			</tr>
+			<tr>
+				<th>#</th>
+				<th>Tipo</th>
+				<th>Control</th>
+				<th>Fecha</th>
+				<th>Asistido</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for i,ct in enumerate(controles) %}
+			<tr>
+				<td>{{i+1}}</td>
+				<td>{{ct.tipo}}</td>
+				<td>{{ct.nro_con}}</td>
+				<td>{{'{}'.format(to_ddmmyy(ct.fecha_con))}}</td>
+				{% if ct.asistido %}
+				<td>Asistido</td>
+				{% else %}
+				<td><a href="/controles/control_asistencia?id_cnt={{ct.id_cnt}}">Pendiente</a></td>
+				{% end %}
+			</tr>
+			{% end %}
+		</tbody>
+	</table>
+</div>
+{% end %}

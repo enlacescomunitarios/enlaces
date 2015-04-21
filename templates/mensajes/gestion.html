@@ -1,0 +1,53 @@
+{% extends "../base.html" %}
+{% block header_section %}
+<link href="{{ static_url("css/dataTables.bootstrap.min.css") }}" rel="stylesheet" media="all">
+<link href="{{ static_url("css/sweet-alert.min.css") }}" rel="stylesheet" media="all">
+<script type="text/javascript" charset="iso-8859-1" src="{{ static_url("js/jquery.dataTables.min.js") }}"></script>
+<script type="text/javascript" src="{{ static_url("js/dataTables.bootstrap.min.js") }}"></script>
+<script type="text/javascript" src="{{ static_url("js/customPaginator.min.js") }}"></script>
+<script type="text/javascript" src="{{ static_url("js/shortcuts.min.js") }}"></script>
+<script type="text/javascript">
+	$(function(){
+		$('.message-menu').addClass('active');
+		$('#custom').customPaginator({height:'auto'});
+	});
+</script>
+{% end %}
+{% block breadcrumbs %}
+<ul id="breadcrumbs" class="breadcrumb">
+	<li><a href="/">Inicio</a></li>
+	<li class="active">Mensajes</li>
+</ul>
+{% end %}
+{% block left-content %}
+<div class="btn-actions">
+	<a href="/mensajes/adicionar_msj" class="btn btn-sm btn-primary">Nuevo Mensaje</a>
+</div>
+<div class="fix-table">
+	<table id="custom" class="table table-striped table-hover table-bordered table-condensed" width="99.8%" cellspacing="0">
+		<thead>
+			<tr>
+				<th colspan="5" class="text-center">Mensajes</th>
+			</tr>
+			<tr>
+				<th>Tipo</th>
+				<th>Nro. de Control</th>
+				<th>Título</th>
+				<th>Agendas</th>
+				<th>Estado</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for msg in mensajes %}
+			<tr>
+				<td><a href="/mensajes/modificar_msj?id_msj={{msg.id_msj}}">{% if msg.tipo==1 %}Pre-Natal{% elif msg.tipo==2 %}Post-Natal{% elif msg.tipo==3 %}Promocional Pre-Natal{% elif msg.tipo==4 %}Promocional Post-Natal{% else %}Extra-Ordinario{% end %}</a></td>
+				<td>{{msg.nro_control or ''}}</td>
+				<td>{{msg.titulo or ''}}</td>
+				<td>{{len(msg.agendas)}}</td>
+				<td class="status">{% if msg.activo %}Habilitado{% else %}Inhabilitado{% end %}</td>
+			</tr>
+			{% end %}
+		</tbody>
+	</table>
+</div>
+{% end %}

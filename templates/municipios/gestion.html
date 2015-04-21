@@ -1,0 +1,123 @@
+{% extends "../base.html" %}
+{% block header_section %}
+<link href="{{ static_url("css/dataTables.bootstrap.min.css") }}" rel="stylesheet" media="all">
+<link href="{{ static_url("css/sweet-alert.min.css") }}" rel="stylesheet" media="all">
+<script type="text/javascript" charset="iso-8859-1" src="{{ static_url("js/jquery.dataTables.min.js") }}"></script>
+<script type="text/javascript" src="{{ static_url("js/dataTables.bootstrap.min.js") }}"></script>
+<script type="text/javascript" src="{{ static_url("js/customPaginator.min.js") }}"></script>
+<script type="text/javascript" src="{{ static_url("js/shortcuts.min.js") }}"></script>
+<script type="text/javascript" charset="iso-8859-1" src="{{ static_url("js/sweet-alert.min.js") }}"></script>
+<script type="text/javascript">
+	$(function(){
+		$('.manager-menu, .health-sub').addClass('active');
+		var o_key = $('#breadcrumbs').data('key');
+		$('.edit').on({
+			click:function(e){
+				e.preventDefault();
+				location.href='/redes_salud/modificar_red?id_red='+o_key.id_red;
+			}
+		});
+		$('.delete').on({
+			click:function(e){
+				e.preventDefault();
+				var o_del = $(this);
+				swal({
+					title: "Está seguro?",
+					text: o_key.str+", será inhabilitado!",
+					type: "warning",
+					showCancelButton: true,
+					cancelButtonText: "Cancelar",
+					confirmButtonColor: "#d9534f",
+					confirmButtonText: "Inhabilitar",
+					closeOnConfirm: false
+				}, function(){
+					$.post(
+						'/redes_salud/eliminar_red',
+						data = {'_xsrf': getCookie('_xsrf'), 'id_red': o_key.id_red},
+						function(response){
+							if(response==false){
+								$('.status').text('Inhabilitado');
+								o_del.remove();
+								$('.add').remove();
+								swal({
+									title: "Inhabilitado",
+									text: "La red de salud \""+o_key.str+"\", fué inhabilitada.",
+									type: "success",
+									confirmButtonText: "Continuar"
+								});
+							}
+						}
+					);
+				});
+			}
+		});
+		$('.add').on({
+			click:function(e){
+				e.preventDefault();
+				location.href='/municipios/nuevo_municipio?id_red='+o_key.id_red;
+			}
+		});
+		$('.back').on({
+			click:function(e){
+				e.preventDefault();
+				location.href='/redes_salud/gestion';
+			}
+		});
+		$('#custom').customPaginator({height:'auto'});
+	});
+</script>
+{% end %}
+{% block breadcrumbs %}
+<ul id="breadcrumbs" class="breadcrumb" data-key='{"id_red":{{red.id_red}},"str":"{{red.__str__()}}"}'>
+	<li><a href="/">Inicio</a></li>
+	<li><a href="#" class="back">Redes de Salud</a></li>
+	<li class="active">Red: {{red}}</li>
+</ul>
+{% end %}
+{% block left-content %}
+<div class="detail-card">
+	<div class="row">
+		<div class="col-sm-12">
+			<dl class="dl-horizontal">
+				<dt>Red de Salud:</dt>
+				<dd>{{red}}</dd>
+				<dt>Estado:</dt>
+				<dd class="status">{% if red.activo %}Habilitado{% else %}Inhabilitado{% end %}</dd>
+			</dl>
+		</div>
+	</div>
+</div>
+<div class="btn-actions">
+	<a href="#" class="back btn btn-sm btn-warning">Regresar</a>
+	<a href="#" class="edit btn btn-sm btn-info">Editar Red</a>
+	{% if red.activo %}
+	<a href="#" class="delete btn btn-sm btn-danger">Inhabilitar Red</a>
+	<a href="#" class="add btn btn-sm btn-primary">Nuevo Municipio</a>
+	{% end %}
+</div>
+<div class="fix-table">
+	<table id="custom" class="table table-striped table-hover table-bordered table-condensed" width="99.8%" cellspacing="0">
+		<thead>
+			<tr>
+				<th colspan="4" class="text-center">Municipios de la Red {{red}}</th>
+			</tr>
+			<tr>
+				<th>Municipio</th>
+				<th>Departamento</th>
+				<th>Comunidades</th>
+				<th>Estado</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for mn in red.municipios %}
+			<tr>
+				<td><a href="/comunidades/gestion?id_mup={{mn.id_mup}}">{{mn}}</a></td>
+				<td>{{mn.dpto}}</td>
+				<td>{{len(mn.comunidades)}}</td>
+				<td class="activo">{% if mn.activo %}Habilitado{% else %}Inhabilitado{% end %}</td>
+			</tr>
+			{% end %}
+		</tbody>
+	</table>
+</div>
+{% end %}

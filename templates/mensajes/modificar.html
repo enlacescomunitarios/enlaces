@@ -1,0 +1,114 @@
+{% extends "../base.html" %}
+{% block header_section %}
+<link href="{{ static_url("css/sweet-alert.min.css") }}" rel="stylesheet" media="all">
+<script type="text/javascript" src="{{ static_url("js/shortcuts.min.js") }}"></script>
+<script type="text/javascript" charset="iso-8859-1" src="{{ static_url("js/sweet-alert.min.js") }}"></script>
+<script type="text/javascript">
+	$(function(){
+		$('.message-menu').addClass('active');
+		$('#back, .back').on({
+			click:function(e){
+				e.preventDefault();
+				location.href='/mensajes/gestion';
+			}
+		});
+		$('#tipo').closest('.form-group').disable();
+		$('input[name=nro_control]').disable().removeAttr('name');
+		$('input[name=titulo]').addClass('only_g_names');
+		var o_key = $('.del').data('key'), btn_submit = $('buttom[type=submit]'), btn_del = $('.del');
+		btn_del.removeAttr('data-key').on({
+			click:function(e){
+				e.preventDefault();
+				btn_submit.disable().hide();
+				btn_del.disable().hide();
+				$.post(
+					'/mensajes/eliminar_msj',
+					data = {'_xsrf':getCookie('_xsrf'),'id_msj':o_key},
+					function(response){
+						if(response==false){
+							location.href='/mensajes/gestion';
+						} else{
+							btn_submit.enable().show();
+							btn_del.enable().show();
+						}
+					}
+				);
+			}
+		});
+		$('form').on({
+			submit:function(e){
+				e.preventDefault();
+				e.stopPropagation();
+				var oform = $(this);
+				btn_submit.disable().hide();
+				btn_del.disable().hide();
+				$.post(
+					'/mensajes/modificar_msj',
+					data = oform.form2Dict(),
+					function(response){
+						if(response){
+							location.href='/mensajes/gestion';
+						} else{
+							$('.check').removeClass('has-success').addClass('has-error').find('span').removeClass('fa-check').addClass('fa-times').end();
+							swal({
+								title:"Error!",
+								text:"El Título que eligió, le pertenece a otro mensaje!",
+								type:"error",
+								confirmButtonText: "Continuar",//Ok
+								allowEscapeKey: false
+							});
+							btn_submit.enable().show();
+							btn_del.enable().show();
+						}
+					}
+				);
+			}
+		});
+	});
+</script>
+{% end %}
+{% block breadcrumbs %}
+<ul id="breadcrumbs" class="breadcrumb">
+	<li><a href="/">Inicio</a></li>
+	<li><a href="#" class="back">Mensajes</a></li>
+	<li class="active">Modificar Mensaje</li>
+</ul>
+{% end %}
+{% block left-content %}
+<form>
+	{% module xsrf_form_html() %}
+	<input type="hidden" name="id_msj" value="{{msg.id_msj}}" readonly>
+	<legend class="text-center">Modificar Mensaje</legend>
+	<div class="row">
+		<fieldset class="form-group col-sm-6">
+			<label>Tipo:</label>
+			<select id="tipo" class="form-control input-sm">
+				<option value="-1">-- Elija Uno --</option>
+				<option value="1"{% if msg.tipo==1 %} selected{% end %}>Pre-Natal</option>
+				<option value="2"{% if msg.tipo==2 %} selected{% end %}>Post-Natal</option>
+				<option value="3"{% if msg.tipo==3 %} selected{% end %}>Promocional Pre-Natal</option>
+				<option value="4"{% if msg.tipo==4 %} selected{% end %}>Promocional Post-Natal</option>
+				<option value="5"{% if msg.tipo==5 %} selected{% end %}>Extra-Ordinario</option>
+			</select>
+		</fieldset>
+		<fieldset class="form-group has-feedback col-sm-6 check">
+			<label>{{'Nro. de Control:' if msg.nro_control else 'Título:'}}</label>
+			<input type="text" name="{{'nro_control' if msg.nro_control else 'titulo'}}" value="{{msg.nro_control if msg.nro_control else msg.titulo}}" class="form-control input-sm" required>
+			<span class="form-control-feedback"></span>
+		</fieldset>
+	</div>
+	<fieldset class="form-group">
+		<label>Tenor:</label>
+		<textarea name="tenor" class="form-control input-sm only_msg_content" rows="3" required>{{msg.tenor}}</textarea>
+	</fieldset>
+	<fieldset class="form-group">
+		<button type="button" id="back" class="btn btn-sm btn-warning">Regresar</button>
+		{% if msg.activo %}
+		<button type="button" data-key="{{msg.id_msj}}" class="del btn btn-sm btn-danger">Inhabilitar</button>
+		<button type="submit" class="btn btn-sm btn-primary">Actualizar</button>
+		{% else %}
+		<button type="submit" class="btn btn-sm btn-primary">Habilitar</button>
+		{% end %}
+	</fieldset>
+</form>
+{% end %}
