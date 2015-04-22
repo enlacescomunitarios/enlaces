@@ -10,12 +10,7 @@
 	$(function(){
 		$('.manager-menu, .capability-sub').addClass('active');
 		$('#custom').customPaginator({height:'auto'});
-		$('#add').on({
-			click:function(e){
-				e.preventDefault();
-				location.href='/prestaciones/nueva_prestacion'
-			}
-		});
+		$('#add').on({click:function(e){e.preventDefault();location.href='/prestaciones/nueva_prestacion';}});
 	});
 </script>
 {% end %}

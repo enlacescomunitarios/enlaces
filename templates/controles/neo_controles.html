@@ -4,44 +4,7 @@
 <script type="text/javascript" charset="iso-8859-1" src="{{ static_url("js/jquery.dataTables.min.js") }}"></script>
 <script type="text/javascript" src="{{ static_url("js/dataTables.bootstrap.min.js") }}"></script>
 <script type="text/javascript" src="{{ static_url("js/customPaginator.min.js") }}"></script>
-<script type="text/javascript">
-	$(function(){
-		$('.pregnant-menu').addClass('active');
-		var o_key = $('#breadcrumbs').data('key');
-		$('#breadcrumbs').removeAttr('data-key');
-		$('.back').on({
-			click:function(e){
-				e.preventDefault();
-				location.href='/embarazos/gestion?id_per='+o_key.id_per;
-			}
-		});
-		$('.born').on({
-			click:function(e){
-				e.preventDefault();
-				location.href='/embarazos/reg_parto?id_emb='+o_key.id_emb;
-			}
-		});
-		$('.interrupt').on({
-			click:function(e){
-				e.preventDefault();
-				location.href='/embarazos/interrumpir?id_emb='+o_key.id_emb;
-			}
-		});
-		$('.confirm').on({
-			click:function(e){
-				e.preventDefault();
-				location.href='/embarazos/conf_interr?id_emb='+o_key.id_emb;
-			}
-		});
-		$('.edit').on({
-			click:function(e){
-				e.preventDefault();
-				location.href='/controles/modificar_neo?id_rcn='+o_key.id_rcn;
-			}
-		});
-		$('#custom').customPaginator({height:'auto'});
-	});
-</script>
+<script type="text/javascript" src="{{ static_url("js/apps/controls/neoControls.min.js") }}"></script>
 {% end %}
 {% block breadcrumbs %}
 <ul id="breadcrumbs" class="breadcrumb" data-key='{"id_per":{{neo.embarazo.embarazada.id_per}},"id_emb":{{neo.embarazo.id_emb}},"id_rcn":{{neo.id_rcn}}}'>

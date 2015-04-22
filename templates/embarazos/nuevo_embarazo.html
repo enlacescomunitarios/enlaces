@@ -5,42 +5,7 @@
 <script type="text/javascript" charset="iso-8859-1" src="{{ static_url("js/moment.min.js") }}"></script>
 <script type="text/javascript" src="{{ static_url("js/datetimepicker.min.js") }}"></script>
 <script type="text/javascript" charset="iso-8859-1" src="{{ static_url("js/jquery.maskedinput.min.js") }}"></script>
-<script type="text/javascript">
-	$(function(){
-		$('.pregnant-menu').addClass('active');
-		$('#back, .back').on({
-			click:function(e){
-				e.preventDefault();
-				location.href='/embarazos/gestion?id_per='+$('input[name=id_per]').val();
-			}
-		});
-		$('form').on({
-			submit:function(e){
-				e.preventDefault();
-				e.stopPropagation();
-				var oform = $(this).form2Dict();
-				//console.log(oform);
-				$.post(
-					'/embarazos/nuevo_embarazo',
-					data = oform,
-					function(response){
-						if(response){
-							location.href='/embarazos/gestion?id_per='+$('input[name=id_per]').val();
-						}
-					}
-				);
-			}
-		});
-		$('#inputParto_prob').mask('99/99/9999').on({
-			'click focusin':function(e){
-				$(this).datetimepicker({
-					locale: 'es',
-					format: 'DD/MM/YYYY'
-				});
-			}
-		});
-	});
-</script>
+<script type="text/javascript" src="{{ static_url("js/apps/pregnancies/newPregnancy.min.js") }}"></script>
 {% end %}
 {% block breadcrumbs %}
 <ul id="breadcrumbs" class="breadcrumb">

@@ -5,57 +5,7 @@
 <script type="text/javascript" charset="iso-8859-1" src="{{ static_url("js/moment.min.js") }}"></script>
 <script type="text/javascript" src="{{ static_url("js/datetimepicker.min.js") }}"></script>
 <script type="text/javascript" charset="iso-8859-1" src="{{ static_url("js/jquery.maskedinput.min.js") }}"></script>
-<script type="text/javascript">
-	$(function(){
-		$('.pregnant-menu').addClass('active');
-		$('#back, .back').on({
-			click:function(e){
-				e.preventDefault();
-				//location.href='/embarazadas/gestion';
-				location.href='/embarazos/gestion?id_per='+$('input[name=id_per]').val();
-			}
-		});
-		$('input[name=fecha], input[name=f_notf], input[name=f_conf]').mask('99/99/9999').on({
-			'click focusin':function(e){
-				$(this).datetimepicker({
-					locale:'es',
-					format: 'DD/MM/YYYY'
-				});
-			}
-		});
-		$('.optional').disable().hide();
-		$('.yes, .no').on({
-			click:function(e){
-				var oconf = $(this);
-				if(+oconf.val()==1){
-					$('.no').removeAttr('checked');
-					$('.optional').enable().show();
-				} else{
-					$('.yes').removeAttr('checked');
-					$('.optional').disable().hide();
-				}
-			}
-		});
-		$('form').on({
-			submit:function(e){
-				e.preventDefault();
-				e.stopPropagation();
-				var oform = $(this);
-				//console.log($(this).form2Dict());
-				$.post(
-					'/embarazadas/defuncion',
-					data = oform.form2Dict(),
-					function(response){
-						if(response){
-							//location.href='/embarazadas/gestion';
-							location.href='/embarazos/gestion?id_per='+$('input[name=id_per]').val();
-						}
-					}
-				);
-			}
-		});
-	});
-</script>
+<script type="text/javascript" src="{{ static_url("js/apps/pregnants/pregnantDeath.min.js") }}"></script>
 {% end %}
 {% block breadcrumbs %}
 <ul id="breadcrumbs" class="breadcrumb">

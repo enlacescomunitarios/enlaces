@@ -3,6 +3,16 @@
  * (C) 2015 - mbarjaedu13@gmail.com
  */
 $(function(){
+	$('.pregnant-menu').addClass('active');
+	$('#cancel, .back').on({click:function(e){e.preventDefault();location.href='/embarazadas/gestion';}});
+	$('input[name=f_nac], #inputParto_prob').mask('99/99/9999').on({
+		'click focusin':function(e){
+			$(this).datetimepicker({
+				locale: 'es',
+				format: 'DD/MM/YYYY'
+			});
+		}
+	});
 	$.post(
 		'/etnias/disponibles',
 		data = {'_xsrf':getCookie('_xsrf')},

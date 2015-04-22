@@ -7,65 +7,7 @@
 <script type="text/javascript" src="{{ static_url("js/customPaginator.min.js") }}"></script>
 <script type="text/javascript" src="{{ static_url("js/shortcuts.min.js") }}"></script>
 <script type="text/javascript" charset="iso-8859-1" src="{{ static_url("js/sweet-alert.min.js") }}"></script>
-<script type="text/javascript">
-	$(function(){
-		$('.manager-menu, .health-sub').addClass('active');
-		var o_key = $('#breadcrumbs').data('key');
-		$('.edit').on({
-			click:function(e){
-				e.preventDefault();
-				location.href='/redes_salud/modificar_red?id_red='+o_key.id_red;
-			}
-		});
-		$('.delete').on({
-			click:function(e){
-				e.preventDefault();
-				var o_del = $(this);
-				swal({
-					title: "Está seguro?",
-					text: o_key.str+", será inhabilitado!",
-					type: "warning",
-					showCancelButton: true,
-					cancelButtonText: "Cancelar",
-					confirmButtonColor: "#d9534f",
-					confirmButtonText: "Inhabilitar",
-					closeOnConfirm: false
-				}, function(){
-					$.post(
-						'/redes_salud/eliminar_red',
-						data = {'_xsrf': getCookie('_xsrf'), 'id_red': o_key.id_red},
-						function(response){
-							if(response==false){
-								$('.status').text('Inhabilitado');
-								o_del.remove();
-								$('.add').remove();
-								swal({
-									title: "Inhabilitado",
-									text: "La red de salud \""+o_key.str+"\", fué inhabilitada.",
-									type: "success",
-									confirmButtonText: "Continuar"
-								});
-							}
-						}
-					);
-				});
-			}
-		});
-		$('.add').on({
-			click:function(e){
-				e.preventDefault();
-				location.href='/municipios/nuevo_municipio?id_red='+o_key.id_red;
-			}
-		});
-		$('.back').on({
-			click:function(e){
-				e.preventDefault();
-				location.href='/redes_salud/gestion';
-			}
-		});
-		$('#custom').customPaginator({height:'auto'});
-	});
-</script>
+<script type="text/javascript" src="{{ static_url("js/apps/townships/townships.min.js") }}"></script>
 {% end %}
 {% block breadcrumbs %}
 <ul id="breadcrumbs" class="breadcrumb" data-key='{"id_red":{{red.id_red}},"str":"{{red.__str__()}}"}'>

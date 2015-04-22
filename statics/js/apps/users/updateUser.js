@@ -3,6 +3,13 @@
  * (C) 2015 - mbarjaedu13@gmail.com
  */
 $(function(){
+	$('.manager-menu, .user-sub').addClass('active');
+	$('#cancel, .back').on({
+		click:function(e){
+			e.preventDefault();
+			location.href='/usuarios/gestion';
+		}
+	});
 	var o_user = $('.key').data('key'), btn_submit = $('button[type=submit]'), btn_del = $('#del');
 	$('.key').removeAttr('data-key');
 	//console.log(o_user);

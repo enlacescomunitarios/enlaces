@@ -2,22 +2,14 @@
 {% block header_section %}
 <script type="text/javascript" src="{{ static_url("js/shortcuts.min.js") }}"></script>
 <script type="text/javascript" charset="iso-8859-1" src="{{ static_url("js/jquery.maskedinput.min.js") }}"></script>
-<script type="text/javascript">
-	$(function(){
-		var o_key = $('#breadcrumbs').data('key');
-		$('#breadcrumbs').removeAttr('data-key');
-		$('.back').on({
-			click:function(e){
-				e.preventDefault();
-				location.href='/controles/gestion?id_rcn='+o_key.id_rcn;
-			}
-		});
-	});
-</script>
+<script type="text/javascript" src="{{ static_url("js/apps/controls/neoUpdate.min.js") }}"></script>
 {% end %}
 {% block breadcrumbs %}
-<ul id="breadcrumbs" class="breadcrumb" data-key='{"id_emb":{{neo.embarazo.id_emb}},"id_rcn":{{neo.id_rcn}},"str":"{{neo.__str__()}}"}'>
+<ul id="breadcrumbs" class="breadcrumb" data-key='{"id_per":{{neo.embarazo.embarazada.id_per}},"id_rcn":{{neo.id_rcn}},"str":"{{neo.__str__()}}"}'>
 	<li><a href="/">Inicio</a></li>
+	<li><a href="#" class="pregnants">Embarazadas</a></li>
+	<li><a href="#" class="pregnant">Madre: {{neo.embarazo.embarazada}}</a></li>
+	<li><a href="#" class="back">Controles</a></li>
 	<li class="active">Modificar</li>
 </ul>
 {% end %}
@@ -26,18 +18,32 @@
 	{% module xsrf_form_html() %}
 	<input type="hidden" name="id_rcn" value="{{neo.id_rcn}}" readonly>
 	<legend>Modificar Datos</legend>
-	<fieldset class="form-group has-feedback">
-		<label>Nombres:</label>
-		<input type="text" name="nombres" value="{{'{}'.format(neo.nombres or '')}}" class="form-control input-sm only_p_names" required>
-	</fieldset>
-	<fieldset class="form-group has-feedback">
-		<label>Apellidos:</label>
-		<input type="text" name="apellidos" value="{{neo.apellidos}}" class="form-control input-sm only_p_lastnames" required>
-	</fieldset>
-	<fieldset class="form-group has-feedback">
-		<label>Fecha de Nacimiento:</label>
-		<input type="text" name="f_nac" value="{{neo.f_nac}}" class="form-control input-sm only_p_lastnames" required>
-	</fieldset>
+	<div class="row">
+		<fieldset class="form-group has-feedback col-sm-6">
+			<label>Nombres:</label>
+			<input type="text" name="nombres" value="{{'{}'.format(neo.nombres or '')}}" class="form-control input-sm only_p_names" required>
+		</fieldset>
+		<fieldset class="form-group has-feedback col-sm-6">
+			<label>Apellidos:</label>
+			<input type="text" name="apellidos" value="{{neo.apellidos}}" class="form-control input-sm only_p_lastnames" required>
+		</fieldset>
+	</div>
+	<div class="row">
+		<fieldset class="form-group has-feedback col-sm-6">
+			<label>Fecha de Nacimiento:</label>
+			<input type="text" name="f_nac" value="{{to_ddmmyy(neo.f_nac)}}" class="form-control input-sm only_date" required>
+			<span class="form-control-feedback"></span>
+			<p class="help-block">Día/Mes/Año</p>
+		</fieldset>
+		<fieldset class="form-group has-feedback col-sm-6">
+			<label>Sexo:</label>
+			<select name="sexo" class="form-control input-sm" required>
+				<option value="-1">-- Elija Uno --</option>
+				<option value="f" {% if neo.sexo=='f' %}selected{% end %}>Femenino</option>
+				<option value="m" {% if neo.sexo=='m' %}selected{% end %}>Masculino</option>
+			</select>
+		</fieldset>
+	</div>
 	<fieldset class="form-group">
 		<button type="button" class="back btn btn-sm btn-warning">Regresar</button>
 		<button type="submit" class="btn btn-sm btn-primary">Actualizar</button>

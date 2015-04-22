@@ -3,6 +3,13 @@
  * (C) 2015 - mbarjaedu13@gmail.com
  */
  $(function(){
+ 	$('.manager-menu, .user-sub').addClass('active');
+ 	$('#cancel, .back').on({
+ 		click:function(e){
+ 			e.preventDefault();
+ 			location.href='/usuarios/gestion';
+ 		}
+ 	});
  	var rol = $('#inputRol'), alcance = rol.closest('.form-group').next(), redes_salud = $('.redes_salud'), municipios = $('.municipios'), centros_salud = $('.centros_salud'),
  		/*
  		tipo_tmpl = function(obj){

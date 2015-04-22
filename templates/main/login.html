@@ -8,9 +8,9 @@
 		display: -ms-flexbox;
 		display: flex;
 	}
-	body #container form{
+	body #container form:not(.big-form){
 		min-width: 280px !important;
-		max-width: 360px !important;
+		width: 300px !important;
 		padding: 30px !important;
 	}
 	#alertLogin{
@@ -20,33 +20,7 @@
 	}
 </style>
 <script type="text/javascript" src="{{ static_url("js/shortcuts.min.js") }}"></script>
-<script type="text/javascript">
-	$(function(){
-		var alertbox = $('.alert-Box').clone();
-		$('.alert-Box').html('');
-		$('form').on({
-			submit:function(e){
-				e.preventDefault();
-				e.stopPropagation();
-				var oform = $(this), btn_submit = $('button[type=submit]');
-				btn_submit.disable();
-				$.post(
-					'/login',
-					data = oform.form2Dict(),
-					function(response){
-						if(response){
-							location.href='/';
-						} else{
-							btn_submit.enable();
-							$('input').tooltip('hide');
-							$('.alert-Box').html(alertbox.html()).find('#alertLogin').show();
-						}
-					}
-				);
-			}
-		});
-	});
-</script>
+<script type="text/javascript" src="{{ static_url("js/apps/login.min.js") }}"></script>
 {% end %}
 {% block user_actions %}{% end %}
 {% block content %}

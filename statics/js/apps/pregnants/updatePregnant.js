@@ -3,6 +3,16 @@
  * (C) 2015 - mbarjaedu13@gmail.com
  */
 $(function(){
+	$('.pregnant-menu').addClass('active');
+	$('#back, .back').on({click:function(e){e.preventDefault();location.href='/embarazos/gestion?id_per='+$('input[name=id_per]').val();}});
+	$('input[name=f_nac]').mask('99/99/9999').on({
+		'click focusin':function(e){
+			$(this).datetimepicker({
+				locale: 'es',
+				format: 'DD/MM/YYYY'
+			});
+		}
+	});
 	var checkfields = $('form').data('key'),
 		ldetnias = function(etnias){
 			var options = [$('<option value="-1">-- Elija Una --</option>')];

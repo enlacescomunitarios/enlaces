@@ -3,7 +3,6 @@ $choice = 0//0, 1, 2 or 3
 base_color = $palette[$choice]['base_color']
 back_color = $palette[$choice]['back_color']
 active_color = $palette[$choice]['active_color']
-single_form_width = 320px
 @import 'functions'
 *
 	text-rendering optimizeLegibility !important
@@ -101,18 +100,19 @@ body
 				// 	margin 0
 				// 	padding 0
 				// 	padding-bottom 15px
-				// 	width single_form_width !important
+				// 	width 360px !important
 				// 	.row
 				// 		margin-left -15px
-				// 		width single_form_width !important
+				// 		width 360px !important
 				// 		.form-control-feedback
 				// 			right 2px
 				// 	label
 				// 		margin-left 0
-				// 		width single_form_width !important
+				// 		width 360px !important
 				&:not(.big-form)
 					background-color #fff !important
-					//width single_form_width !important
+					min-width 280px !important
+					width 360px !important
 					//padding 15px !important
 					fix_outborder()
 		#right-content

@@ -265,7 +265,7 @@ class Mensaje(db.Entity):
 	nro_control = _Optional(int, nullable=True)
 	titulo = _Optional(unicode, nullable=True)
 	tipo = _Required(int)
-	tenor = _Required(unicode, 160)
+	tenor = _Required(unicode)
 	activo = _Optional(bool, default=True)
 	creado = _Optional(_datetime)
 	modificado = _Optional(_datetime)

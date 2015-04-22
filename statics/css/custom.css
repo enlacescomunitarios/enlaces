@@ -143,6 +143,8 @@ body #container form .row [class*="col-"] {
 }
 body #container form:not(.big-form) {
   background-color: #fff !important;
+  min-width: 280px !important;
+  width: 360px !important;
   -webkit-border-radius: 5px !important;
      -moz-border-radius: 5px !important;
           border-radius: 5px !important;

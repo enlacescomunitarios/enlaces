@@ -5,73 +5,7 @@
 <script type="text/javascript" charset="iso-8859-1" src="{{ static_url("js/moment.min.js") }}"></script>
 <script type="text/javascript" src="{{ static_url("js/datetimepicker.min.js") }}"></script>
 <script type="text/javascript" charset="iso-8859-1" src="{{ static_url("js/jquery.maskedinput.min.js") }}"></script>
-<script type="text/javascript">
-	$(function(){
-		$('.pregnant-menu').addClass('active');
-		var o_key = $('.big-form').data('key'), btn_submit = $('button[type=submit]'), btn_interr = $('#interr');
-		//console.log('conf',o_key);
-		$('.big-form').removeAttr('data-key');
-		$('#back, .back').on({
-			click:function(e){
-				e.preventDefault();
-				//location.href='/embarazadas/gestion';
-				location.href='/embarazos/gestion?id_per='+o_key.id_per;
-			}
-		});
-		$('.optional').disable();
-		$('input[name=f_conf]').mask('99/99/9999').on({
-			'click focusin':function(e){
-				$(this).datetimepicker({
-					locale: 'es',
-					format: 'DD/MM/YYYY'
-				});
-			}
-		});
-		$('#interr').on({
-			click:function(e){
-				e.preventDefault();
-				btn_submit.disable().hide();
-				btn_interr.disable().hide();
-				$.post(
-					'/embarazadas/del_defuncion',
-					data = {'_xsrf':getCookie('_xsrf'),'id_def':o_key.id_def},
-					function(response){
-						if(!response){
-							location.href='/embarazadas/gestion?id_per='+o_key.id_per;
-						} else{
-							btn_submit.enable().show();
-							btn_interr.enable().show();
-						}
-					}
-				);
-			}
-		});
-		if(o_key.done){
-			$('.right-side').disable();
-		}
-		$('form').on({
-			submit:function(e){
-				e.preventDefault();
-				e.stopPropagation();
-				var oform = $(this);
-				btn_submit.disable().hide();
-				btn_interr.disable().hide();
-				$.post(
-					'/embarazadas/conf_defuncion',
-					data = oform.form2Dict(),
-					function(response){
-						if(response){
-							//location.href='/embarazadas/gestion';
-							location.href='/embarazos/gestion?id_per='+o_key.id_per;
-						} else{
-							btn_submit.enable().show();
-						}
-					}
-				);
-			}
-		});
-	});
-</script>
+<script type="text/javascript" src="{{ static_url("js/apps/pregnants/deathConfirm.min.js") }}"></script>
 {% end %}
 {% block breadcrumbs %}
 <ul id="breadcrumbs" class="breadcrumb">
@@ -82,7 +16,7 @@
 </ul>
 {% end %}
 {% block left-content %}
-<form class="big-form" data-key='{"id_per":{{death.embarazo.embarazada.id_per}},"id_def":{{death.id_def}},"done":{{1 if death.f_conf else 0}}}'>
+<form class="big-form" data-key='{"id_per":{{death.embarazo.embarazada.id_per if death.embarazo else death.embarazada.id_per}},"id_def":{{death.id_def}},"done":{{1 if death.f_conf else 0}}}'>
 	{% module xsrf_form_html() %}
 	<input type="hidden" name="id_def" value="{{death.id_def}}" readonly>
 	<div class="inner-container">
