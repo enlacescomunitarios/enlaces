@@ -25,10 +25,14 @@ class Login(BaseHandler):
 	@db_session
 	def post(self):
 		self.set_header('Content-type', 'application/json')
-		us = usersCrt.granted_access(self.form2Dict())
-		if us:
-			self.set_secure_cookie('user', us.to_json(), expires_days=1)
-		self.write(dumps(True if us else False))
+		form = self.form2Dict()
+		if len(form.login) and len(form.passwd):
+			us = usersCrt.granted_access(self.form2Dict())
+			if us:
+				self.set_secure_cookie('user', us.to_json(), expires_days=1)
+			self.write(dumps(True if us else False))
+		else:
+			self.write(dumps(False))
 		
 @route('/logout')
 class Logout(BaseHandler):

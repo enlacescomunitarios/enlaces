@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from ..tools import (route, BaseHandler, cdict, to_ddmmyy)
 from pony.orm import (db_session, commit, select)
 from ..entities import (Embarazo, Recien_Nacido, Control)
-from ..criterias import (controlsCrt, pregnancy_status)
+from ..criterias import (controlsCrt, pregnancy_status, childrensCrt)
 from json import dumps
 
 @route('/controles/gestion')
@@ -56,3 +56,6 @@ class ModificarNeo(BaseHandler):
 	def get(self):
 		neo = Recien_Nacido.get(**self.form2Dict())
 		self.render('controles/neo_modificar.html', neo=neo, to_ddmmyy=to_ddmmyy)
+	def post(self):
+		self.set_header('Content-type', 'application/json')
+		self.write(dumps(childrensCrt.update(**self.form2Dict())))

@@ -28,6 +28,15 @@ $(function(){
 			e.preventDefault();
 			var oform = $(this), btn_submit = $('button[type=submit]');
 			btn_submit.disable().hide();
+			$.post(
+				'/controles/modificar_neo',
+				data = oform.form2Dict(),
+				function(response){
+					if(response){
+						location.href='/controles/gestion?id_rcn='+$('input[name=id_rcn]').val();
+					}
+				}
+			);
 		}
 	});
 });
