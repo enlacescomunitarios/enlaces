@@ -25,8 +25,12 @@ class UserCriteria:
 			return False
 	@classmethod
 	def granted_access(self, form):
-		form.activo, form.passwd = True, form.passwd.encode('hex').encode('base64')
-		return _Usuario.get(**form)
+		if len(form.login) and len(form.passwd):
+			form.activo, form.passwd = True, form.passwd.encode('hex').encode('base64')
+			return _Usuario.get(**form)
+		else:
+			return None
+
 	@classmethod
 	def save(self, form):
 		f_persona = lambda: dict(telf=form.telf,ci=form.ci,nombres=form.nombres,apellidos=form.apellidos,sexo=form.sexo)

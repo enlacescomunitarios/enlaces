@@ -228,7 +228,7 @@ class Recien_Nacido(db.Entity):
 	defuncion = _Optional(lambda: Defuncion, reverse='recien_nacido', nullable=True)
 	creado = _Optional(_datetime)
 	modificado = _Optional(_datetime)
-	activo = _Optional(bool, default=True)
+	#activo = _Optional(bool, default=True)
 	embarazo = _Required(Embarazo, reverse='recien_nacidos')
 	controles = _Set(lambda: Control, reverse='recien_nacido')
 	def before_insert(self):

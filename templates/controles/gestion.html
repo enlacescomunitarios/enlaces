@@ -44,10 +44,9 @@
 	<table id="custom" class="table table-striped table-hover table-bordered table-condensed" width="99.8%" cellspacing="0">
 		<thead>
 			<tr>
-				<th colspan="5" class="text-center">Controles</th>
+				<th colspan="4" class="text-center">Controles</th>
 			</tr>
 			<tr>
-				<th>#</th>
 				<th>Tipo</th>
 				<th>Control</th>
 				<th>Fecha</th>
@@ -55,9 +54,8 @@
 			</tr>
 		</thead>
 		<tbody>
-			{% for i,ct in enumerate(controles) %}
+			{% for ct in controles %}
 			<tr>
-				<td>{{i+1}}</td>
 				<td>{{ct.tipo}}</td>
 				<td>{{ct.nro_con}}</td>
 				<td>{{'{}'.format(to_ddmmyy(ct.fecha_con))}}</td>

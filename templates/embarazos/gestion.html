@@ -101,7 +101,7 @@
 			<tr>
 				<td><a href="/controles/gestion?id_rcn={{neo.id_rcn}}">{{neo}}</a></td>
 				<td>{{to_ddmmyy(neo.f_nac)}}</td>
-				<td>{% if neo.activo %}Habilitado{% else %}Inhabilitado{% end %}</td>
+				<td>{% if neo.defuncion and not neo.defuncion.f_conf %}Advertencia{% elif neo.defuncion and neo.defuncion.f_conf %}Fallecido{% else %}Habilitado{% end %}</td>
 			</tr>
 			{% end %}
 		</tbody>

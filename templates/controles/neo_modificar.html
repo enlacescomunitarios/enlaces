@@ -30,12 +30,6 @@
 	</div>
 	<div class="row">
 		<fieldset class="form-group has-feedback col-sm-6">
-			<label>Fecha de Nacimiento:</label>
-			<input type="text" name="f_nac" value="{{to_ddmmyy(neo.f_nac)}}" class="form-control input-sm only_date" required>
-			<span class="form-control-feedback"></span>
-			<p class="help-block">Día/Mes/Año</p>
-		</fieldset>
-		<fieldset class="form-group has-feedback col-sm-6">
 			<label>Sexo:</label>
 			<select name="sexo" class="form-control input-sm" required>
 				<option value="-1">-- Elija Uno --</option>
@@ -43,7 +37,16 @@
 				<option value="m" {% if neo.sexo=='m' %}selected{% end %}>Masculino</option>
 			</select>
 		</fieldset>
+		<fieldset class="form-group has-feedback col-sm-6">
+			<label>Peso:</label>
+			<input type="text" name="peso" value="{{neo.peso}}" class="form-control input-sm only_neonato_weight" required>
+		</fieldset>
 	</div>
+	<fieldset class="form-group">
+		<label>Fecha de Nacimiento:</label>
+		<label class="form-control input-sm" disabled>{{to_ddmmyy(neo.f_nac)}}</label>
+		<p class="help-block">Día/Mes/Año</p>
+	</fieldset>
 	<fieldset class="form-group">
 		<button type="button" class="back btn btn-sm btn-warning">Regresar</button>
 		<button type="submit" class="btn btn-sm btn-primary">Actualizar</button>
