@@ -130,9 +130,7 @@
 <form action="/personas/modificar" method="POST" data-key='{{checkfields}}'>
 	{% module xsrf_form_html() %}
 	<input type="hidden" name="id_per" value="{{pr.id_per}}" readonly>
-	<fieldset>
-		<legend class="text-center">Modificar Datos</legend>
-	</fieldset>
+	<legend class="text-center">Modificar Datos</legend>
 	<fieldset class="form-group locations">
 		<label>Red de Salud:</label>
 		<select id="red" class="form-control input-sm" required>
@@ -159,56 +157,22 @@
 			<input type="text" name="telf" value="{{pr.telf or ''}}" class="form-control input-sm only_cell_phone">
 			<span class="form-control-feedback"></span>
 		</fieldset>
-		<fieldset class="form-group has-feedback col-sm-8">
-			<label>Nombre:</label>
-			<input type="text" name="nombre" value="{{pr.nombre}}" class="form-control input-sm only_p_names" required>
-			<span class="form-control-feedback"></span>
-		</fieldset>
 	</div>
 	<div class="row">
 		<fieldset class="form-group has-feedback col-sm-6">
-			<label>Apellido Paterno:</label>
-			<input type="text" name="ap_pat" value="{{pr.ap_pat or ''}}" class="form-control input-sm only_p_lastnames">
+			<label>Nombre(s):</label>
+			<input type="text" name="nombres" value="{{pr.nombres}}" class="form-control input-sm only_p_names" required>
 			<span class="form-control-feedback"></span>
 		</fieldset>
 		<fieldset class="form-group has-feedback col-sm-6">
-			<label>Apellido Materno:</label>
-			<input type="text" name="ap_mat" value="{{pr.ap_mat}}" class="form-control input-sm only_p_lastnames" required>
+			<label>Apellidos:</label>
+			<input type="text" name="apellidos" value="{{pr.apellidos}}" class="form-control input-sm only_p_lastnames" required>
 			<span class="form-control-feedback"></span>
 		</fieldset>
 	</div>
-	<fieldset>
-		<legend>Contacto&nbsp;<i id="delContact" class="btn btn-xs btn-danger fa"></i></legend>
-	</fieldset>
-	<div class="contactForm">
-		<div class="row">
-			<fieldset class="form-group has-feedback col-sm-4">
-				<label>Celular:</label>
-				<input type="text" name="c_telf" value="{% if pr.contacto %}{{pr.contacto.telf}}{% end %}" class="form-control input-sm only_cell_phone" required>
-				<span class="form-control-feedback"></span>
-			</fieldset>
-			<fieldset class="form-group has-feedback col-sm-8 optional">
-				<label>Nombre:</label>
-				<input type="text" name="c_nombre" value="{% if pr.contacto %}{{pr.contacto.nombre}}{% end %}" class="form-control input-sm only_p_names" required>
-				<span class="form-control-feedback"></span>
-			</fieldset>
-		</div>
-		<div class="row">
-			<fieldset class="form-group has-feedback optional col-sm-6">
-				<label>Apellido Paterno:</label>
-				<input type="text" name="c_ap_pat" value="{% if pr.contacto %}{{pr.contacto.ap_pat or ''}}{% end %}" class="form-control input-sm only_p_lastnames">
-				<span class="form-control-feedback"></span>
-			</fieldset>
-			<fieldset class="form-group has-feedback optional col-sm-6">
-				<label>Apellido Materno:</label>
-				<input type="text" name="c_ap_mat" value="{% if pr.contacto %}{{pr.contacto.ap_mat}}{% end %}" class="form-control input-sm only_p_lastnames" required>
-				<span class="form-control-feedback"></span>
-			</fieldset>
-		</div>
-	</div>
 	<fieldset class="form-group">
-		<button type="submit" class="btn btn-sm btn-primary">Guardar</button>
 		<button type="button" id="back" class="btn btn-sm btn-danger">Cancelar</button>
+		<button type="submit" class="btn btn-sm btn-primary">Guardar</button>
 	</fieldset>
 </form>
 {% end %}

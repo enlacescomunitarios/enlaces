@@ -6,38 +6,40 @@
 <script type="text/javascript" src="{{ static_url("js/customPaginator.min.js") }}"></script>
 <script type="text/javascript">
 	$(function(){
-		$('#custom').customPaginator();
+		$('#custom').customPaginator({height:'auto'});
 	});
 </script>
 {% end %}
-{% block content %}
-<table id="custom" class="table table-striped table-hover table-bordered table-condensed" width="99.8%" cellspacing="0">
-	<thead>
-		<tr>
-			<th colspan="7" class="text-center">Personas</th>
-		</tr>
-		<tr>
-			<th>#</th>
-			<th>Nombres y Apellidos</th>
-			<th>Celular</th>
-			<th>Sexo</th>
-			<th>Tipo</th>
-			<th>Estado</th>
-			<th>Defunción</th>
-		</tr>
-	</thead>
-	<tbody>
-		{% for i,pr in enumerate(personas) %}
-		<tr>
-			<td>{{i+1}}</td>
-			<td><a href="/personas/modificar?id_per={{pr.id_per}}">{{pr}}</a></td>
-			<td>{{pr.telf or ''}}</td>
-			<td>{% if pr.sexo=='f' %}Femenino{% else %}Masculino{% end %}</td>
-			<td>{% if pr.usuario %}Usuario{% end %}</td>
-			<td>{% if pr.activo %}Activo{% else %}Eliminado{% end %}</td>
-			<td>{% if pr.defuncion %}{{pr.defuncion.isoformat()}}{% end %}</td>
-		</tr>
-		{% end %}
-	</tbody>
-</table>
+{% block left-content %}
+<div class="fix-table">
+	<table id="custom" class="table table-striped table-hover table-bordered table-condensed" width="99.8%" cellspacing="0">
+		<thead>
+			<tr>
+				<th colspan="7" class="text-center">Personas</th>
+			</tr>
+			<tr>
+				<th>#</th>
+				<th>Nombres y Apellidos</th>
+				<th>Celular</th>
+				<th>Sexo</th>
+				<th>Tipo</th>
+				<th>Estado</th>
+				<th>Defunción</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for i,pr in enumerate(personas) %}
+			<tr>
+				<td>{{i+1}}</td>
+				<td><a href="/personas/modificar?id_per={{pr.id_per}}">{{pr}}</a></td>
+				<td>{{pr.telf or ''}}</td>
+				<td>{% if pr.sexo=='f' %}Femenino{% else %}Masculino{% end %}</td>
+				<td>{% if pr.usuario %}Usuario{% end %}</td>
+				<td>{% if pr.activo %}Activo{% else %}Eliminado{% end %}</td>
+				<td>{% if pr.defuncion %}{{to_ddmmyy(pr.defuncion.f_conf)}}{% end %}</td>
+			</tr>
+			{% end %}
+		</tbody>
+	</table>
+</div>
 {% end %}

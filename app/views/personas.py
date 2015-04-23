@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 from __future__ import absolute_import
-from ..tools import (route, BaseHandler)
+from ..tools import (route, BaseHandler, to_ddmmyy)
 from pony.orm import (db_session, commit, select)
 from ..entities import (Tipo, Persona)
 from ..criterias import personsCrt
@@ -11,7 +11,7 @@ class Gestion_Personas(BaseHandler):
 	@db_session
 	def get(self):
 		personas = select(pr for pr in Persona).order_by(lambda pr: (pr.nombres, pr.apellidos))
-		self.render('personas/gestion.html', personas=personas)
+		self.render('personas/gestion.html', personas=personas, to_ddmmyy=to_ddmmyy)
 
 @route('/personas/modificar')
 class Modificar_Persona(BaseHandler):
