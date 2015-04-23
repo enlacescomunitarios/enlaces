@@ -17,7 +17,7 @@
 		<script type="text/javascript">
 			window.history.pushState("string", "Title", "/");
 			$(function(){
-				$('.navbar, #breadcrumbs, .btn-actions, .right-content').find('a').each(function(){
+				$('.navbar, #breadcrumbs, .btn-actions, #right-content').find('a').each(function(){
 					var olink = $(this);
 					olink.data('link', olink.attr('href')).removeAttr('href').on({
 						click:function(e){

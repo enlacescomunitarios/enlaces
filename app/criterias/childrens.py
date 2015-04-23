@@ -24,14 +24,14 @@ class ChildrensCriteria:
 	def death(self, id_rcn, fecha, f_notf, obs_notf, f_conf=None, obs_conf=None):
 		deathForm = _getLocals(locals())
 		deathForm.fecha, deathForm.f_notf = _to_yymmdd(fecha), _to_yymmdd(f_notf)
-		print deathForm
 		try:
 			with _db_session:
 				child = _newBorn.get(id_rcn=id_rcn)
-				_Death(recien_nacido=child, **deathForm)
+				del deathForm.id_rcn
 				if f_conf is not None:
 					deathForm.f_conf = _to_yymmdd(f_conf)
 					_controlsCrt.delete_controls(child)
+				death = _Death(recien_nacido=child, **deathForm)
 				_commit()
 			return True
 		except Exception, e:
@@ -42,10 +42,21 @@ class ChildrensCriteria:
 		try:
 			with _db_session:
 				death = _Death.get(id_def=id_def)
-				death.set(f_conf=f_conf, obs_conf=obs_conf)
+				death.set(f_conf=_to_yymmdd(f_conf), obs_conf=obs_conf)
 				_controlsCrt.delete_controls(death.recien_nacido)
 				_commit()
 			return True
 		except Exception, e:
 			raise e
 			return False
+	@classmethod
+	def delete_death(self, id_def):
+		try:
+			with _db_session:
+				death = _Death.get(id_def=id_def)
+				death.delete()
+				_commit()
+			return False
+		except Exception, e:
+			raise e
+			return True

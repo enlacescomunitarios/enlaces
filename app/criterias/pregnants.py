@@ -92,7 +92,7 @@ class PregnantCriteria:
 			#raise e
 			return False
 	@classmethod
-	def update(self, id_per, telf, nombres, apellidos, id_com, id_etn, f_nac, ci, c_telf):
+	def update(self, id_per, telf, nombres, apellidos, id_com, id_etn, f_nac, ci, c_telf, c_nombres, c_apellidos, c_id_per=None):
 		f_nac = _to_yymmdd(f_nac); activo = True
 		preg_form = dict([(k,v) for k,v in locals().iteritems() if not(k.startswith('_') or k.startswith('c_') or k.startswith('self') or k in ['id_com','id_etn','id_per'])])
 		try:
@@ -101,10 +101,10 @@ class PregnantCriteria:
 				etn = _Etnia.get(id_etn=id_etn)
 				pregnant = _Persona.get(id_per=id_per)
 				pregnant.set(comunidad=com, etnia=etn,**preg_form)
-				contact = _Persona.get(telf=c_telf)
-				if not contact:
-					pregnant.contacto.telf = c_telf
+				if c_id_per is not None:
+					pregnant.contacto.set(telf=c_telf, nombres=c_nombres, apellidos=c_apellidos)
 				else:
+					contact = _Persona(telf=c_telf, nombres=c_nombres, apellidos=c_apellidos)
 					pregnant.contacto = contact
 				_commit()
 			return True

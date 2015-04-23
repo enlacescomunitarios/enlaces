@@ -41,6 +41,13 @@ $(function(){
 	$('.death').on({
 		click:function(e){
 			e.preventDefault();
+			location.href='/controles/neo_defuncion?id_rcn='+o_key.id_rcn;
+		}
+	});
+	$('.confirmDeath').on({
+		click:function(e){
+			e.preventDefault();
+			location.href='/controles/neo_confirmDef?id_def='+o_key.id_def;
 		}
 	});
 	$('#custom').customPaginator({height:'auto'});

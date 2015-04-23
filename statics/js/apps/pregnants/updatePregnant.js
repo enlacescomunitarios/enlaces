@@ -100,7 +100,7 @@ $(function(){
 	$('input[name=telf]').on({
 		blur:function(e){
 			var o_telf = $(this), o_val = $(this).val();
-			if(pregnant_telf != +o_val && o_val.length==8){
+			if(pregnant_telf != +o_val && o_val.length==8 && o_val.match(o_telf.data('pattern'))){
 				if(o_val != contact_telf){
 					$.post(
 						'/personas/v_telf',
@@ -114,7 +114,6 @@ $(function(){
 									text: 'El nro. '+o_val+', está registrado!.\nPor favor use otro.',
 									type: 'error',
 									confirmButtonText: 'Continuar',
-									closeOnConfirm: false
 								});
 							}
 						}
@@ -126,10 +125,23 @@ $(function(){
 		}
 	});
 	$('input[name=c_telf]').on({
-		blur:function(e){
+		keyup:function(e){
 			var o_telf = $(this), o_val = o_telf.val();
-			if(o_val.length==8 && o_val!=contact_telf){
+			if(o_val.length==8 && o_val!=contact_telf && o_val.match(o_telf.data('pattern'))){
 				if(o_val!=pregnant_telf){
+					swal({
+						title: 'Advertencia!',
+						text: 'Desea cambiar de contacto?',
+						type: 'warning',
+						showCancelButton: true,
+						cancelButtonText: "Cancelar",
+						//confirmButtonColor: "#d9534f",
+						confirmButtonText: "Cambiar",
+						closeOnConfirm: true
+					}, function(){
+						$('input[name=C_id_per]').disable();
+						$('input[name=c_nombres], input[name=c_apellidos]').val('');
+					});
 					$.post(
 						'/personas/v_telf',
 						data = {'_xsrf':$('input[name=_xsrf]').val(), 'telf':o_val},
@@ -152,11 +164,21 @@ $(function(){
 					);
 				} else{
 					$('form').find('.optional').show().end().find('.contact-name').text('Contacto');
-					o_telf.val(contact_telf).focus().closest('.form-group').removeClass('has-success has-error').find('span').removeClass('fa-check fa-time');
+					o_telf.val(contact_telf).focus().closest('.form-group').removeClass('has-success has-error').find('span').removeClass('fa-check fa-times');
+					swal({
+						title: 'Error!',
+						text: 'El nro. de contacto, no puede ser igual al de la embarazada!.\nPor favor elija otro.',
+						type: 'error',
+						confirmButtonText: 'Continuar',
+					});
 				}
 			} else{
-				$('form').find('.optional').show().end().find('.contact-name').text('Contacto');
-				o_telf.val(contact_telf).closest('.form-group').removeClass('has-success has-error').find('span').removeClass('fa-check fa-time');
+				if(o_val.length==8){
+					$('form').find('.optional').show().end().find('.contact-name').text('Contacto');
+					o_telf.val(contact_telf).closest('.form-group').removeClass('has-success has-error').find('span').removeClass('fa-check fa-times');
+				} else{
+					o_telf.closest('.form-group').removeClass('has-success').addClass('has-error').find('span').removeClass('fa-check').addClass('fa-times');
+				}
 			}
 		}
 	});
@@ -176,7 +198,6 @@ $(function(){
 								text: 'El CI: '+ci_val+', está registrado!.\nPor favor use otro.',
 								type: 'error',
 								confirmButtonText: 'Continuar',
-								closeOnConfirm: false
 							});
 						} else{
 							o_ci.closest('.form-group').removeClass("has-error").addClass("has-success").find('span').removeClass('fa-times').addClass('fa fa-check');

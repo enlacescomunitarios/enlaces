@@ -2,7 +2,7 @@
 from __future__ import absolute_import
 from ..tools import (route, BaseHandler, cdict, to_ddmmyy)
 from pony.orm import (db_session, commit, select)
-from ..entities import (Embarazo, Recien_Nacido, Control)
+from ..entities import (Embarazo, Recien_Nacido, Control, Defuncion)
 from ..criterias import (controlsCrt, pregnancy_status, childrensCrt)
 from json import dumps
 
@@ -59,3 +59,29 @@ class ModificarNeo(BaseHandler):
 	def post(self):
 		self.set_header('Content-type', 'application/json')
 		self.write(dumps(childrensCrt.update(**self.form2Dict())))
+
+@route('/controles/neo_defuncion')
+class NeoDefuncion(BaseHandler):
+	@db_session
+	def get(self):
+		neo = Recien_Nacido.get(**self.form2Dict())
+		self.render('controles/neo_defuncion.html', neo=neo)
+	def post(self):
+		self.set_header('Content-type', 'application/json')
+		self.write(dumps(childrensCrt.death(**self.form2Dict())))
+
+@route('/controles/neo_confirmDef')
+class NeoConfirmarDef(BaseHandler):
+	@db_session
+	def get(self):
+		death = Defuncion.get(**self.form2Dict())
+		self.render('controles/neo_confirmDef.html', death=death, to_ddmmyy=to_ddmmyy)
+	def post(self):
+		self.set_header('Content-type', 'application/json')
+		self.write(dumps(childrensCrt.confirm_death(**self.form2Dict())))
+
+@route('/controles/eliminar_defuncion')
+class NeoEliminarDef(BaseHandler):
+	def post(self):
+		self.set_header('Content-type', 'application/json')
+		self.write(dumps(childrensCrt.delete_death(**self.form2Dict())))

@@ -100,7 +100,7 @@ $(function(){
 	//$('.contact-form').html('');
 	//$('#delContact').disable();
 	$('#inputTelf').on({
-		blur:function(e){
+		'keyup':function(e){
 			var preg_telf = $(this), o_val = $(this).val(), chk_ptrn = $(this).data('pattern');
 			$('form').find('.prg-name').text('Nueva Embarazada').end().find('.contact-name').text('Contacto');
 			$('.contact-form').html('').html(contacForm.html()).find('#inputId_etnc').html($('#inputId_etn').html());
@@ -142,7 +142,6 @@ $(function(){
 							text: cell_flag.p_data!=null?(cell_flag.p_data+'.\nEstá registrado con el nro. '+o_val):'',
 							type:'error',
 							confirmButtonText: "Continuar",
-							closeOnConfirm: false
 						});
 					}
 				} else{
@@ -154,7 +153,7 @@ $(function(){
 	$('input[name=ci]').on({
 		blur:function(e){
 			var o_ci = $(this), o_val = o_ci.val();
-			if(o_val.length>6 && o_val.length<9){
+			if(o_val.length>6 && o_val.length<9 && o_val.match(o_ci.data('pattern'))){
 				$.post(
 					'/personas/v_ci',
 					data = {'_xsrf':getCookie('_xsrf'),'ci':o_val},
@@ -166,7 +165,6 @@ $(function(){
 								text: '"'+o_val+'", se encuentra registrado!.\nPor favor elija otro.',
 								type: 'error',
 								confirmButtonText: "Continuar",
-								closeOnConfirm: false
 							});
 						} else{
 							o_ci.closest('.form-group').removeClass("has-error").addClass("has-success");
@@ -174,7 +172,11 @@ $(function(){
 					}
 				);
 			} else{
-				o_ci.val('').closest('.form-group').removeClass("has-success has-error");
+				if(o_val.length){
+					o_ci.closest('.form-group').removeClass("has-success").addClass('has-error');
+				} else{
+					o_ci.closest('.form-group').removeClass("has-success has-error");
+				}
 			}
 		}
 	});
@@ -191,7 +193,7 @@ $(function(){
 		$(this).attr('id','addContact').removeClass('btn-danger').addClass('btn-info');
 	});
 	*/
-	$('form').on('blur', '#inputTelfc', function(e){
+	$('form').on('keyup', '#inputTelfc', function(e){
 		var o_val = $(this).val(), chk_ptrn = $(this).data('pattern'), o_ctelf = $(this), prg_cell = $('#inputTelf').val();
 		if(o_val.match(chk_ptrn)!=null && o_val!=prg_cell){
 			if(check_contactphone(o_val)==false){
@@ -212,8 +214,18 @@ $(function(){
 			}
 		} else{
 			//o_ctelf.focus();
-			o_ctelf.val('').closest('.form-group').removeClass("has-success").addClass("has-error").find('span').removeClass('fa-check').addClass('fa-times');
-			$('form').find('.optional').enable().find(':input').enable().end().show().end().find('.contact-name').text('Contacto');
+			if(o_val.length==8 && o_val==prg_cell){
+				o_ctelf.val('').closest('.form-group').removeClass("has-success").addClass("has-error").find('span').removeClass('fa-check').addClass('fa-times');
+				$('form').find('.optional').enable().find(':input').enable().end().show().end().find('.contact-name').text('Contacto');
+				swal({
+					title: 'Error!',
+					text: 'El nro. de contacto, no debe ser igual al de la embaraza!.\nPor favor elija otro.',
+					type: 'error',
+					confirmButtonText: "Continuar",
+				});
+			} else{
+				o_ctelf.closest('.form-group').removeClass("has-success").addClass("has-error").find('span').removeClass('fa-check').addClass('fa-times');
+			}
 		}
 	});
 	$('form').on('change', 'select', function(e){

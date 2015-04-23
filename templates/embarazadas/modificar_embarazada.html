@@ -84,19 +84,20 @@
 		</div>
 		<div class="right-side">
 			<legend class="contact-name">Contacto</legend>
+			<input type="hidden" name="c_id_per" value="{{pr.contacto.id_per}}" readonly>
 			<fieldset class="form-group has-feedback">
 				<label>Celular:</label>
 				<input type="text" name="c_telf" value="{{pr.contacto.telf if pr.contacto else ''}}" class="form-control input-sm only_cell_phone" required>
 				<span class="form-control-feedback"></span>
 			</fieldset>
 			<div class="row">
-				<fieldset class="form-group col-sm-6 optional" disabled>
+				<fieldset class="form-group col-sm-6 optional">
 					<label>Nombre(s):</label>
-					<label class="form-control input-sm">{% if pr.contacto %}{{pr.contacto.nombres}}{% end %}</label>
+					<input type="text" name="c_nombres" value="{{pr.contacto.nombres}}" class="form-control input-sm only_p_names" required>
 				</fieldset>
-				<fieldset class="form-group has-feedback col-sm-6 optional" disabled>
+				<fieldset class="form-group has-feedback col-sm-6 optional">
 					<label>Apellido(s):</label>
-					<label class="form-control input-sm">{% if pr.contacto %}{{pr.contacto.apellidos}}{% end %}</label>
+					<input type="text" name="c_apellidos" value="{{pr.contacto.apellidos}}" class="form-control input-sm only_p_lastnames" required>
 				</fieldset>
 			</div>
 		</div>
