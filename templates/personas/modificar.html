@@ -82,7 +82,7 @@
 		</fieldset>
 		<fieldset class="form-group has-feedback col-sm-6">
 			<label>Celular:</label>
-			<input type="text" name="telf" value="{{pr.telf or ''}}" class="form-control input-sm only_cell_phone">
+			<input type="text" name="telf" value="{{pr.telf or ''}}" class="form-control input-sm only_cell_phone"{% if pr.tipos.select().first().id_tip==2%}required{% end %}>
 			<span class="form-control-feedback"></span>
 		</fieldset>
 	</div>
