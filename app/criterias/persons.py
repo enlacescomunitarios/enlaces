@@ -1,6 +1,7 @@
 #-*- coding: utf-8 -*-
 from __future__ import absolute_import
-from pony.orm import (db_session as _db_session, select as _select)
+from ..tools import getLocals
+from pony.orm import (db_session as _db_session, select as _select, commit as _commit)
 from ..entities import (Persona as _Persona,)
 
 class PersonCriteria:
@@ -20,3 +21,15 @@ class PersonCriteria:
 		except Exception, e:
 			#raise e
 			False
+	@classmethod
+	def update(self, id_per, nombres, apellidos, telf, sexo):
+		form = getLocals(locals())
+		try:
+			with _db_session:
+				pr = _Persona.get(id_per=id_per); del form.id_per
+				pr.set(**form)
+				_commit()
+			return True
+		except Exception, e:
+			raise e
+			return False

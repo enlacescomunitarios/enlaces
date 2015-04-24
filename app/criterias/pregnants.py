@@ -92,7 +92,7 @@ class PregnantCriteria:
 			#raise e
 			return False
 	@classmethod
-	def update(self, id_per, telf, nombres, apellidos, id_com, id_etn, f_nac, ci, c_telf, c_nombres, c_apellidos, c_id_per=None):
+	def update(self, id_per, telf, nombres, apellidos, id_com, id_etn, f_nac, ci, c_telf, c_sexo, c_nombres=None, c_apellidos=None, c_id_per=None):
 		f_nac = _to_yymmdd(f_nac); activo = True
 		preg_form = dict([(k,v) for k,v in locals().iteritems() if not(k.startswith('_') or k.startswith('c_') or k.startswith('self') or k in ['id_com','id_etn','id_per'])])
 		try:
@@ -101,16 +101,28 @@ class PregnantCriteria:
 				etn = _Etnia.get(id_etn=id_etn)
 				pregnant = _Persona.get(id_per=id_per)
 				pregnant.set(comunidad=com, etnia=etn,**preg_form)
-				if c_id_per is not None:
-					pregnant.contacto.set(telf=c_telf, nombres=c_nombres, apellidos=c_apellidos)
+				if not(c_id_per is None):
+					contact = _Persona.get(id_per=c_id_per)
+					contact.set(sexo=c_sexo); _flush()
+					if c_nombres is None:
+						pregnant.contacto = contact; _flush()
+					else:
+						tmp = self.get_byCellphone(c_telf)
+						if tmp:
+							assert(tmp.id_per==pregnant.contacto.id_per)
+						contact.set(telf=c_telf, nombres=c_nombres, apellidos=c_apellidos); _flush()
+						pregnant.contacto = contact; _flush()
 				else:
-					contact = _Persona(telf=c_telf, nombres=c_nombres, apellidos=c_apellidos)
+					contact = _Persona(telf=c_telf, nombres=c_nombres, apellidos=c_apellidos, sexo=c_sexo, tipos=[_Tipo.get(id_tip=2)])
 					pregnant.contacto = contact
 				_commit()
 			return True
 		except Exception, e:
 			#raise e
 			return False
+	@classmethod
+	def get_byCellphone(self, telf):
+		return _Persona.get(telf=telf)
 	@classmethod
 	def death(self, id_per, fecha, f_notf, obs_notf, f_conf=None, obs_conf=None):
 		f_death = lambda: dict(fecha=_to_yymmdd(fecha), f_notf=_to_yymmdd(f_notf), obs_notf=obs_notf.upper()) if f_conf is None else dict(fecha=_to_yymmdd(fecha), f_notf=_to_yymmdd(f_notf), obs_notf=obs_notf.upper(), f_conf=_to_yymmdd(f_conf), obs_conf=obs_conf.upper())

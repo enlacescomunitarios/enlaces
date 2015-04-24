@@ -40,7 +40,7 @@
 	 			//sScrollX: 599,
 	 			/*pagingType:'simple_numbers',//'full_numbers'*/
 	 			pagingType: 'full_numbers',
-	 			sort: false,
+	 			sort: true,
 	 			//lengthMenu: arguments.length==0?optFields():optFields(start,stop,step),
 	 			lengthMenu: (arguments.length && 'range' in config && config.range.length)?optFields(config.range):optFields(),
 	 			language:{

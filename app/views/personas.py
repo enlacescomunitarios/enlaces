@@ -10,7 +10,7 @@ from json import (dumps,)
 class Gestion_Personas(BaseHandler):
 	@db_session
 	def get(self):
-		personas = select(pr for pr in Persona).order_by(lambda pr: (pr.nombres, pr.apellidos))
+		personas = select(pr for pr in Persona if not pr.usuario).order_by(lambda pr: (pr.nombres, pr.apellidos))
 		self.render('personas/gestion.html', personas=personas, to_ddmmyy=to_ddmmyy)
 
 @route('/personas/modificar')
@@ -18,17 +18,10 @@ class Modificar_Persona(BaseHandler):
 	@db_session
 	def get(self):
 		pr = Persona.get(**self.form2Dict())
-		f_comunidad = lambda: dict(id_com=pr.comunidad.id_com, id_mup=pr.comunidad.municipio.id_mup, id_red=pr.comunidad.municipio.red_salud.id_red) if pr.comunidad else {'id_con':None}
-		checkfields = dumps(dict(is_pregnant=find_pregnant(pr), **f_comunidad()))
-		self.render('personas/modificar.html', pr=pr, checkfields=checkfields)
+		self.render('personas/modificar.html', pr=pr)
 	def post(self):
-		form = self.form2Dict()
-		with db_session:
-			pr = Persona.get(id_per=form.id_per)
-			if pr:
-				del form.id_per; form.activo = True
-				pr.set(**form); commit()
-		self.redirect('/personas/gestion')
+		self.set_header('Content-type', 'application/json')
+		self.write(dumps(personsCrt.update(**self.form2Dict())))
 
 @route('/personas/v_telf')
 class V_Telf(BaseHandler):
@@ -64,7 +57,7 @@ class GetbyCellphone(BaseHandler):
 		with db_session:
 			pr = Persona.get(**self.form2Dict())
 			if pr:
-				tmp = dict(persona=pr.__str__())
+				tmp = dict(persona=pr.__str__(), id_per=pr.id_per, sexo=pr.sexo, nombres=pr.nombres, apellidos=pr.apellidos)
 		self.write(dumps(tmp))
 
 @route('/personas/v_ci')

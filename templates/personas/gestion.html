@@ -10,6 +10,12 @@
 	});
 </script>
 {% end %}
+{% block breadcrumbs %}
+<ul id="breadcrumbs" class="breadcrumb">
+	<li><a href="/">Inicio</a></li>
+	<li class="active">Personas</li>
+</ul>
+{% end %}
 {% block left-content %}
 <div class="fix-table">
 	<table id="custom" class="table table-striped table-hover table-bordered table-condensed" width="99.8%" cellspacing="0">
@@ -18,25 +24,25 @@
 				<th colspan="7" class="text-center">Personas</th>
 			</tr>
 			<tr>
-				<th>#</th>
 				<th>Nombres y Apellidos</th>
 				<th>Celular</th>
+				<th>CI</th>
 				<th>Sexo</th>
 				<th>Tipo</th>
-				<th>Estado</th>
 				<th>Defunción</th>
+				<th>Estado</th>
 			</tr>
 		</thead>
 		<tbody>
-			{% for i,pr in enumerate(personas) %}
+			{% for pr in personas %}
 			<tr>
-				<td>{{i+1}}</td>
 				<td><a href="/personas/modificar?id_per={{pr.id_per}}">{{pr}}</a></td>
 				<td>{{pr.telf or ''}}</td>
+				<td>{{pr.ci or ''}}</td>
 				<td>{% if pr.sexo=='f' %}Femenino{% else %}Masculino{% end %}</td>
-				<td>{% if pr.usuario %}Usuario{% end %}</td>
-				<td>{% if pr.activo %}Activo{% else %}Eliminado{% end %}</td>
+				<td>{{pr.tipos.select().first() if pr.tipos.count()>0 else ''}}</td>
 				<td>{% if pr.defuncion %}{{to_ddmmyy(pr.defuncion.f_conf)}}{% end %}</td>
+				<td>{% if pr.activo and not pr.defuncion %}Habilitado{% else %}Inhabilitado{% end %}</td>
 			</tr>
 			{% end %}
 		</tbody>

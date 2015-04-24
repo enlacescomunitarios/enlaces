@@ -39,6 +39,8 @@
 				<dd>{{pr.contacto if pr.contacto else ''}}</dd>
 				<dt>Celular:</dt>
 				<dd>{{'{}'.format(pr.contacto.telf or '' if pr.contacto else '')}}</dd>
+				<dt>Sexo:</dt>
+				<dd>{{'Femenino' if pr.contacto.sexo=='f' else 'Masculino'}}</dd>
 			</dl>
 		</div>
 	</div>

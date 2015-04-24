@@ -96,7 +96,8 @@ $(function(){
 	} else{
 		$('.locations').disable().hide();
 	}
-	var pregnant_telf = +$('input[name=telf]').val(), contact_telf = $('input[name=c_telf]').val(), current_ci = $('input[name=ci]').val();
+	var pregnant_telf = +$('input[name=telf]').val(), contact_telf = $('input[name=c_telf]').val(), current_ci = $('input[name=ci]').val(),
+		c_id_per = $('input[name=c_id_per]').val(), c_names = $('input[name=c_nombres]').val(), c_lastnames = $('input[name=c_apellidos]').val(), c_sexo = $('select[name=c_sexo]').val();
 	$('input[name=telf]').on({
 		blur:function(e){
 			var o_telf = $(this), o_val = $(this).val();
@@ -127,8 +128,10 @@ $(function(){
 	$('input[name=c_telf]').on({
 		keyup:function(e){
 			var o_telf = $(this), o_val = o_telf.val();
+			$('input[name=c_id_per]').enable().val(c_id_per);
 			if(o_val.length==8 && o_val!=contact_telf && o_val.match(o_telf.data('pattern'))){
 				if(o_val!=pregnant_telf){
+					$('form').find('.optional').enable().show();
 					swal({
 						title: 'Advertencia!',
 						text: 'Desea cambiar de contacto?',
@@ -139,31 +142,39 @@ $(function(){
 						confirmButtonText: "Cambiar",
 						closeOnConfirm: true
 					}, function(){
-						$('input[name=C_id_per]').disable();
-						$('input[name=c_nombres], input[name=c_apellidos]').val('');
-					});
-					$.post(
-						'/personas/v_telf',
-						data = {'_xsrf':$('input[name=_xsrf]').val(), 'telf':o_val},
-						function(response){
-							//console.log(response);
-							if(response){
-								$('form').find('.optional').show().end().find('.contact-name').text('Contacto');
-								//o_telf.val(contact_telf).focus().closest('.form-group').removeClass('has-success has-error');
-								$.post(
-									'/personas/getbycellphone',
-									data = {'_xsrf':getCookie('_xsrf'),'telf':o_val},
-									function(response){
-										if(response){
-											$('form').find('.optional').hide().end().find('.contact-name').text(response.persona);
+						$('form').find('.optional').show().end().find('.contact-name').text('Contacto');
+						$.post(
+							'/personas/v_telf',
+							data = {'_xsrf':$('input[name=_xsrf]').val(), 'telf':o_val},
+							function(response){
+								//console.log(response);
+								if(response){
+									//o_telf.val(contact_telf).focus().closest('.form-group').removeClass('has-success has-error');
+									$.post(
+										'/personas/getbycellphone',
+										data = {'_xsrf':getCookie('_xsrf'),'telf':o_val},
+										function(contact){
+											c_id_per = contact.id_per;
+											c_names = contact.nombres;
+											c_lastnames = contact.apellidos;
+											$('input[name=c_nombres]').val(contact.nombres);
+											$('input[name=c_apellidos]').val(contact.apellidos);
+											$('input[name=c_id_per]').enable().val(contact.id_per);
+											$('form').find('.optional').disable().hide().end().find('.contact-name').text(contact.persona);
+											$('select[name=c_sexo]').find('option:selected').removeAttr('selected').end().find('option[value="'+contact.sexo+'"]').attr('selected',true).select();
 										}
-									}
-								);
+									);
+								} else{
+									$('input[name=c_id_per]').disable();
+									$('form').find('.optional').enable().show();
+									$('input[name=c_nombres], input[name=c_apellidos]').val('');
+									$('select[name=c_sexo]').find('option:selected').removeAttr('selected').end().find('option[value="-1"]').attr('selected',true).select();
+								}
 							}
-						}
-					);
+						);
+					});
 				} else{
-					$('form').find('.optional').show().end().find('.contact-name').text('Contacto');
+					$('form').find('.optional').enable().show().end().find('.contact-name').text('Contacto');
 					o_telf.val(contact_telf).focus().closest('.form-group').removeClass('has-success has-error').find('span').removeClass('fa-check fa-times');
 					swal({
 						title: 'Error!',
@@ -174,8 +185,12 @@ $(function(){
 				}
 			} else{
 				if(o_val.length==8){
-					$('form').find('.optional').show().end().find('.contact-name').text('Contacto');
 					o_telf.val(contact_telf).closest('.form-group').removeClass('has-success has-error').find('span').removeClass('fa-check fa-times');
+					$('input[name=c_id_per]').enable();
+					$('form').find('.optional').enable().show().end().find('.contact-name').text('Contacto');
+					$('input[name=c_nombres]').val(c_names);
+					$('input[name=c_apellidos]').val(c_lastnames);
+					$('select[name=c_sexo]').find('option:selected').removeAttr('selected').end().find('option[value="'+c_sexo+'"]').attr('selected',true).select();
 				} else{
 					o_telf.closest('.form-group').removeClass('has-success').addClass('has-error').find('span').removeClass('fa-check').addClass('fa-times');
 				}
@@ -221,6 +236,23 @@ $(function(){
 						location.href='/embarazos/gestion?id_per='+$('input[name=id_per]').val();
 					} else{
 						btn_submit.enable().show();
+						var o_telf = $('input[name=c_telf]');
+						$.post(
+							'/personas/v_telf',
+							data = {'_xsrf':$('input[name=_xsrf]').val(), 'telf':o_telf.val()},
+							function(response){
+								if(response){
+									swal({
+										title: 'Error!',
+										text: 'El nro. '+o_telf.val()+', está registrado!.\nPor favor elija otro.',
+										type: 'error',
+										confirmButtonText: 'Continuar',
+										closeOnConfirm: true,
+									});
+									o_telf.val(contact_telf);
+								}
+							}
+						);
 					}
 				}
 			);
