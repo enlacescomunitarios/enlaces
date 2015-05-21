@@ -30,7 +30,7 @@ class PreNatal(object):
 		if week>0:
 			weeks += [(4, week, self.fix_ctrlday(week))]
 			for i in range(4,1,-1):
-				week -= (PreNatal.weeks_ctrls[i-1] - PreNatal.weeks_ctrls[i-2])
+				week -= (self.weeks_ctrls[i-1] - self.weeks_ctrls[i-2])
 				if week > 0:
 					weeks += [(i-1, week, self.fix_ctrlday(week))]
 				else:
@@ -43,7 +43,7 @@ class PreNatal(object):
 class PostNatal(object):
 	days_ctrls = [3,7,20,28]
 	def __init__(self, y,m,d):
-		self.days_calc = lambda: [_fix_ctrlday(_date(y,m,d) + _timedelta(days=i)) for i in PostNatal.days_ctrls]
+		self.days_calc = lambda: [_fix_ctrlday(_date(y,m,d) + _timedelta(days=i)) for i in self.days_ctrls]
 		super(PostNatal, self).__init__()
 	def controls_date(self):
 		controls = [(cn+1,dt) for cn,dt in enumerate(self.days_calc()) if _utc.now().date()<dt]
@@ -53,20 +53,20 @@ class PostNatal(object):
 class PrePromotional(object):
 	weeks_ctrls = [9,15,20,25,30,35]
 	def __init__(self, y,m,d):
-		self.weeks_calc = lambda: [(i, _fix_ctrlday(_date(y,m,d) + _timedelta(weeks=i))) for i in PrePromotional.weeks_ctrls]
+		self.weeks_calc = lambda: [_fix_ctrlday(_date(y,m,d) + _timedelta(weeks=i)) for i in self.weeks_ctrls]
 		super(PrePromotional, self).__init__()
 	def controls_date(self):
-		controls = [(w,dt) for w,dt in self.weeks_calc() if _utc.now().date()<dt]
+		controls = [(cn+1,dt) for cn,dt in enumerate(self.weeks_calc()) if _utc.now().date()<dt]
 		assert(len(controls))
 		return controls
 
 class PostPromotional(object):
 	days_ctrls = [3,7,20,28]
 	def __init__(self, y,m,d):
-		self.days_calc = lambda: [(i, _fix_ctrlday(_date(y,m,d) + _timedelta(days=i))) for i in PostPromotional.days_ctrls]
+		self.days_calc = lambda: [_fix_ctrlday(_date(y,m,d) + _timedelta(days=i)) for i in PostPromotional.days_ctrls]
 		super(PostPromotional, self).__init__()
 	def controls_date(self):
-		controls = [(d,dt) for d, dt in self.days_calc() if _utc.now().date()<dt]
+		controls = [(cn+1,dt) for cn,dt in enumerate(self.days_calc()) if _utc.now().date()<dt]
 		assert(len(controls))
 		return controls
 

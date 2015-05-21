@@ -8,7 +8,7 @@
 {% block breadcrumbs %}
 <ul id="breadcrumbs" class="breadcrumb">
 	<li><a href="/">Inicio</a></li>
-	<li><a href="#" class="back">Naciones Indígenas</a></li>
+	<li><a href="#" class="back">Pertenencia Étnica</a></li>
 	<li class="active">{{et.nombre}}</li>
 </ul>
 {% end %}
@@ -16,7 +16,7 @@
 <form>
 	{% module xsrf_form_html() %}
 	<input type="hidden" name="id_etn" value="{{et.id_etn}}" readonly>
-	<legend>Modificar Nación Indígena</legend>
+	<legend>Modificar Pertenencia Étnica</legend>
 	<div class="form-group has-feedback">
 		<label for="inputNombre">Nombre:</label>
 		<input type="text" name="nombre" value="{{et.nombre}}" id="inputNombre" class="form-control input-sm only_g_names" required>

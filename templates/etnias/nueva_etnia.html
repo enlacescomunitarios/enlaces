@@ -8,14 +8,14 @@
 {% block breadcrumbs %}
 <ul id="breadcrumbs" class="breadcrumb">
 	<li><a href="/">Inicio</a></li>
-	<li><a href="#" class="back">Naciones Indígenas</a></li>
-	<li class="active">Nueva Nación Indígena</li>
+	<li><a href="#" class="back">Pertenencia Étnica</a></li>
+	<li class="active">Nueva Etnia</li>
 </ul>
 {% end %}
 {% block left-content %}
 <form>
 	{% module xsrf_form_html() %}
-	<legend>Nueva Nación Indígena</legend>
+	<legend>Nueva Etnia</legend>
 	<div class="form-group has-feedback">
 		<label for="inputNombre">Nombre:</label>
 		<input type="text" name="nombre" id="inputNombre" class="form-control input-sm only_g_names" required>

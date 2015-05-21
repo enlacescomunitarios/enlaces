@@ -1,1 +1,1 @@
-web: python server.py --localdb=false
+web: python server.py --debug=false --localdb=false
