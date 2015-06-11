@@ -22,6 +22,9 @@ class PersonCriteria:
 			#raise e
 			False
 	@classmethod
+	def get_byId(self, id_per):
+		return _Persona.get(id_per=id_per)
+	@classmethod
 	def update(self, id_per, nombres, apellidos, telf, sexo):
 		form = getLocals(locals())
 		try:
@@ -33,3 +36,6 @@ class PersonCriteria:
 		except Exception, e:
 			raise e
 			return False
+	@classmethod
+	def get_All(self, status=True):
+		return _select(pr for pr in _Persona if pr.activo==status and not pr.defuncion).order_by(lambda pr: (pr.nombres, pr.apellidos))

@@ -101,5 +101,5 @@
  			location.href='/comunidades/modificar_comunidad?id_com='+o_key.com;
  		}
  	});
- 	$('#custom').customPaginator({height:'auto'});
+ 	$('#custom').customPaginator();
  });

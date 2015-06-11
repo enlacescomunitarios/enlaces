@@ -60,6 +60,6 @@ $(function(){
 			});
 		}
 	});
-	$('#custom').customPaginator({height:'auto',range:[3,5]});
-	$('#neo-natos').customPaginator({height:'auto',range:[3,5]});
+	$('#custom, #neo-natos').customPaginator({range:[3,5]});
+	//$('#neo-natos').customPaginator({height:'auto',range:[3,5]});
 });

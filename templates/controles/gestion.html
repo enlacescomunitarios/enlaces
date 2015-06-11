@@ -21,12 +21,19 @@
 			<dl class="dl-horizontal">
 				<dt>Embarazada:</dt>
 				<dd>{{pr}}</dd>
-				<dt>Parto Probable:</dt>
-				<dd>{{to_ddmmyy(em.parto_prob)}}</dd>
-				<dt>Parto Institucional:</dt>
-				<dd>{{'{}'.format(to_ddmmyy(em.parto_inst) if em.parto_inst else '')}}</dd>
 				<dt>Estado:</dt>
 				<dd>{{pregnancy_status(em)[1]}}</dd>
+				{% if not em.parto_inst %}
+				<dt>Parto Probable:</dt>
+				<dd>{{to_ddmmyy(em.parto_prob)}}</dd>
+				{% else %}
+				<dt>Fecha de Parto:</dt>
+				<dd>{{'{}'.format(to_ddmmyy(em.parto_inst) if em.parto_inst else '')}}</dd>
+				<dt>Tipo de Parto:</dt>
+				<dd>{% if em.tipo==1 %}Institucional{% else %}Domiciliario{% end %}</dd>
+				<dt>Lugar:</dt>
+				<dd>{{em.embarazada.comunidad}}</dd>
+				{% end %}
 			</dl>
 		</div>
 	</div>

@@ -1,3 +1,5 @@
 # General
 *.pyc
 *.bat
+*.mp3
+*.wav

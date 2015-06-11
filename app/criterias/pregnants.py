@@ -5,6 +5,8 @@ from ..tools import (to_date as _to_date, to_yymmdd as _to_yymmdd, PreNatal as _
 from pony.orm import (db_session as _db_session, commit as _commit, flush as _flush, desc as _desc, select as _select, count as _count)
 from ..entities import (Comunidad as _Comunidad, Tipo as _Tipo, Etnia as _Etnia, Persona as _Persona, Embarazo as _Embarazo, Control as _Control, Defuncion as _Defuncion, Usuario as _Usuario)
 from .controls import ControlsCriteria as _controlsCrt
+from .agendas import AgendasCriteria as _agendasCrt
+from .messages import MessagesCriteria as _messagesCrt
 
 def pregnant_status(pregnant):
 	prg = PregnantCriteria.current_pregnancy(pregnant.id_per)
@@ -75,6 +77,9 @@ class PregnantCriteria:
 				embarazo = _Embarazo(embarazada=em, parto_prob=form.parto_prob, usuario=usuario)
 				embarazo.controles += [_Control(embarazo=embarazo, nro_con=ctrl[0], fecha_con=ctrl[2]) for ctrl in ctrls.controls_dates()[::-1]]
 				_flush()
+				for cn in embarazo.controles:
+					msg = _messagesCrt.get_byNumbControl(cn.nro_con)
+					_agendasCrt.save(persona=em, mensaje=msg, fecha_con=cn.fecha_con)
 				if check_contact()==1:
 					contacto = _Persona.get(telf=form.c_telf)
 					contacto.embarazadas += [em]
@@ -90,6 +95,7 @@ class PregnantCriteria:
 			return True
 		except Exception, e:
 			#raise e
+			print e
 			return False
 	@classmethod
 	def update(self, id_per, telf, nombres, apellidos, id_com, id_etn, f_nac, ci, c_telf, c_sexo, c_nombres=None, c_apellidos=None, c_id_per=None):
@@ -133,6 +139,8 @@ class PregnantCriteria:
 					#em.telf = None; em.contacto = None
 					if not em.embarazadas.is_empty():
 						em.embarazadas.clear()
+					if not em.agendas.is_empty():
+						_agendasCrt.delete_agendas(em)
 				death = _Defuncion(embarazada=em, **f_death())
 				c_prg = self.current_pregnancy(id_per)
 				if c_prg:
@@ -155,6 +163,8 @@ class PregnantCriteria:
 					death.embarazada.embarazadas.clear()
 				if death.embarazo:
 					_controlsCrt.delete_controls(death.embarazo)
+				if not death.embarazada.agendas.is_empty():
+					_agendasCrt.delete_agendas(death.embarazada)
 				_commit()
 			return True
 		except Exception, e:
@@ -177,6 +187,8 @@ class PregnantCriteria:
 			with _db_session:
 				pr = _Persona.get(id_per=id_per)
 				pr.activo = False
+				if not pr.agendas.is_empty():
+					_agendasCrt.delete_agendas(pr)
 				_commit()
 			return False
 		except Exception, e:

@@ -5,7 +5,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Telesalud</title>
+		<title>Enlaces</title>
 		<link href="{{ static_url("css/bootstrap.min.css") }}" rel="stylesheet" media="all">
 		<link href="{{ static_url("css/custom.min.css") }}" rel="stylesheet" media="all">
 		<!--[if lt IE 9]>
@@ -41,7 +41,7 @@
 					<span class="icon-bar"></span>
 				</button>
 				{% end %}
-				<a href='/' class="navbar-brand">TeleSalud</a>
+				<a href='/' class="navbar-brand projname"><i class="fa fa-users"></i>&nbsp;Enlaces</a>
 			</div>
 			<div class="navbar-collapse collapse navbar-ex1-collapse">
 				{% block menu %}
@@ -49,17 +49,24 @@
 					{% if current_user and current_user.rol in [u'Administrador',u'Op. de Registro'] %}
 					<li class="pregnant-menu"><a href="/embarazadas/gestion"><i class="fa fa-female"></i>&nbsp;Embarazadas</a></li>
 					<li class="report-menu"><a href="#"><i class="fa fa-line-chart"></i>&nbsp;Reportes</a></li>
-					<li class="message-menu"><a href="/mensajes/gestion"><i class="fa fa-envelope"></i>&nbsp;Mensajes</a></li>
+					<li class="dropdown message-menu">
+						<a href="#" data-toggle="dropdown" class="dropdown-toggle"><i class="fa fa-envelope"></i>&nbsp;Mensajes&nbsp;<b class="caret"></b></a>
+						<ul class="dropdown-menu" rol="menu">
+							<li class="sms-catalog"><a href="/mensajes/gestion"><i class="fa fa-file-text"></i>&nbsp;Catálogo</a></li>
+							<li class="sms-agenda"><a href="/mensajes/agendas"><i class="fa fa-book"></i>&nbsp;Agenda</a></li>
+							<li class="sms-flash"><a href="/mensajes/sendsms"><i class="fa fa-paper-plane"></i>&nbsp;Instantáneos</a></li>
+						</ul>
+					</li>
 					{% end %}
 					{% if current_user and current_user.rol==u'Administrador' %}
 					<li class="dropdown manager-menu">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Administración&nbsp;<b class="caret"></b></a>
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog"></i>&nbsp;Administración&nbsp;<b class="caret"></b></a>
 						<ul class="dropdown-menu" rol="menu">
 							<li class="type-sub"><a href="/tipos/gestion"><i class="fa fa-child"></i>&nbsp;Tipos de Persona</a></li>
 							<li class="capability-sub"><a href="/prestaciones/gestion"><i class="fa fa-ambulance"></i>&nbsp;Tipos de prestaciones</a></li>
 							<li class="ethnic-sub"><a href="/etnias/gestion"><i class="fa fa-flag"></i>&nbsp;Pertencia Étnica</a></li>
 							<li class="health-sub"><a href="/redes_salud/gestion"><i class="fa fa-sitemap"></i>&nbsp;Redes de Salud</a></li>
-							<li class="user-sub"><a href="/usuarios/gestion"><i class="fa fa-users"></i>&nbsp;Usuarios</a></li>
+							<li class="user-sub"><a href="/usuarios/gestion"><i class="fa fa-user"></i>&nbsp;Usuarios</a></li>
 						</ul>
 					</li>
 					{% end %}
@@ -71,7 +78,7 @@
 					<li class="dropdown user-menu">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" title="{{current_user.persona}}"><i class="fa fa-smile-o"></i>&nbsp;{{current_user.login}}&nbsp;<b class="caret"></b>&nbsp;</a>
 						<ul class="dropdown-menu" rol="menu">
-							<li><a href="#"><i class="fa fa-cogs"></i>&nbsp;Perfil</a></li>
+							<li class="user-profile"><a href="/usuarios/profile"><i class="fa fa-cogs"></i>&nbsp;Perfíl</a></li>
 							<li><a href="/logout"><i class="fa fa-sign-out"></i>&nbsp;Salir&nbsp;</a></li>
 						</ul>
 					</li>

@@ -187,6 +187,7 @@ class Usuario(db.Entity):
 	municipio = _Optional(Municipio, reverse='operadores', nullable=True)
 	centro_salud = _Optional(Centro_Salud, reverse='operadores', nullable=True)
 	embarazos = _Set(lambda: Embarazo, reverse='usuario')
+	mensajes = _Set(lambda: Mensaje, reverse='usuario')
 	activo = _Optional(bool, default=True)
 	def before_insert(self):
 		self.passwd = self.passwd.encode('hex').encode('base64')
@@ -270,6 +271,7 @@ class Mensaje(db.Entity):
 	creado = _Optional(_datetime)
 	modificado = _Optional(_datetime)
 	agendas = _Set(lambda: Agenda, reverse='mensaje')
+	usuario = _Optional(Usuario, reverse='mensajes', nullable=True)
 	def before_insert(self):
 		self.titulo = self.titulo.upper() if self.titulo else None
 		self.tenor = self.tenor.upper()
@@ -302,7 +304,13 @@ class Agenda(db.Entity):
 	fecha_msj = _Required(_date)
 	fecha_con = _Optional(_date, nullable=True)
 	enviado = _Optional(bool, default=False)
+	creado = _Optional(_datetime, nullable=True)
+	modificado = _Optional(_datetime, nullable=True)
 	_PrimaryKey(persona, mensaje)
+	def before_insert(self):
+		self.creado = self.modificado = utc.now()
+	def before_update(self):
+		self.modificado = utc.now()
 
 if __name__ == '__main__':
 	def test(developdb):

@@ -3,7 +3,7 @@
  * (C) 2015 - mbarjaedu13@gmail.com
  */
 $(function(){
-	$('.message-menu').addClass('active');
+	$('.message-menu, .sms-catalog').addClass('active');
 	$('#back, .back').on({
 		click:function(e){
 			e.preventDefault();

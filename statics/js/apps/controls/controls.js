@@ -30,5 +30,5 @@ $(function(){
 			location.href='/embarazos/conf_interr?id_emb='+o_key.id_emb;
 		}
 	});
-	$('#custom').customPaginator({height:'auto'});
+	$('#custom').customPaginator();
 });

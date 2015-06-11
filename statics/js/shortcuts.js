@@ -25,7 +25,7 @@ $(function(){
 	 		g_names: /^(?:(?:[A-ZÁÉÍÓÚÑ](?:'[A-Z])?[a-záéíóúäëïöüñ]+(?:(?:\.? ?[1-9][0-9]*)?(?: ?[Ee]n)?(?: ?[Dd]el?)?(?: ?[Ll][ao]s?)?)? ?)+)$/i,
 	 		neonato_weight: /^(?:[1-5]\b(?:\.?[0-9]{1,3})?)$/,
 	 		msg_number: /^(?:[1-9][0-9]?){1}$/,
-	 		msg_content: /^(?:[^\s] ?){2,}$/i,
+	 		msg_content: /^(?:[^\s] ?){2,140}$/i,
 	 		comments: /^(?:[^\s] ?){2,}$/i,
 	 	},
 	 	pattern_name = function(obj){

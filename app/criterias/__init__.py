@@ -13,4 +13,5 @@ from .childrens import ChildrensCriteria as childrensCrt
 from .messages import MessagesCriteria as messagesCrt
 from .persons import PersonCriteria as personsCrt
 from .users import UserCriteria as usersCrt
-__all__ = ['capabilityCrt','networksCrt','townshipsCrt','ethnicCrt','typeCrt','pregnantCrt','pregnant_status','pregnanciesCrt','pregnancy_status','controlsCrt','childrensCrt','messagesCrt','usersCrt','personsCrt']
+from .agendas import AgendasCriteria as agendaCrt
+__all__ = ['capabilityCrt','networksCrt','townshipsCrt', 'communitiesCrt','ethnicCrt','typeCrt','pregnantCrt','pregnant_status','pregnanciesCrt','pregnancy_status','controlsCrt','childrensCrt','messagesCrt','usersCrt','personsCrt','agendaCrt']

@@ -18,11 +18,11 @@ class App_Server(_App):
 			static_hash_cache = not _options.debug,
 			template_path = _join(_projdir, 'templates'),
 			compile_template_cache = not _options.debug,
-			cookie_secret = 'NTQ2NTZjNjU1MzYxNmM3NTY0\n',
+			cookie_secret = 'NGM0NTRkNDIyZDRiNDg0MTU3NDE1ODNhNDU2YzYxNjM2NTcz',
 			xsrf_cookies = True,
 			login_url = '/login',
 			server_traceback = True,
-			debug = True
+			debug = _options.debug
 		)
 		#print url_handlers
 		super(App_Server, self).__init__(handlers=_url_handlers, **settings)

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#! /usr/bin/python
 #-*- coding: utf-8 -*-
 import sys, logging, signal, time
 reload(sys)
@@ -17,7 +17,7 @@ define('allowed_hosts', default='localhost:8080', multiple=True, help='Allowed h
 define('localdb', default=True, type=bool, help='By default, the DB in local mode')
 
 def shutdown(server):
-	ioloop = IOLoop.instance()
+	ioloop = IOLoop.current()
 	logging.info('Stopping server.')
 	server.stop()
 	def finalize():
@@ -28,7 +28,11 @@ def shutdown(server):
 if __name__ == '__main__':
 	parse_command_line()
 	server = HTTPServer(App_Server())
-	server.listen(environ.get('PORT', options.port))
 	signal.signal(signal.SIGINT, lambda sig, frame: shutdown(server))
 	logging.info('Starting server on localhost:{}'.format(options.port))
-	IOLoop.instance().start()
+	if not options.debug:
+		server.bind(environ.get('PORT', options.port))
+		server.start(0)
+	else:
+		server.listen(environ.get('PORT', options.port))
+	IOLoop.current().start()

@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 from __future__ import absolute_import
-from pony.orm import (db_session as _db_session, commit as _commit, select as _select, count as _count)
-from ..entities import (Embarazo as _Embarazo, Control as _Control)
+from pony.orm import (select as _select, count as _count, db_session as _db_session, commit as _commit)
+from ..entities import (Control as _Control)
 from ..tools import utcDateTime as _utcDateTime
 
 class ControlsCriteria:
@@ -18,6 +18,8 @@ class ControlsCriteria:
 	def delete_controls(self, obj):
 		utc = _utcDateTime()
 		check_date = lambda dt: True if dt>=utc.now().date() else False
-		for cnt in obj.controles:
-			if not cnt.asistido and check_date(cnt.fecha_con):
-				cnt.delete()
+		with _db_session:
+			for cnt in obj.controles:
+				if not cnt.asistido and check_date(cnt.fecha_con):
+					cnt.delete()
+			_commit()

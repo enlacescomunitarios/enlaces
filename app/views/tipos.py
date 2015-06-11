@@ -1,6 +1,7 @@
 #-*- coding: utf-8 -*-
 from __future__ import absolute_import
 from ..tools import (route, BaseHandler)
+from tornado.web import (authenticated, asynchronous)
 from pony.orm import (db_session,)
 from ..entities import (Tipo,)
 from ..criterias import typeCrt
@@ -8,6 +9,8 @@ from json import dumps
 
 @route('/tipos/gestion')
 class Gestion_Tipos(BaseHandler):
+	@authenticated
+	@asynchronous
 	@db_session
 	def get(self):
 		tipos = (tp for tp in Tipo.select())
@@ -15,28 +18,38 @@ class Gestion_Tipos(BaseHandler):
 
 @route('/tipos/nuevo_tipo')
 class Nuevo_Tipo(BaseHandler):
+	@authenticated
+	@asynchronous
 	def get(self):
 		self.render('tipos/nuevo_tipo.html')
+	@asynchronous
 	def post(self):
 		self.set_header('Content-type', 'application/json')
 		status = typeCrt.save(**self.form2Dict())
 		self.write(dumps(status))
+		self.finish()
 
 @route('/tipos/modificar_tipo')
 class Modificar_Tipo(BaseHandler):
+	@authenticated
+	@asynchronous
 	@db_session
 	def get(self):
 		tp = Tipo.get(**self.form2Dict())
 		self.render('tipos/modificar_tipo.html', tp=tp)
+	@asynchronous
 	def post(self):
 		self.set_header('Content-type', 'application/json')
 		status = typeCrt.update(**self.form2Dict())
 		self.write(dumps(status))
+		self.finish()
 
 @route('/tipos/disponibles')
 class Tipos_Disponible(BaseHandler):
+	@asynchronous
 	def post(self):
 		self.set_header('Content-type', 'application/json')
 		with db_session:
 			tipos = [dict(id_tip=tp.id_tip,nombre=tp.nombre) for tp in Tipo.select() if tp.activo]
 		self.write(dumps(tipos))
+		self.finish()

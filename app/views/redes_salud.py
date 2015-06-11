@@ -1,15 +1,16 @@
 #-*- coding: utf-8 -*-
 from __future__ import absolute_import
-from tornado.web import authenticated
+from tornado.web import (authenticated, asynchronous)
 from ..tools import (route, BaseHandler, cdict)
 from pony.orm import (db_session, commit)
-from ..entities import (Red_Salud, Municipio)
+from ..entities import (Red_Salud,)
 from ..criterias import networksCrt
 from json import dumps
 
 @route(r'/redes_salud/gestion')
 class Gestion_RedSalud(BaseHandler):
 	@authenticated
+	@asynchronous
 	@db_session
 	def get(self):
 		redes = (rd for rd in Red_Salud.select())
@@ -18,8 +19,10 @@ class Gestion_RedSalud(BaseHandler):
 @route(r'/redes_salud/nueva_red')
 class Nueva_Red(BaseHandler):
 	@authenticated
+	@asynchronous
 	def get(self):
 		self.render('redes_salud/nueva_red.html')
+	@asynchronous
 	def post(self):
 		self.set_header('Content-type', 'application/json')
 		names = self.get_arguments('nombre')
@@ -27,20 +30,26 @@ class Nueva_Red(BaseHandler):
 		f_mups = lambda: dict(municipios=[dict(dpto=dpto, nombre=nombre) for dpto,nombre in zip(dptos, names[1:])])
 		form = cdict(nombre=names[0], **f_mups())
 		self.write(dumps(networksCrt.save(form)))
+		self.finish()
+
 @route(r'/redes_salud/modificar_red')
 class Modificar_Red(BaseHandler):
 	@authenticated
+	@asynchronous
 	@db_session
 	def get(self):
 		red = Red_Salud.get(**self.form2Dict())
 		self.render('redes_salud/modificar_red.html', red=red)
+	@asynchronous
 	def post(self):
 		self.set_header('Content-type', 'application/json')
 		self.write(dumps(networksCrt.update(**self.form2Dict())))
+		self.finish()
 
 @route('/redes_salud/eliminar_red')
 class Eliminar_Red(BaseHandler):
 	@authenticated
+	@asynchronous
 	def post(self):
 		if self.current_user.rol == u'Administrador':
 			self.set_header("Content-type", "application/json")
@@ -50,10 +59,11 @@ class Eliminar_Red(BaseHandler):
 					red.set(activo=False)
 					commit()
 			self.write(dumps(red.activo))
-			return
+			self.finish()
 
 @route('/redes_salud/disponibles')
 class Redes_Disponibles(BaseHandler):
+	@asynchronous
 	def post(self):
 		if self.current_user.rol == u'Administrador':
 			self.set_header('Content-type', 'application/json')
@@ -63,10 +73,11 @@ class Redes_Disponibles(BaseHandler):
 			with db_session:
 				redes = f_redes()
 			self.write(dumps(redes))
-			return
+			self.finish()
 
 @route('/redes_salud/geografia')
 class Redes_Geografia(BaseHandler):
+	@asynchronous
 	def post(self):
 		self.set_header('Content-type', 'application/json')
 		f_redes = lambda: [dict(id_red=rd.id_red, nombre=rd.nombre, municipios=f_municipios(rd)) for rd in Red_Salud.select(lambda rd: rd.activo)]
@@ -75,3 +86,4 @@ class Redes_Geografia(BaseHandler):
 		with db_session:
 			redes = f_redes()
 		self.write(dumps(redes))
+		self.finish()

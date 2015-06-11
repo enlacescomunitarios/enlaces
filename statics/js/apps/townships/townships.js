@@ -57,5 +57,5 @@
  			location.href='/redes_salud/gestion';
  		}
  	});
- 	$('#custom').customPaginator({height:'auto'});
+ 	$('#custom').customPaginator();
  });

@@ -4,6 +4,8 @@ from pony.orm import (db_session as _db_session, commit as _commit, flush as _fl
 from ..entities import (Embarazo as _Embarazo, Control as _Control, Recien_Nacido as _NewBorn, Persona as _Persona, Usuario as _Usuario, Defuncion as _Defuncion)
 from ..tools import (to_date as _to_date, to_yymmdd as _to_yymmdd, PreNatal as _PreNatal, PostNatal as _PostNatal)
 from .controls import ControlsCriteria as _controlsCrt
+from .messages import MessagesCriteria as _messagesCrt
+from .agendas import AgendasCriteria as _agendasCrt
 
 def pregnancy_status(prg):
 	pregnant = prg.embarazada
@@ -33,12 +35,19 @@ class PregnanciesCriteria:
 			with _db_session:
 				pregnant = _Persona.get(id_per=id_per)
 				usuario = _Usuario.get(persona=id_user)
-				pregnacy = _Embarazo(embarazada=pregnant, parto_prob=parto_prob, usuario=usuario)
-				pregnacy.controles += [_Control(embarazo=pregnacy, nro_con=ctrl[0], fecha_con=ctrl[2]) for ctrl in ctrls.controls_dates()[::-1]]
+				pregnancy = _Embarazo(embarazada=pregnant, parto_prob=parto_prob, usuario=usuario)
+				_controlsCrt.delete_controls(pregnancy)
+				_agendasCrt.delete_agendas(pregnant)
+				pregnancy.controles += [_Control(embarazo=pregnancy, nro_con=ctrl[0], fecha_con=ctrl[2]) for ctrl in ctrls.controls_dates()[::-1]]
+				_flush()
+				for cn in pregnancy.controles:
+					msg = _messagesCrt.get_byNumbControl(cn.nro_con)
+					_agendasCrt.save(persona=pregnant, mensaje=msg, fecha_con=cn.fecha_con)
 				_commit()
 			return True
 		except Exception, e:
 			#raise e
+			print e
 			return False
 	@classmethod
 	def childbirth(self, obj):
@@ -53,14 +62,22 @@ class PregnanciesCriteria:
 				em = _Embarazo.get(id_emb=obj.get_argument('id_emb'))
 				em.set(activo=False, **f_emb())
 				_flush()
+				_controlsCrt.delete_controls(em)
+				_agendasCrt.delete_agendas(em.embarazada)
 				controls = lambda: [_Control(tipo=u'Post-Natal', nro_con=ctrl[0], fecha_con=ctrl[1]) for ctrl in ctrls.controls_date()]
 				em.recien_nacidos += [_NewBorn(embarazo=em,peso=nb[0],sexo=nb[1],nombres=nb[2],apellidos=nb[3],controles=controls()) for nb in zip(pesos,sexos,nombres,apellidos)]
-				_controlsCrt.delete_controls(em)
+				_flush()
+				for rn in em.recien_nacidos:
+					for cn in rn.controles:
+						msg = _messagesCrt.get_byNumbControl(nro_control=cn.nro_con, tipo=2)
+						_agendasCrt.save(persona=em.embarazada, mensaje=msg, fecha_con=cn.fecha_con, days=1)
+					break
 				#em.controles += [_Control(embarazo=em, tipo=u'Post-Natal', nro_con=ctrl[0], fecha_con=ctrl[1]) for ctrl in ctrls.controls_date()]
 				_commit()
 			return True
 		except Exception, e:
 			#raise e
+			print e
 			return False
 	@classmethod
 	def interrupt(self, id_emb, fecha, f_notf, obs_notf, f_conf=None, obs_conf=None):
@@ -71,6 +88,8 @@ class PregnanciesCriteria:
 				if f_conf:
 					_controlsCrt.delete_controls(em)
 					em.activo = False
+					if not em.embarazada.agendas.is_empty():
+						_agendasCrt.delete_agendas(em.embarazada)
 				p_interrupt = _Defuncion(embarazo=em, **f_interr())
 				_commit()
 			return True
@@ -85,6 +104,8 @@ class PregnanciesCriteria:
 				interr.set(f_conf=_to_yymmdd(f_conf), obs_conf=obs_conf.upper())
 				interr.embarazo.activo = False
 				_controlsCrt.delete_controls(interr.embarazo)
+				if not interr.embarazo.embarazada.agendas.is_empty():
+					_agendasCrt.delete_agendas(interr.embarazo.embarazada)
 				_commit()
 			return True
 		except Exception, e:

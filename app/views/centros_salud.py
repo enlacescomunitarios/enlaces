@@ -1,12 +1,15 @@
 #-*- coding: utf-8 -*-
 from __future__ import absolute_import
 from ..tools import (route, BaseHandler)
+from tornado.web import (authenticated, asynchronous)
 from pony.orm import (db_session, commit)
 from ..entities import (Comunidad, Centro_Salud, Prestacion)
 from json import dumps
 
 @route('/centros_salud/gestion')
 class Gestion_Centros(BaseHandler):
+	@authenticated
+	@asynchronous
 	@db_session
 	def get(self):
 		com = Comunidad.get(**self.form2Dict())
@@ -14,10 +17,13 @@ class Gestion_Centros(BaseHandler):
 
 @route('/centros_salud/nuevo_establecimiento')
 class Nuevo_Establecimiento(BaseHandler):
+	@authenticated
+	@asynchronous
 	@db_session
 	def get(self):
 		com = Comunidad.get(**self.form2Dict())
 		self.render('centros_salud/nuevo_establecimiento.html', com=com, dumps=dumps)
+	@asynchronous
 	def post(self):
 		with db_session:
 			ubicado = Comunidad.get(id_com=self.get_arguments('id_com')[0])
@@ -30,10 +36,13 @@ class Nuevo_Establecimiento(BaseHandler):
 
 @route('/centros_salud/modificar_establecimiento')
 class Modificar_Establecimiento(BaseHandler):
+	@authenticated
+	@asynchronous
 	@db_session
 	def get(self):
 		cen = Centro_Salud.get(**self.form2Dict())
 		self.render('centros_salud/modificar_establecimiento.html', cen=cen, dumps=dumps)
+	@asynchronous
 	def post(self):
 		with db_session:
 			cen = Centro_Salud.get(id_cen=self.get_argument('id_cen'))
@@ -50,6 +59,7 @@ class Modificar_Establecimiento(BaseHandler):
 
 @route('/centros_salud/eliminar_establecimiento')
 class Eliminar_Establecimiento(BaseHandler):
+	@asynchronous
 	def post(self):
 		self.set_header('Content-type', 'application/json')
 		with db_session:
@@ -62,9 +72,12 @@ class Eliminar_Establecimiento(BaseHandler):
 					cs.prestaciones.clear()
 				commit()
 		self.write(dumps(cs.activo))
+		self.finish()
 
 @route('/centros_salud')
 class Listar_Centros(BaseHandler):
+	@authenticated
+	@asynchronous
 	@db_session
 	def get(self):
 		centros = (cs for cs in Centro_Salud.select().order_by(lambda cs:(cs.ubicado,)))

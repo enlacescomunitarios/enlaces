@@ -1,19 +1,21 @@
 {% extends "../base.html" %}
 {% block header_section %}
+<link href="{{ static_url("css/jasny-bootstrap.min.css") }}" rel="stylesheet" media="all">
+<script type="text/javascript" src="{{ static_url("js/jasny-bootstrap.min.js") }}"></script>
 <script type="text/javascript" src="{{ static_url("js/shortcuts.min.js") }}"></script>
 <script type="text/javascript" src="{{ static_url("js/apps/messages/newMessage.min.js") }}"></script>
 {% end %}
 {% block breadcrumbs %}
 <ul id="breadcrumbs" class="breadcrumb">
 	<li><a href="/">Inicio</a></li>
-	<li><a href="#" class="back">Mensajes</a></li>
+	<li><a href="#" class="back">Catálogo</a></li>
 	<li class="active">Nuevo Mensaje</li>
 </ul>
 {% end %}
 {% block left-content %}
 <form>
 	{% module xsrf_form_html() %}
-	<legend class="text-center">Nuevo Mensaje</legend>
+	<legend>Nuevo Mensaje</legend>
 	<div class="row">
 		<fieldset class="form-group col-sm-6">
 			<label>Tipo:</label>
@@ -23,7 +25,6 @@
 				<option value="2">Post-Natal</option>
 				<option value="3">Promocioanl Pre-Natal</option>
 				<option value="4">Promocioanl Post-Natal</option>
-				<option value="5">Extra-Ordinario</option>
 			</select>
 		</fieldset>
 		<fieldset class="form-group has-feedback col-sm-6">
@@ -36,10 +37,17 @@
 		<label>Tenor:</label>
 		<textarea name="tenor" class="form-control input-sm only_msg_content" rows="3" required></textarea>
 	</fieldset>
-	<fieldset class="form-group">
-		<label>Audio:</label>
-		<input type="file" name="audio" required>
-	</fieldset>
+	<div class="fileinput fileinput-new input-group" data-provides="fileinput">
+		<div class="form-control" data-trigger="fileinput">
+			<span class="fileinput-filename"></span>
+		</div>
+		<span class="input-group-addon btn btn-default btn-file">
+			<span class="fileinput-new">Audio</span>
+			<span class="fileinput-exists"><i class="fa fa-refresh"></i></span>
+			<input type="file" name="audio" class="input-sm" accept=".mp3" required>
+		</span>
+		<a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i></a>
+	</div>
 	<fieldset class="form-group">
 		<button type="button" id="back" class="btn btn-sm btn-warning">Regresar</button>
 		<button type="submit" class="btn btn-sm btn-primary">Guardar</button>

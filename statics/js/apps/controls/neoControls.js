@@ -50,5 +50,5 @@ $(function(){
 			location.href='/controles/neo_confirmDef?id_def='+o_key.id_def;
 		}
 	});
-	$('#custom').customPaginator({height:'auto'});
+	$('#custom').customPaginator();
 });

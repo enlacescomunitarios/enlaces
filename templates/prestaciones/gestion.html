@@ -9,8 +9,8 @@
 <script type="text/javascript">
 	$(function(){
 		$('.manager-menu, .capability-sub').addClass('active');
-		$('#custom').customPaginator({height:'auto'});
 		$('#add').on({click:function(e){e.preventDefault();location.href='/prestaciones/nueva_prestacion';}});
+		$('#custom').customPaginator();
 	});
 </script>
 {% end %}

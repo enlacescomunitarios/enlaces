@@ -63,5 +63,5 @@ $(function(){
 			location.href='/comunidades/nueva_comunidad?id_mup='+o_key.mup;
 		}
 	});
-	$('#custom').customPaginator({height:'auto'});
+	$('#custom').customPaginator();
 });

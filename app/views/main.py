@@ -1,14 +1,15 @@
 #-*- coding: utf-8 -*-
 from __future__ import absolute_import
-from tornado.web import authenticated
+from tornado.web import (authenticated, asynchronous)
 from ..tools import (route, BaseHandler)
 from pony.orm import (db_session,)
-from ..entities import Usuario
+#from ..entities import Usuario
 from ..criterias import (pregnantCrt, pregnant_status, childrensCrt, controlsCrt, usersCrt)
 from json import dumps
 
 @route('/')
 class Index(BaseHandler):
+	@asynchronous
 	@authenticated
 	@db_session
 	def get(self):
@@ -20,8 +21,10 @@ class Index(BaseHandler):
 
 @route('/login')
 class Login(BaseHandler):
+	@asynchronous
 	def get(self):
 		self.render('main/login.html')
+	@asynchronous
 	@db_session
 	def post(self):
 		self.set_header('Content-type', 'application/json')
@@ -29,10 +32,11 @@ class Login(BaseHandler):
 		if len(form.login) and len(form.passwd):
 			us = usersCrt.granted_access(self.form2Dict())
 			if us:
-				self.set_secure_cookie('user', us.to_json(), expires_days=1)
+				self.set_secure_cookie('user', us.to_json(), expires_days=None)#without persistence
 			self.write(dumps(True if us else False))
 		else:
 			self.write(dumps(False))
+		self.finish()
 		
 @route('/logout')
 class Logout(BaseHandler):
