@@ -113,7 +113,7 @@ class SendSMS(BaseHandler):
 					agendaCrt.save(persona=id_per, mensaje=self.msg.id_msj)
 			else:
 				messagesCrt.delete(id_msj=self.msg.id_msj, id_user=self.current_user.id)
-		link = 'http://190.129.142.26:8000/sendsms'
+		link = '190.129.142.26:8000/sendsms'
 		data = urlencode(dict(msg=self.msg.tenor, personas=self.persons2Json()))
 		cedes = AsyncHTTPClient()
 		cedes.fetch(request=link, method='POST', body=data, expect_100_continue=True, request_timeout=120.0, callback=handler)
