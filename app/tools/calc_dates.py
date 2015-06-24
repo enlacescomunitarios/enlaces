@@ -46,7 +46,7 @@ class PostNatal(object):
 		self.days_calc = lambda: [_fix_ctrlday(_date(y,m,d) + _timedelta(days=i)) for i in self.days_ctrls]
 		super(PostNatal, self).__init__()
 	def controls_date(self):
-		controls = [(cn+1,dt) for cn,dt in enumerate(self.days_calc()) if _utc.now().date()<dt]
+		controls = [(cn,dt) for cn,dt in enumerate(self.days_calc(),1) if _utc.now().date()<dt]
 		assert(len(controls))
 		return controls
 
@@ -56,7 +56,7 @@ class PrePromotional(object):
 		self.weeks_calc = lambda: [_fix_ctrlday(_date(y,m,d) + _timedelta(weeks=i)) for i in self.weeks_ctrls]
 		super(PrePromotional, self).__init__()
 	def controls_date(self):
-		controls = [(cn+1,dt) for cn,dt in enumerate(self.weeks_calc()) if _utc.now().date()<dt]
+		controls = [(cn,dt) for cn,dt in enumerate(self.weeks_calc(),1) if _utc.now().date()<dt]
 		assert(len(controls))
 		return controls
 
@@ -66,7 +66,7 @@ class PostPromotional(object):
 		self.days_calc = lambda: [_fix_ctrlday(_date(y,m,d) + _timedelta(days=i)) for i in PostPromotional.days_ctrls]
 		super(PostPromotional, self).__init__()
 	def controls_date(self):
-		controls = [(cn+1,dt) for cn,dt in enumerate(self.days_calc()) if _utc.now().date()<dt]
+		controls = [(cn,dt) for cn,dt in enumerate(self.days_calc(),1) if _utc.now().date()<dt]
 		assert(len(controls))
 		return controls
 

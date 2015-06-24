@@ -267,11 +267,12 @@ class Mensaje(db.Entity):
 	titulo = _Optional(unicode, nullable=True)
 	tipo = _Required(int)
 	tenor = _Required(unicode)
+	audio = _Optional(unicode)
 	activo = _Optional(bool, default=True)
 	creado = _Optional(_datetime)
 	modificado = _Optional(_datetime)
 	agendas = _Set(lambda: Agenda, reverse='mensaje')
-	usuario = _Optional(Usuario, reverse='mensajes', nullable=True)
+	usuario = _Optional(Usuario, reverse='mensajes')
 	def before_insert(self):
 		self.titulo = self.titulo.upper() if self.titulo else None
 		self.tenor = self.tenor.upper()
@@ -299,14 +300,15 @@ class Control(db.Entity):
 		self.modificado = utc.now()
 
 class Agenda(db.Entity):
+	id_agd = _PrimaryKey(int, auto=True)
 	persona = _Required(Persona, reverse='agendas')
 	mensaje = _Required(Mensaje, reverse='agendas')
 	fecha_msj = _Required(_date)
 	fecha_con = _Optional(_date, nullable=True)
 	enviado = _Optional(bool, default=False)
-	creado = _Optional(_datetime, nullable=True)
-	modificado = _Optional(_datetime, nullable=True)
-	_PrimaryKey(persona, mensaje)
+	creado = _Optional(_datetime)
+	modificado = _Optional(_datetime)
+	#_PrimaryKey(persona, mensaje)
 	def before_insert(self):
 		self.creado = self.modificado = utc.now()
 	def before_update(self):

@@ -19,7 +19,7 @@
 {% end %}
 {% block left-content %}
 <div class="fix-table">
-	<table id="custom" class="table table-striped table-hover table-bordered table-condensed" width="99.8%" cellspacing="0">
+	<table id="custom" class="table table-hover table-bordered" width="99.8%" cellspacing="0">
 		<thead>
 			<tr>
 				<th colspan="6" class="text-center">Agendas</th>
@@ -39,8 +39,8 @@
 				<td>{{ '{}'.format(ag.mensaje.usuario if ag.mensaje.tipo==5 else '') }}</td>
 				<td>{{ ag.persona }}</td>
 				<td>{{ ag.mensaje.tenor }}</td>
-				<td>&nbsp;</td>
-				<td>&nbsp;</td>
+				<td>{{ ag.modificado.date() }}</td>
+				<td>{{ ag.modificado.time().isoformat()[:8] }}</td>
 				<td>{{ '{}'.format('Pendiente' if not ag.enviado else '') }}</td>
 			</tr>
 			{% end %}

@@ -23,7 +23,7 @@
 		$('textarea[name=tenor]').on({
 			keyup:function(e){
 				var strs = $(this).val().length, help = $(this).next('p');
-				help.text(strs+' caracteres.');
+				help.text(strs+'/140');
 			}
 		});
 		$('form').on({
@@ -36,9 +36,10 @@
 						var $chk = $(chk);
 						if($chk.prop('checked')){
 							var pr = $($chk.closest('td')).data('person');
-							//console.log(pr.cellphone);
+							if($.type(pr.id_per)==='undefined'){
+								$chk.closest('tr').css('background','red');
+							}
 							oform.push({name:'id_per',value:pr.id_per});
-							oform.push({name:'telf',value:pr.cellphone});
 						}
 					});
 					$.post(
@@ -90,7 +91,7 @@
 				<fieldset class="form-group has-feedback">
 					<label>Texto:</label>
 					<textarea name="tenor" class="form-control input-sm only_msg_content" required></textarea>
-					<p class="help-block">caracteres.</p>
+					<p class="help-block">0/140</p>
 				</fieldset>
 				<fieldset class="form-group">
 					<button type="button" class="cancel btn btn-sm btn-danger">Cancelar</button>
@@ -100,7 +101,7 @@
 		</div>
 		<div class="right-side">
 			<div class="fix-table">
-				<table id="custom" class="table table-striped table-hover table-bordered table-condensed" width="99.8%" cellspacing="0">
+				<table id="custom" class="table table-hover table-bordered" width="99.8%" cellspacing="0">
 					<thead>
 						<tr>
 							<th colspan="6" class="text-center">Personas</th>
@@ -117,7 +118,7 @@
 					<tbody>
 						{% for pr in personas %}
 						<tr>
-							<td data-person='{"cellphone":{{pr.telf or ''}}, "nombre":"{{pr}}", "id_per":{{pr.id_per}}}'>&nbsp;<input type="checkbox" class="ocheckbox" style="width: 13px;"></td>
+							<td data-person='{"id_per":{{pr.id_per}}}'>&nbsp;<input type="checkbox" class="ocheckbox" style="width: 13px;"></td>
 							<td>{{pr}}</td>
 							<td>{{pr.telf or ''}}</td>
 							<td>{{pr.ci or ''}}</td>

@@ -11,12 +11,12 @@
  				var o_cen = $(this).data('key'), o_del = $(this);
  				swal({
  					title: "Está seguro?",
- 					text: o_cen.nombre+", será eliminado!",
+ 					text: o_cen.nombre+", será inhabilitado!",
  					type: "warning",
  					showCancelButton: true,
  					cancelButtonText: "Cancelar",
- 					confirmButtonColor: "#d9534f",
- 					confirmButtonText: "Eliminar",
+ 					confirmButtonClass: "btn-danger",
+ 					confirmButtonText: "Inhabilitar",
  					closeOnConfirm: false
  				}, function(){
  					$.post(
@@ -24,10 +24,10 @@
  						data = {'_xsrf':getCookie('_xsrf'),'id_cen':o_cen.id},
  						function(response){
  							if(response==false){
- 								o_del.closest('tr').find('.activo').html('Eliminado').end().find('.comunidades').html('0').end().find('.prestaciones').html('0').end().end().remove();
+ 								o_del.closest('tr').find('.activo').html('Inhabilitado').end().find('.comunidades').html('0').end().find('.prestaciones').html('0').end().end().remove();
  								swal({
- 									title: "Eliminado",
- 									text: "El establecimiento de salud \""+o_cen.nombre+"\", fué eliminado.",
+ 									title: "Inhabilitado",
+ 									text: "El establecimiento de salud \""+o_cen.nombre+"\", fué inhabilitado.",
  									type: "success",
  									confirmButtonText: "Continuar"
  								});
@@ -54,7 +54,7 @@
  				type: "warning",
  				showCancelButton: true,
  				cancelButtonText: "Cancelar",
- 				confirmButtonColor: "#d9534f",
+ 				confirmButtonClass: "btn-danger",
  				confirmButtonText: "Inhabilitar",
  				closeOnConfirm: false
  			}, function(){

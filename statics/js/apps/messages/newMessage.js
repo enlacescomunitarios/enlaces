@@ -30,28 +30,44 @@ $(function(){
 		submit:function(e){
 			e.preventDefault();
 			e.stopPropagation();
-			var btn_submit = $('button[type=submit]');
+			var oform = $(this), cedesform = new FormData(), btn_submit = $('button[type=submit]');
 			//console.log(oaudio[0].files[0]);
 			btn_submit.disable().hide();
 			if(oaudio.val().length){
-				$.ajax({
-					url: '/mensajes/adicionar_msj',
-					type: 'POST',
-					data:  new FormData(this),
-					mimeType:"multipart/form-data",
-					contentType: false,
-					cache: false,
-					processData:false,
-					success: function(response){
-						if(response){
-							location.href='/mensajes/gestion';
+				$.post(
+					'/mensajes/adicionar_msj',
+					data = oform.form2Dict(),
+					function(response){
+						if(response.status==true){
+							cedesform.append('tipo', data.tipo);
+							cedesform.append('nro', data.nro_control);
+							cedesform.append('audio', oaudio[0].files[0]);
+							cedesform.append('audioname', response.audio)
+							$.ajax({
+								url: 'http://190.129.142.26:8000/getaudiofile',
+								type: 'POST',
+								data:  cedesform,
+								mimeType:"multipart/form-data",
+								contentType: false,
+								cache: false,
+								processData:false,
+								success: function(resp){
+									if(resp){
+										location.href='/mensajes/gestion';
+									} else{
+										prtn.removeClass('has-success').addClass('has-error');
+										feedback.removeClass('fa-check').addClass('fa-times');
+										btn_submit.enable().show();
+									}
+								}
+							});
 						} else{
 							prtn.removeClass('has-success').addClass('has-error');
 							feedback.removeClass('fa-check').addClass('fa-times');
 							btn_submit.enable().show();
 						}
 					}
-				});
+				);
 			} else {
 				btn_submit.enable().show();
 			}

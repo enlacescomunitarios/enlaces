@@ -21,7 +21,7 @@ $(function(){
 				type: "warning",
 				showCancelButton: true,
 				cancelButtonText: "Cancelar",
-				confirmButtonColor: "#d9534f",
+				confirmButtonClass: "btn-danger",
 				confirmButtonText: "Inhabilitar",
 				closeOnConfirm: false
 			}, function(){

@@ -185,6 +185,13 @@ body #right-content .list-group .list-group-item:last-child {
 .navbar-inverse {
   background-color: #8abe9b !important;
 }
+.navbar-inverse .navbar-nav>li>a,
+.navbar-inverse .navbar-nav>.active>a {
+  -webkit-transition: 240ms;
+     -moz-transition: 240ms;
+       -o-transition: 240ms;
+          transition: 240ms;
+}
 .navbar-inverse .navbar-nav>li>a:hover,
 .navbar-inverse .navbar-nav>.active>a:hover,
 .navbar-inverse .navbar-nav>li>a:focus,
@@ -200,9 +207,25 @@ body #right-content .list-group .list-group-item:last-child {
 }
 .navbar-inverse .dropdown-menu {
   background-color: #8abe9b;
+  -webkit-transition: 240ms;
+     -moz-transition: 240ms;
+       -o-transition: 240ms;
+          transition: 240ms;
+}
+.navbar-inverse .dropdown-menu a {
+  -webkit-transition: 240ms;
+     -moz-transition: 240ms;
+       -o-transition: 240ms;
+          transition: 240ms;
 }
 .navbar-inverse .dropdown-menu a:hover {
   background-color: #3f5d76 !important;
+}
+.nav li {
+  -webkit-transition: 240ms;
+     -moz-transition: 240ms;
+       -o-transition: 240ms;
+          transition: 240ms;
 }
 .nav li:hover {
   background-color: #5c8692;
@@ -214,6 +237,10 @@ body #right-content .list-group .list-group-item:last-child {
   color: #fff;
   background-color: #4a6d8b !important;
   border-color: transparent;
+  -webkit-transition: 240ms;
+     -moz-transition: 240ms;
+       -o-transition: 240ms;
+          transition: 240ms;
 }
 #right-content .list-group-item.active:hover,
 .navbar-inverse .navbar-nav>.open>a:hover,
@@ -528,6 +555,10 @@ select.form-control {
 a {
   cursor: pointer;
   color: #34b1d6;
+  -webkit-transition: 240ms;
+     -moz-transition: 240ms;
+       -o-transition: 240ms;
+          transition: 240ms;
 }
 .link:hover,
 a:hover,
@@ -564,6 +595,13 @@ a:focus {
 .table thead tr th {
   text-align: center !important;
   vertical-align: top !important;
+}
+.table thead tr th input[type="checkbox"]:after {
+  border: 2px solid #fff;
+}
+.table thead tr th input[type="checkbox"]:checked:after {
+  border: 2px solid #8abe9b;
+  background-color: #8abe9b;
 }
 [id$="_wrapper"] .row:nth-child(2) tbody tr td {
   height: 31.818px !important;
@@ -722,6 +760,10 @@ a:focus {
   -webkit-border-radius: 5px !important;
      -moz-border-radius: 5px !important;
           border-radius: 5px !important;
+  -webkit-transition: 240ms;
+     -moz-transition: 240ms;
+       -o-transition: 240ms;
+          transition: 240ms;
 }
 .rowBox .inner-box .number {
   vertical-align: top;
@@ -853,4 +895,62 @@ a:focus {
 .projname {
   font-weight: bold;
   text-shadow: -1px -1px 0px #777, -2px -2px 1px #666, -3px -3px 2px #555, 1px 1px 5px #ccc, 2px 2px 5px #ccc, 3px 3px 5px #ccc;
+}
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+input[type="checkbox"] {
+  position: relative;
+  vertical-align: -2px;
+}
+input[type="checkbox"],
+input[type="checkbox"]:not(:checked) {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  border: none;
+  cursor: pointer;
+  clip: rect(0, 0, 0, 0);
+  pointer-events: auto;
+  outline: none;
+  border-color: transparent;
+  border-style: none;
+}
+input[type="checkbox"]:after {
+  display: block;
+  content: "";
+  border: 2px solid #4a6d8b;
+  width: 14px;
+  height: 14px;
+  -webkit-transition: 240ms;
+     -moz-transition: 240ms;
+       -o-transition: 240ms;
+          transition: 240ms;
+}
+input[type="checkbox"]:checked:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 4px;
+  display: table;
+  width: 6px;
+  height: 10px;
+  border: 2px solid #fff;
+  border-top-width: 0;
+  border-left-width: 0;
+  -webkit-transform: rotate(45deg);
+     -moz-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+       -o-transform: rotate(45deg);
+          transform: rotate(45deg);
+}
+input[type="checkbox"]:checked:after {
+  border: 2px solid #0d87e9;
+  background-color: #0d87e9;
 }

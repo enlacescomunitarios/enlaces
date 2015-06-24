@@ -135,10 +135,13 @@ body
 						border-bottom-right-radius 5px !important
 [class*="only_"]:not([class*="_login"]):not([class*="_passwd"]):not([class*="_lgpwd"])
 	text-transform uppercase
-.navbar-inverse
+.navbar-inverse//, .navbar-default
+	//*
+	//	color #fff !important
 	background-color base_color !important
 	.navbar-nav
 		&>li>a, &>.active>a
+			transition 240ms
 			&:hover, &:focus
 				background-color darken(active_color, 15%) !important
 	.navbar-toggle
@@ -148,16 +151,22 @@ body
 		border-color transparent
 	.dropdown-menu
 		background-color base_color
-		& a:hover
-			background-color darken(active_color, 15%) !important
+		transition 240ms
+		& a
+			transition 240ms
+			&:hover
+				background-color darken(active_color, 15%) !important
 .nav
-	li:hover
-		background-color back_color
+	li
+		transition 240ms
+		&:hover
+			background-color back_color
 #right-content .list-group-item.active,
 .navbar-inverse .navbar-nav>.open>a,
 .navbar-inverse .navbar-nav>.active>a,
 .navbar-inverse .navbar-nav .open .dropdown-menu>.active>a
 	hover_normal()
+	transition 240ms
 	&:hover, &:focus
 		hover_active()
 @media (max-width: 380px)
@@ -402,6 +411,7 @@ select.form-control
 .link, a
 	cursor pointer
 	color darken(#5bc0de, 15%)//color #088DA5
+	transition 240ms
 	&:hover, &:focus
 		color darken(#5bc0de, 30%)//color #0697ff
 		text-decoration underline
@@ -434,6 +444,12 @@ select.form-control
 			th
 				text-align center !important
 				vertical-align top !important
+				input[type="checkbox"]
+					&:after
+						border 2px solid #fff
+					&:checked:after
+						border 2px solid base_color
+						background-color base_color
 //.pagination
 	//&>.disabled
 		//&>span, &>a
@@ -567,6 +583,7 @@ select.form-control
 		text-shadow darken(@color,45%) 0px 0px 1px
 		padding 15px !important
 		border-radius 5px !important
+		transition 240ms
 		.number
 			vertical-align top
 			font-size 30px
@@ -647,3 +664,42 @@ select.form-control
 .projname
 	font-weight bold
 	text-shadow -1px -1px 0px #777,	-2px -2px 1px #666,	-3px -3px 2px #555,	1px 1px 5px #ccc, 2px 2px 5px #ccc,	3px 3px 5px #ccc
+button::-moz-focus-inner, input::-moz-focus-inner
+	border 0
+	padding 0
+input[type="checkbox"]
+	position relative
+	vertical-align -2px
+	&, &:not(:checked)
+		user-select none
+		appearance none
+		border none
+		cursor pointer
+		clip rect(0, 0, 0, 0)
+		pointer-events auto
+		outline none
+		border-color transparent
+		border-style none
+	&:after
+		display block
+		content ""
+		border 2px solid active_color
+		width 14px
+		height 14px
+		transition 240ms
+	&:checked
+		&:before
+			content ""
+			position absolute
+			top 0
+			left 4px
+			display table
+			width 6px
+			height 10px
+			border 2px solid #fff
+			border-top-width 0
+			border-left-width 0
+			transform rotate(45deg)
+		&:after
+			border 2px solid #0d87e9
+			background-color #0d87e9

@@ -1,7 +1,7 @@
 // SweetAlert
 // 2014 (c) - Tristan Edwards
 // github.com/t4t5/sweetalert
-;(function(window, document, undefined) {
+(function(window, document) {
 
   var modalClass   = '.sweet-alert',
       overlayClass = '.sweet-overlay',
@@ -11,20 +11,20 @@
         text: '',
         type: null,
         allowOutsideClick: false,
-        showConfirmButton: true,
         showCancelButton: false,
+        showConfirmButton: true,
         closeOnConfirm: true,
         closeOnCancel: true,
         confirmButtonText: 'OK',
-        confirmButtonColor: '#AEDEF4',
+        confirmButtonClass: 'btn-primary',
         cancelButtonText: 'Cancel',
+        cancelButtonClass: 'btn-default',
+        containerClass: '',
+        titleClass: '',
+        textClass: '',
         imageUrl: null,
         imageSize: null,
-        timer: null,
-        customClass: '',
-        html: false,
-        animation: true,
-        allowEscapeKey: true
+        timer: null
       };
 
 
@@ -33,14 +33,7 @@
    */
 
   var getModal = function() {
-      var $modal = document.querySelector(modalClass);
-
-      if (!$modal) {
-        sweetAlertInitialize();
-        $modal = getModal();
-      }
-
-      return $modal;
+      return document.querySelector(modalClass);
     },
     getOverlay = function() {
       return document.querySelector(overlayClass);
@@ -49,7 +42,7 @@
       return new RegExp(' ' + className + ' ').test(' ' + elem.className + ' ');
     },
     addClass = function(elem, className) {
-      if (!hasClass(elem, className)) {
+      if (className && !hasClass(elem, className)) {
         elem.className += ' ' + className;
       }
     },
@@ -105,20 +98,15 @@
       elem.style.left = '-9999px';
       elem.style.display = 'block';
 
-      var height = elem.clientHeight,
-          padding;
-      if (typeof getComputedStyle !== "undefined") { /* IE 8 */
-        padding = parseInt(getComputedStyle(elem).getPropertyValue('padding'), 10);
-      } else {
-        padding = parseInt(elem.currentStyle.padding);
-      }
+      var height = elem.clientHeight;
+      var padding = parseInt(getComputedStyle(elem).getPropertyValue('padding'), 10);
 
       elem.style.left = '';
       elem.style.display = 'none';
       return ('-' + parseInt(height / 2 + padding) + 'px');
     },
     fadeIn = function(elem, interval) {
-      if (+elem.style.opacity < 1) {
+      if(+elem.style.opacity < 1) {
         interval = interval || 16;
         elem.style.opacity = 0;
         elem.style.display = 'block';
@@ -133,7 +121,6 @@
         };
         tick();
       }
-      elem.style.display = 'block'; //fallback IE8
     },
     fadeOut = function(elem, interval) {
       interval = interval || 16;
@@ -154,7 +141,7 @@
     fireClick = function(node) {
       // Taken from http://www.nonobtrusive.com/2011/11/29/programatically-fire-crossbrowser-click-event-with-javascript/
       // Then fixed for today's Chrome browser.
-      if (typeof MouseEvent === 'function') {
+      if (MouseEvent) {
         // Up-to-date approach
         var mevt = new MouseEvent('click', {
           view: window,
@@ -189,49 +176,36 @@
       previousWindowKeyDown,
       lastFocusedButton;
 
-
   /*
    * Add modal + overlay to DOM
    */
 
-  var sweetAlertInitialize = function() {
-    var sweetHTML = '<div class="sweet-overlay" tabIndex="-1"></div><div class="sweet-alert" tabIndex="-1"><div class="sa-icon sa-error"><span class="sa-x-mark"><span class="sa-line sa-left"></span><span class="sa-line sa-right"></span></span></div><div class="sa-icon sa-warning"> <span class="sa-body"></span> <span class="sa-dot"></span> </div> <div class="sa-icon sa-info"></div> <div class="sa-icon sa-success"> <span class="sa-line sa-tip"></span> <span class="sa-line sa-long"></span> <div class="sa-placeholder"></div> <div class="sa-fix"></div> </div> <div class="sa-icon sa-custom"></div> <h2>Title</h2><p>Text</p><button class="cancel" tabIndex="2">Cancel</button><button class="confirm" tabIndex="1">OK</button></div>',
+  window.sweetAlertInitialize = function() {
+    var sweetHTML = '<div class="sweet-overlay" tabIndex="-1"></div><div class="sweet-alert" tabIndex="-1"><div class="icon error"><span class="x-mark"><span class="line left"></span><span class="line right"></span></span></div><div class="icon warning"> <span class="body"></span> <span class="dot"></span> </div> <div class="icon info"></div> <div class="icon success"> <span class="line tip"></span> <span class="line long"></span> <div class="placeholder"></div> <div class="fix"></div> </div> <div class="icon custom"></div> <h2>Title</h2><p class="lead text-muted">Text</p><p><button class="cancel btn btn-lg" tabIndex="2">Cancel</button> <button class="confirm btn btn-lg" tabIndex="1">OK</button></p></div>',
         sweetWrap = document.createElement('div');
 
     sweetWrap.innerHTML = sweetHTML;
 
-    // Append elements to body
-    while (sweetWrap.firstChild) {
-      document.body.appendChild(sweetWrap.firstChild);
-    }
-  };
+    // For readability: check sweet-alert.html
+    document.body.appendChild(sweetWrap);
 
+    // For development use only!
+    /*jQuery.ajax({
+      url: '../lib/sweet-alert.html', // Change path depending on file location
+      dataType: 'html'
+    })
+    .done(function(html) {
+      jQuery('body').append(html);
+    });*/
+  }
 
   /*
    * Global sweetAlert function
    */
-  var sweetAlert, swal;
-  
-  sweetAlert = swal = function() {
-    var customizations = arguments[0];
 
-    /*
-     * Use argument if defined or default value from params object otherwise.
-     * Supports the case where a default value is boolean true and should be
-     * overridden by a corresponding explicit argument which is boolean false.
-     */
-    function argumentOrDefault(key) {
-      var args = customizations;
-
-      if (typeof args[key] !== 'undefined') {
-        return args[key];
-      } else {
-        return defaultParams[key];
-      }
-    }
-
+  window.sweetAlert = window.swal = function() {
     if (arguments[0] === undefined) {
-      logStr('SweetAlert expects at least 1 attribute!');
+      window.console.error('sweetAlert expects at least 1 attribute!');
       return false;
     }
 
@@ -239,7 +213,6 @@
 
     switch (typeof arguments[0]) {
 
-      // Ex: swal("Hello", "Just testing", "info");
       case 'string':
         params.title = arguments[0];
         params.text  = arguments[1] || '';
@@ -247,51 +220,39 @@
 
         break;
 
-      // Ex: swal({title:"Hello", text: "Just testing", type: "info"});
       case 'object':
         if (arguments[0].title === undefined) {
-          logStr('Missing "title" argument!');
+          window.console.error('Missing "title" argument!');
           return false;
         }
 
-        params.title = arguments[0].title;
-
-        var availableCustoms = [
-          'text',
-          'type',
-          'customClass',
-          'allowOutsideClick',
-          'showConfirmButton',
-          'showCancelButton',
-          'closeOnConfirm',
-          'closeOnCancel',
-          'timer',
-          'confirmButtonColor',
-          'cancelButtonText',
-          'imageUrl',
-          'imageSize',
-          'html',
-          'animation',
-          'allowEscapeKey'];
-
-        // It would be nice to just use .forEach here, but IE8... :(
-        var numCustoms = availableCustoms.length;
-        for (var customIndex = 0; customIndex < numCustoms; customIndex++) {
-          var customName = availableCustoms[customIndex];
-          params[customName] = argumentOrDefault(customName);
-        }
+        params.title              = arguments[0].title;
+        params.text               = arguments[0].text || defaultParams.text;
+        params.type               = arguments[0].type || defaultParams.type;
+        params.allowOutsideClick  = arguments[0].allowOutsideClick || defaultParams.allowOutsideClick;
+        params.showCancelButton   = arguments[0].showCancelButton !== undefined ? arguments[0].showCancelButton : defaultParams.showCancelButton;
+        params.showConfirmButton  = arguments[0].showConfirmButton !== undefined ? arguments[0].showConfirmButton : defaultParams.showConfirmButton;
+        params.closeOnConfirm     = arguments[0].closeOnConfirm !== undefined ? arguments[0].closeOnConfirm : defaultParams.closeOnConfirm;
+        params.closeOnCancel      = arguments[0].closeOnCancel !== undefined ? arguments[0].closeOnCancel : defaultParams.closeOnCancel;
+        params.timer              = arguments[0].timer || defaultParams.timer;
 
         // Show "Confirm" instead of "OK" if cancel button is visible
-        params.confirmButtonText  = (params.showCancelButton) ? 'Confirm' : defaultParams.confirmButtonText;
-        params.confirmButtonText  = argumentOrDefault('confirmButtonText');
-
-        // Function to call when clicking on cancel/OK
+        params.confirmButtonText  = (defaultParams.showCancelButton) ? 'Confirm' : defaultParams.confirmButtonText;
+        params.confirmButtonText  = arguments[0].confirmButtonText || defaultParams.confirmButtonText;
+        params.confirmButtonClass = arguments[0].confirmButtonClass || (arguments[0].type ? 'btn-' + arguments[0].type : null) || defaultParams.confirmButtonClass;
+        params.cancelButtonText   = arguments[0].cancelButtonText || defaultParams.cancelButtonText;
+        params.cancelButtonClass  = arguments[0].cancelButtonClass || defaultParams.cancelButtonClass;
+        params.containerClass     = arguments[0].containerClass || defaultParams.containerClass;
+        params.titleClass         = arguments[0].titleClass || defaultParams.titleClass;
+        params.textClass          = arguments[0].textClass || defaultParams.textClass;
+        params.imageUrl           = arguments[0].imageUrl || defaultParams.imageUrl;
+        params.imageSize          = arguments[0].imageSize || defaultParams.imageSize;
         params.doneFunction       = arguments[1] || null;
 
         break;
 
       default:
-        logStr('Unexpected type of argument! Expected "string" or "object", got ' + typeof arguments[0]);
+        window.console.error('Unexpected type of argument! Expected "string" or "object", got ' + typeof arguments[0]);
         return false;
 
     }
@@ -305,51 +266,21 @@
     var modal = getModal();
 
     // Mouse interactions
-    var onButtonEvent = function(event) {
-      var e = event || window.event;
+    var onButtonEvent = function(e) {
+
       var target = e.target || e.srcElement,
-          targetedConfirm    = (target.className.indexOf("confirm") !== -1),
+          targetedConfirm    = (target.className.indexOf('confirm') > -1),
           modalIsVisible     = hasClass(modal, 'visible'),
           doneFunctionExists = (params.doneFunction && modal.getAttribute('data-has-done-function') === 'true');
 
       switch (e.type) {
-        case ("mouseover"):
-          if (targetedConfirm) {
-            target.style.backgroundColor = colorLuminance(params.confirmButtonColor, -0.04);
-          }
-          break;
-        case ("mouseout"):
-          if (targetedConfirm) {
-            target.style.backgroundColor = params.confirmButtonColor;
-          }
-          break;
-        case ("mousedown"):
-          if (targetedConfirm) {
-            target.style.backgroundColor = colorLuminance(params.confirmButtonColor, -0.14);
-          }
-          break;
-        case ("mouseup"):
-          if (targetedConfirm) {
-            target.style.backgroundColor = colorLuminance(params.confirmButtonColor, -0.04);
-          }
-          break;
-        case ("focus"):
-          var $confirmButton = modal.querySelector('button.confirm'),
-              $cancelButton  = modal.querySelector('button.cancel');
-
-          if (targetedConfirm) {
-            $cancelButton.style.boxShadow = 'none';
-          } else {
-            $confirmButton.style.boxShadow = 'none';
-          }
-          break;
         case ("click"):
           if (targetedConfirm && doneFunctionExists && modalIsVisible) { // Clicked "confirm"
 
             params.doneFunction(true);
 
             if (params.closeOnConfirm) {
-              sweetAlert.close();
+              closeModal();
             }
           } else if (doneFunctionExists && modalIsVisible) { // Clicked "cancel"
 
@@ -362,10 +293,10 @@
             }
 
             if (params.closeOnCancel) {
-              sweetAlert.close();
+              closeModal();
             }
           } else {
-            sweetAlert.close();
+            closeModal();
           }
 
           break;
@@ -375,26 +306,20 @@
     var $buttons = modal.querySelectorAll('button');
     for (var i = 0; i < $buttons.length; i++) {
       $buttons[i].onclick     = onButtonEvent;
-      $buttons[i].onmouseover = onButtonEvent;
-      $buttons[i].onmouseout  = onButtonEvent;
-      $buttons[i].onmousedown = onButtonEvent;
-      //$buttons[i].onmouseup   = onButtonEvent;
-      $buttons[i].onfocus     = onButtonEvent;
     }
 
     // Remember the current document.onclick event.
     previousDocumentClick = document.onclick;
-    document.onclick = function(event) {
-      var e = event || window.event;
+    document.onclick = function(e) {
       var target = e.target || e.srcElement;
 
       var clickedOnModal = (modal === target),
-          clickedOnModalChild = isDescendant(modal, target),
+          clickedOnModalChild = isDescendant(modal, e.target),
           modalIsVisible = hasClass(modal, 'visible'),
           outsideClickIsAllowed = modal.getAttribute('data-allow-ouside-click') === 'true';
 
       if (!clickedOnModal && !clickedOnModalChild && modalIsVisible && outsideClickIsAllowed) {
-        sweetAlert.close();
+        closeModal();
       }
     };
 
@@ -402,11 +327,10 @@
     // Keyboard interactions
     var $okButton = modal.querySelector('button.confirm'),
         $cancelButton = modal.querySelector('button.cancel'),
-        $modalButtons = modal.querySelectorAll('button[tabindex]');
+        $modalButtons = modal.querySelectorAll('button:not([type=hidden])');
 
 
-    function handleKeyDown(event) {
-      var e = event || window.event;
+    function handleKeyDown(e) {
       var keyCode = e.keyCode || e.which;
 
       if ([9,13,32,27].indexOf(keyCode) === -1) {
@@ -440,7 +364,6 @@
 
         stopEventPropagation(e);
         $targetElement.focus();
-        setFocusStyle($targetElement, params.confirmButtonColor); // TODO
 
       } else {
         if (keyCode === 13 || keyCode === 32) {
@@ -451,7 +374,8 @@
               // Do nothing - let the browser handle it.
               $targetElement = undefined;
             }
-        } else if (keyCode === 27 && params.allowEscapeKey === true) {
+        } else if (keyCode === 27 && !($cancelButton.hidden || $cancelButton.style.display === 'none')) {
+          // ESC to cancel only if there's a cancel button displayed (like the alert() window).
           $targetElement = $cancelButton;
         } else {
           // Fallback - let the browser handle it.
@@ -465,11 +389,9 @@
     }
 
     previousWindowKeyDown = window.onkeydown;
-
     window.onkeydown = handleKeyDown;
 
-    function handleOnBlur(event) {
-      var e = event || window.event;
+    function handleOnBlur(e) {
       var $targetElement = e.target || e.srcElement,
           $focusElement = e.relatedTarget,
           modalIsVisible = hasClass(modal, 'visible');
@@ -513,12 +435,11 @@
     };
   };
 
-
-  /*
+  /**
    * Set default params for each popup
    * @param {Object} userParams
    */
-  sweetAlert.setDefaults = swal.setDefaults = function(userParams) {
+  window.swal.setDefaults = function(userParams) {
     if (!userParams) {
       throw new Error('userParams is required');
     }
@@ -529,6 +450,12 @@
     extend(defaultParams, userParams);
   };
 
+  /**
+   * Closes the current modal
+   */
+  window.swal.close = function() {
+    closeModal();
+  }
 
   /*
    * Set type, text and actions on modal
@@ -543,29 +470,17 @@
         $confirmBtn = modal.querySelector('button.confirm');
 
     // Title
-    $title.innerHTML = (params.html) ? params.title : escapeHtml(params.title).split("\n").join("<br>");
+    $title.innerHTML = escapeHtml(params.title).split("\n").join("<br>");
 
     // Text
-    $text.innerHTML = (params.html) ? params.text : escapeHtml(params.text || '').split("\n").join("<br>");
-
+    $text.innerHTML = escapeHtml(params.text || '').split("\n").join("<br>");
     if (params.text) {
       show($text);
     }
 
-    //Custom Class
-    if (params.customClass) {
-      addClass(modal, params.customClass);
-      modal.setAttribute('data-custom-class', params.customClass);
-    } else {
-      // Find previously set classes and remove them
-      var customClass = modal.getAttribute('data-custom-class');
-      removeClass(modal, customClass);
-      modal.setAttribute('data-custom-class', "");
-    }
-
     // Icon
-    hide(modal.querySelectorAll('.sa-icon'));
-    if (params.type && !isIE8()) {
+    hide(modal.querySelectorAll('.icon'));
+    if (params.type) {
       var validType = false;
       for (var i = 0; i < alertTypes.length; i++) {
         if (params.type === alertTypes[i]) {
@@ -574,34 +489,35 @@
         }
       }
       if (!validType) {
-        logStr('Unknown alert type: ' + params.type);
+        window.console.error('Unknown alert type: ' + params.type);
         return false;
       }
-      var $icon = modal.querySelector('.sa-icon.' + 'sa-' + params.type);
+      var $icon = modal.querySelector('.icon.' + params.type);
       show($icon);
 
       // Animate icon
       switch (params.type) {
         case "success":
           addClass($icon, 'animate');
-          addClass($icon.querySelector('.sa-tip'), 'animateSuccessTip');
-          addClass($icon.querySelector('.sa-long'), 'animateSuccessLong');
+          addClass($icon.querySelector('.tip'), 'animateSuccessTip');
+          addClass($icon.querySelector('.long'), 'animateSuccessLong');
           break;
         case "error":
           addClass($icon, 'animateErrorIcon');
-          addClass($icon.querySelector('.sa-x-mark'), 'animateXMark');
+          addClass($icon.querySelector('.x-mark'), 'animateXMark');
           break;
         case "warning":
           addClass($icon, 'pulseWarning');
-          addClass($icon.querySelector('.sa-body'), 'pulseWarningIns');
-          addClass($icon.querySelector('.sa-dot'), 'pulseWarningIns');
+          addClass($icon.querySelector('.body'), 'pulseWarningIns');
+          addClass($icon.querySelector('.dot'), 'pulseWarningIns');
           break;
       }
+
     }
 
     // Custom image
     if (params.imageUrl) {
-      var $customIcon = modal.querySelector('.sa-icon.sa-custom');
+      var $customIcon = modal.querySelector('.icon.custom');
 
       $customIcon.style.backgroundImage = 'url(' + params.imageUrl + ')';
       show($customIcon);
@@ -610,35 +526,40 @@
           _imgHeight = 80;
 
       if (params.imageSize) {
-        var dimensions = params.imageSize.toString().split('x');
-        var imgWidth  = dimensions[0];
-        var imgHeight = dimensions[1];
+        var imgWidth  = params.imageSize.split('x')[0];
+        var imgHeight = params.imageSize.split('x')[1];
 
         if (!imgWidth || !imgHeight) {
-          logStr("Parameter imageSize expects value with format WIDTHxHEIGHT, got " + params.imageSize);
+          window.console.error("Parameter imageSize expects value with format WIDTHxHEIGHT, got " + params.imageSize);
         } else {
           _imgWidth  = imgWidth;
           _imgHeight = imgHeight;
+
+          $customIcon.css({
+            'width': imgWidth + 'px',
+            'height': imgHeight + 'px'
+          });
         }
       }
       $customIcon.setAttribute('style', $customIcon.getAttribute('style') + 'width:' + _imgWidth + 'px; height:' + _imgHeight + 'px');
     }
 
-    // Show cancel button?
+    // Cancel button
     modal.setAttribute('data-has-cancel-button', params.showCancelButton);
     if (params.showCancelButton) {
       $cancelBtn.style.display = 'inline-block';
     } else {
       hide($cancelBtn);
     }
-
-    // Show confirm button?
+    
+    //Confirm button
     modal.setAttribute('data-has-confirm-button', params.showConfirmButton);
     if (params.showConfirmButton) {
       $confirmBtn.style.display = 'inline-block';
     } else {
       hide($confirmBtn);
     }
+    
 
     // Edit text on cancel and confirm buttons
     if (params.cancelButtonText) {
@@ -648,11 +569,23 @@
       $confirmBtn.innerHTML = escapeHtml(params.confirmButtonText);
     }
 
-    // Set confirm button to selected background color
-    $confirmBtn.style.backgroundColor = params.confirmButtonColor;
+    // Reset confirm buttons to default class (Ugly fix)
+    $confirmBtn.className = 'confirm btn btn-lg';
 
-    // Set box-shadow to default focused button
-    setFocusStyle($confirmBtn, params.confirmButtonColor);
+    // Attach selected class to the sweet alert modal
+    addClass(modal, params.containerClass);
+
+    // Set confirm button to selected class
+    addClass($confirmBtn, params.confirmButtonClass);
+
+    // Set cancel button to selected class
+    addClass($cancelBtn, params.cancelButtonClass);
+
+    // Set title to selected class
+    addClass($title, params.titleClass);
+
+    // Set text to selected class
+    addClass($text, params.textClass);
 
     // Allow outside click?
     modal.setAttribute('data-allow-ouside-click', params.allowOutsideClick);
@@ -660,13 +593,6 @@
     // Done-function
     var hasDoneFunction = (params.doneFunction) ? true : false;
     modal.setAttribute('data-has-done-function', hasDoneFunction);
-
-    // Prevent modal from animating
-    if (!params.animation){
-      modal.setAttribute('data-animation', 'none');
-    } else{
-      modal.setAttribute('data-animation', 'pop');
-    }
 
     // Close timer
     modal.setAttribute('data-timer', params.timer);
@@ -718,7 +644,10 @@
   }
 
 
-  // Animation when opening modal
+  /*
+   * Animations
+   */
+
   function openModal() {
     var modal = getModal();
     fadeIn(getOverlay(), 10);
@@ -735,17 +664,14 @@
     }, 500);
 
     var timer = modal.getAttribute('data-timer');
-
     if (timer !== "null" && timer !== "") {
-      modal.timeout = setTimeout(function() {
-        sweetAlert.close();
+      setTimeout(function() {
+        closeModal();
       }, timer);
     }
   }
 
-
-  // Aninmation when closing modal
-  sweetAlert.close = swal.close = function() {
+  function closeModal() {
     var modal = getModal();
     fadeOut(getOverlay(), 5);
     fadeOut(modal, 5);
@@ -756,19 +682,19 @@
 
     // Reset icon animations
 
-    var $successIcon = modal.querySelector('.sa-icon.sa-success');
+    var $successIcon = modal.querySelector('.icon.success');
     removeClass($successIcon, 'animate');
-    removeClass($successIcon.querySelector('.sa-tip'), 'animateSuccessTip');
-    removeClass($successIcon.querySelector('.sa-long'), 'animateSuccessLong');
+    removeClass($successIcon.querySelector('.tip'), 'animateSuccessTip');
+    removeClass($successIcon.querySelector('.long'), 'animateSuccessLong');
 
-    var $errorIcon = modal.querySelector('.sa-icon.sa-error');
+    var $errorIcon = modal.querySelector('.icon.error');
     removeClass($errorIcon, 'animateErrorIcon');
-    removeClass($errorIcon.querySelector('.sa-x-mark'), 'animateXMark');
+    removeClass($errorIcon.querySelector('.x-mark'), 'animateXMark');
 
-    var $warningIcon = modal.querySelector('.sa-icon.sa-warning');
+    var $warningIcon = modal.querySelector('.icon.warning');
     removeClass($warningIcon, 'pulseWarning');
-    removeClass($warningIcon.querySelector('.sa-body'), 'pulseWarningIns');
-    removeClass($warningIcon.querySelector('.sa-dot'), 'pulseWarningIns');
+    removeClass($warningIcon.querySelector('.body'), 'pulseWarningIns');
+    removeClass($warningIcon.querySelector('.dot'), 'pulseWarningIns');
 
 
     // Reset the page to its previous state
@@ -778,8 +704,7 @@
       previousActiveElement.focus();
     }
     lastFocusedButton = undefined;
-    clearTimeout(modal.timeout);
-  };
+  }
 
 
   /*
@@ -788,32 +713,32 @@
 
   function fixVerticalPosition() {
     var modal = getModal();
-
     modal.style.marginTop = getTopMargin(getModal());
   }
 
-  // If browser is Internet Explorer 8
-  function isIE8() {
-    if (window.attachEvent && !window.addEventListener) {
-      return true;
+
+  /*
+   * If library is injected after page has loaded
+   */
+
+  (function () {
+    if (document.readyState === "complete" || document.readyState === "interactive" && document.body) {
+      sweetAlertInitialize();
     } else {
-      return false;
+      if (document.addEventListener) {
+        document.addEventListener('DOMContentLoaded', function handler() {
+          document.removeEventListener('DOMContentLoaded', handler, false);
+          sweetAlertInitialize();
+        }, false);
+      } else if (document.attachEvent) {
+        document.attachEvent('onreadystatechange', function handler() {
+          if (document.readyState === 'complete') {
+            document.detachEvent('onreadystatechange', handler);
+            sweetAlertInitialize();
+          }
+        });
+      }
     }
-  }
-
-  // Error messages for developers
-  function logStr(string) {
-    if (window.console) { // IE...
-      window.console.log("SweetAlert: " + string);
-    }
-  }
-
-    if (typeof define === 'function' && define.amd) {
-      define(function() { return sweetAlert; });
-    } else if (typeof module !== 'undefined' && module.exports) {
-      module.exports = sweetAlert;
-    } else if (typeof window !== 'undefined') {
-      window.sweetAlert = window.swal = sweetAlert;
-    }
+  })();
 
 })(window, document);

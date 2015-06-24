@@ -1,5 +1,6 @@
 #-*- coding: utf-8 -*-
 from __future__ import absolute_import
+from tornado.gen import (coroutine,)
 from tornado.web import (authenticated, asynchronous)
 from ..tools import (route, BaseHandler)
 from pony.orm import (db_session,)
@@ -10,6 +11,7 @@ from json import dumps
 @route('/')
 class Index(BaseHandler):
 	@asynchronous
+	@coroutine
 	@authenticated
 	@db_session
 	def get(self):

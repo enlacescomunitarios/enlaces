@@ -20,7 +20,7 @@ class PersonCriteria:
 				return _select(pr for pr in _Persona if pr.telf==telf).exists()
 		except Exception, e:
 			#raise e
-			False
+			return False
 	@classmethod
 	def get_byId(self, id_per):
 		return _Persona.get(id_per=id_per)
@@ -34,7 +34,7 @@ class PersonCriteria:
 				_commit()
 			return True
 		except Exception, e:
-			raise e
+			#raise e
 			return False
 	@classmethod
 	def get_All(self, status=True):

@@ -18,8 +18,10 @@ class AgendasCriteria:
 					fecha_con = fecha_con.isoformat()
 					ag = _Agenda(persona=persona, mensaje=mensaje, fecha_msj=fecha_msj, fecha_con=fecha_con)
 				_commit()
+				return True if ag else False
 		except Exception, e:
-			raise e
+			print e
+			return False
 	@classmethod
 	def delete_agendas(self, obj):
 		utc = _utc()
