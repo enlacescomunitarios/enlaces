@@ -44,7 +44,7 @@ $(function(){
 							cedesform.append('audio', oaudio[0].files[0]);
 							cedesform.append('audioname', response.audio)
 							$.ajax({
-								url: 'http://190.129.142.26:8000/getaudiofile',
+								url: '190.129.142.26:8000/getaudiofile',
 								type: 'POST',
 								data:  cedesform,
 								mimeType:"multipart/form-data",
