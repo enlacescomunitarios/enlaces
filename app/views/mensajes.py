@@ -98,14 +98,6 @@ class SendSMS(BaseHandler):
 		contact = lambda pr: dict(contacto=pr.contacto.__str__(), ctelf=pr.contacto.telf) if not pr.telf else dict()
 		person = lambda pr: dict(id_per=pr.id_per, nombre=pr.__str__(), telf=(pr.telf or None), **contact(pr))
 		return dumps([person(personsCrt.get_byId(id_per)) for id_per in self.personas])
-	"""
-	def parse_sms(self, msg, personas):
-		#query = lambda id_per: personsCrt.get_byId(id_per=id_per)
-		contact = lambda pr: dict(contacto=pr.contacto.__str__(), ctelf=pr.contacto.telf) if not pr.telf else dict()
-		person = lambda pr: dict(id_per=pr.id_per, nombre=pr.__str__(), telf=(pr.telf or None), **contact(pr))
-		tmp = dumps([person(pr) for pr in personas])
-		self.sendsms2cedes(msg, tmp)
-	"""
 	def sendsms2cedes(self):
 		def handler(response):
 			if loads(response.body):
@@ -135,10 +127,12 @@ class GetAgenda(BaseHandler):
 	def get(self):
 		self.set_header('Content-type', 'application/json')
 		apikey = self.application.settings['cookie_secret']
+		x_real_ip = self.request.headers.get("X-Real-IP")
+		remote_ip = self.request.remote_ip if not x_real_ip else x_real_ip
+		print remote_ip
 		try:
 			query = self.form2Dict().apikey.encode('utf-8')
 			if query == apikey:
-				#agendas = [self.parse_agenda(ag) for ag in Agenda.select(lambda ag: ag.enviado==False)]
 				self.write(self.parse_agenda())
 			else:
 				self.write('Error')
@@ -148,7 +142,7 @@ class GetAgenda(BaseHandler):
 		self.finish()
 	def parse_agenda(self):
 		contact = lambda pr: dict(contacto=pr.contacto.__str__(), ctelf=pr.contacto.telf) if not pr.telf else dict()
-		person = lambda pr: dict(nombre=pr.__str__(), telf=(pr.telf or None), **contact(pr))
+		person = lambda pr: dict(nombre=pr.__str__(), telf=(pr.telf if pr.telf else None), **contact(pr))
 		todict = lambda agenda: dict(
 				id_agd = agenda.id_agd,
 				fecha_msj = agenda.fecha_msj.isoformat(),

@@ -2,4 +2,5 @@ cython
 psycopg2
 pony
 pycurl
+futures
 tornado
