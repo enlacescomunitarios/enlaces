@@ -167,6 +167,16 @@ body #right-content .list-group .list-group-item:last-child {
 }
 .navbar-inverse {
   background-color: #8abe9b !important;
+  -webkit-transition: 240ms;
+     -moz-transition: 240ms;
+       -o-transition: 240ms;
+          transition: 240ms;
+}
+.navbar-inverse .navbar-nav {
+  -webkit-transition: 240ms;
+     -moz-transition: 240ms;
+       -o-transition: 240ms;
+          transition: 240ms;
 }
 .navbar-inverse .navbar-nav>li>a,
 .navbar-inverse .navbar-nav>.active>a {
@@ -179,14 +189,32 @@ body #right-content .list-group .list-group-item:last-child {
 .navbar-inverse .navbar-nav>.active>a:hover,
 .navbar-inverse .navbar-nav>li>a:focus,
 .navbar-inverse .navbar-nav>.active>a:focus {
+  color: #fff;
+  border-color: transparent;
   background-color: #3f5d76 !important;
+  -webkit-box-shadow: inset 0px -5px 0px #fff !important;
+          box-shadow: inset 0px -5px 0px #fff !important;
 }
 .navbar-inverse .navbar-toggle {
   background-color: #8abe9b !important;
   border: 1px solid #fff;
+  -webkit-transition: 240ms;
+     -moz-transition: 240ms;
+       -o-transition: 240ms;
+          transition: 240ms;
+}
+.navbar-inverse .navbar-toggle:hover {
+  border: 1px solid #4a6d8b !important;
+}
+.navbar-inverse .navbar-toggle:hover * {
+  background-color: #4a6d8b !important;
 }
 .navbar-inverse .navbar-collapse {
   border-color: transparent;
+  -webkit-transition: 240ms;
+     -moz-transition: 240ms;
+       -o-transition: 240ms;
+          transition: 240ms;
 }
 .navbar-inverse .dropdown-menu {
   background-color: #8abe9b;
@@ -204,22 +232,15 @@ body #right-content .list-group .list-group-item:last-child {
 .navbar-inverse .dropdown-menu a:hover {
   background-color: #3f5d76 !important;
 }
-.nav li {
-  -webkit-transition: 240ms;
-     -moz-transition: 240ms;
-       -o-transition: 240ms;
-          transition: 240ms;
-}
-.nav li:hover {
-  background-color: #5c8692;
-}
 #right-content .list-group-item.active,
 .navbar-inverse .navbar-nav>.open>a,
 .navbar-inverse .navbar-nav>.active>a,
 .navbar-inverse .navbar-nav .open .dropdown-menu>.active>a {
   color: #fff;
-  background-color: #4a6d8b !important;
   border-color: transparent;
+  background-color: #4a6d8b !important;
+  -webkit-box-shadow: inset 0px -5px 0px #fff !important;
+          box-shadow: inset 0px -5px 0px #fff !important;
   -webkit-transition: 240ms;
      -moz-transition: 240ms;
        -o-transition: 240ms;
@@ -234,8 +255,20 @@ body #right-content .list-group .list-group-item:last-child {
 .navbar-inverse .navbar-nav>.active>a:focus,
 .navbar-inverse .navbar-nav .open .dropdown-menu>.active>a:focus {
   color: #fff;
-  background-color: #3f5d76 !important;
   border-color: transparent;
+  background-color: #3f5d76 !important;
+  -webkit-box-shadow: inset 0px -5px 0px #fff !important;
+          box-shadow: inset 0px -5px 0px #fff !important;
+}
+.nav li {
+  -webkit-transition: 240ms;
+     -moz-transition: 240ms;
+       -o-transition: 240ms;
+          transition: 240ms;
+}
+.nav li:hover,
+.nav li:focus {
+  background-color: #5c8692 !important;
 }
 @media (max-width: 380px) {
   body>#container form {
@@ -861,6 +894,27 @@ a:focus {
   font-weight: bold;
   text-shadow: -1px -1px 0px #777, -2px -2px 1px #666, -3px -3px 2px #555, 1px 1px 5px #ccc, 2px 2px 5px #ccc, 3px 3px 5px #ccc;
 }
+.navbar-brand {
+  margin: 0 !important;
+  padding: 0 !important;
+  padding-right: 5px !important;
+}
+.navbar-brand * {
+  display: inline-block;
+  float: left;
+}
+.navbar-brand img {
+  margin-top: 1px !important;
+  width: auto;
+  height: 42px;
+}
+.navbar-brand a {
+  color: #fff !important;
+  text-decoration: none !important;
+  font-weight: bold;
+  margin-top: 11px !important;
+  margin-left: -5px !important;
+}
 button::-moz-focus-inner,
 input::-moz-focus-inner {
   border: 0;
@@ -873,6 +927,10 @@ input[type="checkbox"] {
   padding: 0;
   position: relative;
   vertical-align: -2px;
+  -webkit-transition: 240ms;
+     -moz-transition: 240ms;
+       -o-transition: 240ms;
+          transition: 240ms;
 }
 input[type="checkbox"],
 input[type="checkbox"]:not(:checked) {
@@ -897,10 +955,6 @@ input[type="checkbox"]:after {
   border: 2px solid #4a6d8b;
   width: 14px;
   height: 14px;
-  -webkit-transition: 240ms;
-     -moz-transition: 240ms;
-       -o-transition: 240ms;
-          transition: 240ms;
 }
 input[type="checkbox"]:checked:before {
   content: "";

@@ -74,8 +74,15 @@ class V_CI(BaseHandler):
 class User_Profile(BaseHandler):
 	@authenticated
 	@asynchronous
+	@db_session
 	def get(self):
-		self.render('usuarios/profile.html')
+		userprofl = usersCrt.get(persona=self.current_user.id)
+		self.render('usuarios/profile.html', userprofl=userprofl)
+	def post(self):
+		self.set_header('Content-type', 'application/json')
+		print self.form2Dict()
+		self.write(dumps(True))
+		self.finish()
 
 """
 @route('/usuarios/test_json')

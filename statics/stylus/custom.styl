@@ -139,16 +139,26 @@ body
 	//*
 	//	color #fff !important
 	background-color base_color !important
+	transition 240ms
 	.navbar-nav
+		transition 240ms
 		&>li>a, &>.active>a
 			transition 240ms
 			&:hover, &:focus
-				background-color darken(active_color, 15%) !important
+				//background-color darken(active_color, 15%) !important
+				//box-shadow inset 0px -5px 0px #fff !important
+				hover_active()
 	.navbar-toggle
 		background-color base_color !important
 		border 1px solid #fff
+		transition 240ms
+		&:hover
+			border 1px solid active_color !important
+		&:hover *
+			background-color active_color !important
 	.navbar-collapse
 		border-color transparent
+		transition 240ms
 	.dropdown-menu
 		background-color base_color
 		transition 240ms
@@ -156,11 +166,6 @@ body
 			transition 240ms
 			&:hover
 				background-color darken(active_color, 15%) !important
-.nav
-	li
-		transition 240ms
-		&:hover
-			background-color back_color
 #right-content .list-group-item.active,
 .navbar-inverse .navbar-nav>.open>a,
 .navbar-inverse .navbar-nav>.active>a,
@@ -169,6 +174,12 @@ body
 	transition 240ms
 	&:hover, &:focus
 		hover_active()
+.nav
+	li
+		transition 240ms
+		&:hover, &:focus
+			background-color back_color !important
+			//box-shadow inset 0px -5px 0px #fff !important
 @media (max-width: 380px)
 	body
 		&>#container
@@ -664,6 +675,23 @@ select.form-control
 .projname
 	font-weight bold
 	text-shadow -1px -1px 0px #777,	-2px -2px 1px #666,	-3px -3px 2px #555,	1px 1px 5px #ccc, 2px 2px 5px #ccc,	3px 3px 5px #ccc
+.navbar-brand
+	margin 0 !important
+	padding 0 !important
+	padding-right 5px !important
+	*
+		display inline-block
+		float left
+	img
+		margin-top 1px !important
+		width auto
+		height 42px
+	a
+		color #fff !important
+		text-decoration none !important
+		font-weight bold
+		margin-top 11px !important
+		margin-left -5px !important
 button::-moz-focus-inner, input::-moz-focus-inner
 	border 0
 	padding 0
@@ -672,6 +700,7 @@ input[type="checkbox"]
 	padding 0
 	position relative
 	vertical-align -2px
+	transition 240ms
 	&, &:not(:checked)
 		user-select none
 		appearance none
@@ -688,7 +717,6 @@ input[type="checkbox"]
 		border 2px solid active_color
 		width 14px
 		height 14px
-		transition 240ms
 	&:checked
 		&:before
 			content ""
