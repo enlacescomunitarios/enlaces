@@ -16,7 +16,7 @@
 	</ul>
 </%block>
 <%block name="left_content">
-	<form class="big-form" data-key='{"id_per":${death.embarazo.embarazada.id_per if death.embarazo else death.embarazada.id_per},"id_def":${death.id_def},"done":${1 if death.f_conf else 0}'>
+	<form class="big-form" data-key='{"id_per":${death.embarazo.embarazada.id_per if death.embarazo else death.embarazada.id_per},"id_def":${death.id_def},"done":${1 if death.f_conf else 0}}'>
 		${xsrf_form_html()}
 		<input type="hidden" name="id_def" value="${death.id_def}" readonly>
 		<div class="inner-container">
