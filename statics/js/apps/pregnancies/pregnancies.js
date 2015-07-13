@@ -44,8 +44,9 @@ $(function(){
 				type: 'warning',
 				showCancelButton: true,
 				cancelButtonText: "Cancelar",
-				confirmButtonColor: "#d9534f",
+				cancelButtonClass: 'btn-warning',
 				confirmButtonText: "Confirmar",
+				confirmButtonClass: 'btn-primary',
 				closeOnConfirm: true
 			}, function(){
 				$.post(

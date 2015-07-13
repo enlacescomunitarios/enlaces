@@ -1,52 +1,52 @@
-{% extends "../base.html" %}
-{% block header_section %}
-<style type="text/css" media="all">
-	#container>div{
-		display: -webkit-box;
-		display: -webkit-flex;
-		display: -moz-box;
-		display: -ms-flexbox;
-		display: flex;
-	}
-	body #container form:not(.big-form){
-		min-width: 280px !important;
-		width: 300px !important;
-		padding: 30px !important;
-	}
-	#alertLogin{
-		margin:  15px 0 !important;
-		margin-top: 0 !important;
-		display: none;
-	}
-</style>
-<script type="text/javascript" src="{{ static_url("js/shortcuts.min.js") }}"></script>
-<script type="text/javascript" src="{{ static_url("js/apps/login.min.js") }}"></script>
-{% end %}
-{% block user_actions %}{% end %}
-{% block content %}
-<div>
-	<form>
-		{% module xsrf_form_html() %}
-		<legend>Inciar Sesión</legend>
-		<fieldset class="form-group">
-			<label for="inputLogin">Usuario:</label>
-			<input type="text" name="login" id="inputLogin" class="form-control input-sm">
-		</fieldset>
-		<fieldset class="form-group">
-			<label for="inputPasswd">Contraseña:</label>
-			<input type="password" name="passwd" id="inputPasswd" class="form-control input-sm">
-		</fieldset>
-		<div class="alert-Box">
-			<div id="alertLogin" class="alert alert-danger alert-dismissible">
-				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-				Usuario o Contraseña incorrectos!
+<%inherit file="../base.html"/>
+<%block name="header_section">
+	<style type="text/css" media="all">
+		#container>div{
+			display: -webkit-box;
+			display: -webkit-flex;
+			display: -moz-box;
+			display: -ms-flexbox;
+			display: flex;
+		}
+		body #container form:not(.big-form){
+			min-width: 280px !important;
+			width: 300px !important;
+			padding: 30px !important;
+		}
+		#alertLogin{
+			margin:  15px 0 !important;
+			margin-top: 0 !important;
+			display: none;
+		}
+	</style>
+	<script type="text/javascript" src="${static_url('js/shortcuts.min.js')}"></script>
+	<script type="text/javascript" src="${static_url('js/apps/login.min.js')}"></script>
+</%block>
+<%block name="user_actions"/>
+<%block name="content">
+	<div>
+		<form>
+			${xsrf_form_html()}
+			<legend>Inciar Sesión</legend>
+			<fieldset class="form-group">
+				<label for="inputLogin">Usuario:</label>
+				<input type="text" name="login" id="inputLogin" class="form-control input-sm">
+			</fieldset>
+			<fieldset class="form-group">
+				<label for="inputPasswd">Contraseña:</label>
+				<input type="password" name="passwd" id="inputPasswd" class="form-control input-sm">
+			</fieldset>
+			<div class="alert-Box">
+				<div id="alertLogin" class="alert alert-danger alert-dismissible">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					Usuario o Contraseña incorrectos!
+				</div>
 			</div>
-		</div>
-		<fieldset class="form-group">
-			<button type="submit" class="btn btn-sm btn-primary btn-block">Ingresar</button>
-		</fieldset>
-	</form>
-</div>
-{% end %}
+			<fieldset class="form-group">
+				<button type="submit" class="btn btn-sm btn-primary btn-block">Ingresar</button>
+			</fieldset>
+		</form>
+	</div>
+</%block>

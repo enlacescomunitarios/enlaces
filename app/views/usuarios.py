@@ -80,8 +80,14 @@ class User_Profile(BaseHandler):
 		self.render('usuarios/profile.html', userprofl=userprofl)
 	def post(self):
 		self.set_header('Content-type', 'application/json')
-		print self.form2Dict()
-		self.write(dumps(True))
+		form = self.form2Dict()
+		success = usersCrt.update(form)
+		if success:
+			self.clear_all_cookies()
+			with db_session:
+				us = usersCrt.get(login=form.login)
+				self.set_secure_cookie('user', us.to_json(), expires_days=None)
+		self.write(dumps(success))
 		self.finish()
 
 """

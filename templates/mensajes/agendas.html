@@ -1,50 +1,50 @@
-{% extends "../base.html" %}
-{% block header_section %}
-<link href="{{ static_url("css/dataTables.bootstrap.min.css") }}" rel="stylesheet" media="all">
-<script type="text/javascript" charset="iso-8859-1" src="{{ static_url("js/jquery.dataTables.min.js") }}"></script>
-<script type="text/javascript" src="{{ static_url("js/dataTables.bootstrap.min.js") }}"></script>
-<script type="text/javascript" src="{{ static_url("js/customPaginator.min.js") }}"></script>
-<script type="text/javascript">
-	$(function(){
-		$('.message-menu, .sms-agenda').addClass('active');
-		$('#custom').customPaginator({sort:false});
-	});
-</script>
-{% end %}
-{% block breadcrumbs %}
-<ul id="breadcrumbs" class="breadcrumb">
-	<li><a href="/">Inicio</a></li>
-	<li class="active">Agenda</li>
-</ul>
-{% end %}
-{% block left-content %}
-<div class="fix-table">
-	<table id="custom" class="table table-hover table-bordered" width="99.8%" cellspacing="0">
-		<thead>
-			<tr>
-				<th colspan="6" class="text-center">Agendas</th>
-			</tr>
-			<tr>
-				<th>Remitente</th>
-				<th>Destinatario</th>
-				<th>Tenor</th>
-				<th>Fecha</th>
-				<th>Hora</th>
-				<th>Estado</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for ag in agendas %}
-			<tr>
-				<td>{{ '{}'.format(ag.mensaje.usuario if ag.mensaje.tipo==5 else '') }}</td>
-				<td>{{ ag.persona }}</td>
-				<td>{{ ag.mensaje.tenor }}</td>
-				<td>{{ ag.modificado.date() }}</td>
-				<td>{{ ag.modificado.time().isoformat()[:8] }}</td>
-				<td>{{ '{}'.format('Pendiente' if not ag.enviado else '') }}</td>
-			</tr>
-			{% end %}
-		</tbody>
-	</table>
-</div>
-{% end %}
+<%inherit file="../base.html"/>
+<%block name="header_section">
+	<link href="${static_url('css/dataTables.bootstrap.min.css')}" rel="stylesheet" media="all">
+	<script type="text/javascript" charset="iso-8859-1" src="${static_url('js/jquery.dataTables.min.js')}"></script>
+	<script type="text/javascript" src="${static_url('js/dataTables.bootstrap.min.js')}"></script>
+	<script type="text/javascript" src="${static_url('js/customPaginator.min.js')}"></script>
+	<script type="text/javascript">
+		$(function(){
+			$('.message-menu, .sms-agenda').addClass('active');
+			$('#custom').customPaginator({sort:false});
+		});
+	</script>
+</%block>
+	<%block name="breadcrumbs">
+	<ul id="breadcrumbs" class="breadcrumb">
+		<li><a href="/">Inicio</a></li>
+		<li class="active">Agenda</li>
+	</ul>
+</%block>
+<%block name="left_content">
+	<div class="fix-table">
+		<table id="custom" class="table table-hover table-bordered" width="99.8%" cellspacing="0">
+			<thead>
+				<tr>
+					<th colspan="6" class="text-center">Agendas</th>
+				</tr>
+				<tr>
+					<th>Remitente</th>
+					<th>Destinatario</th>
+					<th>Tenor</th>
+					<th>Fecha</th>
+					<th>Hora</th>
+					<th>Estado</th>
+				</tr>
+			</thead>
+			<tbody>
+				% for ag in agendas:
+					<tr>
+						<td>${'{}'.format(ag.mensaje.usuario if ag.mensaje.tipo==5 else '')}</td>
+						<td>${ag.persona}</td>
+						<td>${ag.mensaje.tenor}</td>
+						<td>${ag.modificado.date()}</td>
+						<td>${ag.modificado.time().isoformat()[:8]}</td>
+						<td>${'{}'.format('Pendiente' if not ag.enviado else '')}</td>
+					</tr>
+				% endfor
+			</tbody>
+		</table>
+	</div>
+</%block>

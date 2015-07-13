@@ -21,7 +21,7 @@ class UserCriteria:
 			with _db_session:
 				return _select(us for us in _Usuario if us.login==login).exists()
 		except Exception, e:
-			#raise e
+			print e
 			return False
 	@classmethod
 	def granted_access(self, form):
@@ -42,7 +42,7 @@ class UserCriteria:
 				_commit()
 			return True
 		except Exception, e:
-			#raise e
+			print e
 			return False
 	@classmethod
 	def update(self, form):
@@ -50,19 +50,25 @@ class UserCriteria:
 			with _db_session:
 				us = _Usuario.get(persona=form.persona)
 				if us:
-					us.set(alcance=None, red_salud=None, municipio=None, centro_salud=None, activo=True); del form.persona; _flush()
-					f_usuario = _user_form(form)
+					if form.has_key('ci'):
+						us.persona.set(nombres=form.nombres, apellidos=form.apellidos, ci=form.ci, telf=form.telf); _flush()
+						del form.nombres; del form.apellidos; del form.ci; del form.telf
+						f_usuario = form
+					else:
+						us.set(alcance=None, red_salud=None, municipio=None, centro_salud=None, activo=True); _flush()
+						f_usuario = _user_form(form)
 					if len(f_usuario.passwd):
 						f_usuario.passwd = f_usuario.passwd.encode('hex').encode('base64')
 					else:
 						del f_usuario.passwd
+					#print f_usuario
 					us.set(**f_usuario)
 					_commit()
 				else:
 					return False
 			return True
 		except Exception, e:
-			#raise e
+			print e
 			return False
 	@classmethod
 	def delete(self, persona):
@@ -73,5 +79,5 @@ class UserCriteria:
 					us.set(activo=False); _commit()
 			return False
 		except Exception, e:
-			#raise e
+			print e
 			return True

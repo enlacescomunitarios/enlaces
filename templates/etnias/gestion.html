@@ -1,48 +1,48 @@
-{% extends '../base.html' %}
-{% block header_section %}
-<link href="{{ static_url("css/dataTables.bootstrap.min.css") }}" rel="stylesheet" media="all">
-<script type="text/javascript" charset="iso-8859-1" src="{{ static_url("js/jquery.dataTables.min.js") }}"></script>
-<script type="text/javascript" src="{{ static_url("js/dataTables.bootstrap.min.js") }}"></script>
-<script type="text/javascript" src="{{ static_url("js/customPaginator.min.js") }}"></script>
-<script type="text/javascript" src="{{ static_url("js/shortcuts.min.js") }}"></script>
-<script type="text/javascript">
-	$(function(){
-		$('.manager-menu, .ethnic-sub').addClass('active');
-		$('#custom').customPaginator();
-	});
-</script>
-{% end %}
-{% block breadcrumbs %}
-<ul id="breadcrumbs" class="breadcrumb">
-	<li><a href="/">Inicio</a></li>
-	<li class="active">Pertenencia Étnica</li>
-</ul>
-{% end %}
-{% block left-content %}
-<div class="btn-actions">
-	<a href="/etnias/nueva_etnia" class="btn btn-sm btn-primary">Nueva Etnia</a>
-</div>
-<div class="fix-table">
-	<table id="custom" class="table table-hover table-bordered" width="99.8%" cellspacing="0">
-		<thead>
-			<tr>
-				<th colspan="3" class="text-center">Etnias</th>
-			</tr>
-			<tr>
-				<th>Etnia</th>
-				<th>Personas</th>
-				<th>Estado</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for et in etnias %}
-			<tr>
-				<td><a href="/etnias/modificar_etnia?id_etn={{et.id_etn}}" title="Modificar">{{et}}</a></td>
-				<td>{{len(et.personas)}}</td>
-				<td class="activo">{% if et.activo %}Habilitado{% else %}Inhabilitado{% end %}</td>
-			</tr>
-			{% end %}
-		</tbody>
-	</table>
-</div>
-{% end %}
+<%inherit file="../base.html"/>
+<%block name="header_section">
+	<link href="${static_url('css/dataTables.bootstrap.min.css')}" rel="stylesheet" media="all">
+	<script type="text/javascript" charset="iso-8859-1" src="${static_url('js/jquery.dataTables.min.js')}"></script>
+	<script type="text/javascript" src="${static_url('js/dataTables.bootstrap.min.js')}"></script>
+	<script type="text/javascript" src="${static_url('js/customPaginator.min.js')}"></script>
+	<script type="text/javascript" src="${static_url('js/shortcuts.min.js')}"></script>
+	<script type="text/javascript">
+		$(function(){
+			$('.manager-menu, .ethnic-sub').addClass('active');
+			$('#custom').customPaginator();
+		});
+	</script>
+</%block>
+<%block name="breadcrumbs">
+	<ul id="breadcrumbs" class="breadcrumb">
+		<li><a href="/">Inicio</a></li>
+		<li class="active">Pertenencia Étnica</li>
+	</ul>
+</%block>
+<%block name="left_content">
+	<div class="btn-actions">
+		<a href="/etnias/nueva_etnia" class="btn btn-sm btn-primary">Nueva Etnia</a>
+	</div>
+	<div class="fix-table">
+		<table id="custom" class="table table-hover table-bordered" width="99.8%" cellspacing="0">
+			<thead>
+				<tr>
+					<th colspan="3" class="text-center">Etnias</th>
+				</tr>
+				<tr>
+					<th>Etnia</th>
+					<th>Personas</th>
+					<th>Estado</th>
+				</tr>
+			</thead>
+			<tbody>
+				% for et in etnias:
+				<tr>
+					<td><a href="/etnias/modificar_etnia?id_etn=${et.id_etn}" title="Modificar">${et}</a></td>
+					<td>${len(et.personas)}</td>
+					<td class="activo">${'Habilitado' if et.activo else 'Inhabilitado'}</td>
+				</tr>
+				% endfor
+			</tbody>
+		</table>
+	</div>
+</%block>

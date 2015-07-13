@@ -117,20 +117,16 @@ table.dataTable th:active {
 div.dataTables_scrollHead table {
 	margin-bottom: 0 !important;
 	-webkit-border-bottom-left-radius: 0;
-	   -moz-border-radius-bottomleft: 0;
 	        border-bottom-left-radius: 0;
 	-webkit-border-bottom-right-radius: 0;
-	   -moz-border-radius-bottomright: 0;
 	        border-bottom-right-radius: 0;
 }
 
 div.dataTables_scrollHead table thead tr:last-child th:first-child,
 div.dataTables_scrollHead table thead tr:last-child td:first-child {
 	-webkit-border-bottom-left-radius: 0 !important;
-	   -moz-border-radius-bottomleft: 0 !important;
 	        border-bottom-left-radius: 0 !important;
 	-webkit-border-bottom-right-radius: 0 !important;
-	   -moz-border-radius-bottomright: 0 !important;
 	        border-bottom-right-radius: 0 !important;
 }
 
@@ -243,10 +239,8 @@ div.DTTT_print_info {
 	background-color: white;
 	border: 1px solid rgba(0, 0, 0, 0.2);
 	-webkit-border-radius: 6px;
-	   -moz-border-radius: 6px;
 	        border-radius: 6px;
 	-webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.5);
-	   -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.5);
 	        box-shadow: 0 3px 7px rgba(0, 0, 0, 0.5);
 }
 
@@ -298,13 +292,10 @@ div.DTFC_LeftHeadWrapper table {
 	border-bottom: none !important;
     margin-bottom: 0 !important;
     -webkit-border-top-right-radius: 0 !important;
-       -moz-border-radius-topright: 0 !important;
             border-top-right-radius: 0 !important;
     -webkit-border-bottom-left-radius: 0 !important;
-       -moz-border-radius-bottomleft: 0 !important;
             border-bottom-left-radius: 0 !important;
     -webkit-border-bottom-right-radius: 0 !important;
-       -moz-border-radius-bottomright: 0 !important;
             border-bottom-right-radius: 0 !important;
 }
  
@@ -313,10 +304,8 @@ div.DTFC_RightHeadWrapper table thead tr:last-child td:first-child,
 div.DTFC_LeftHeadWrapper table thead tr:last-child th:first-child,
 div.DTFC_LeftHeadWrapper table thead tr:last-child td:first-child {
     -webkit-border-bottom-left-radius: 0 !important;
-       -moz-border-radius-bottomleft: 0 !important;
             border-bottom-left-radius: 0 !important;
     -webkit-border-bottom-right-radius: 0 !important;
-       -moz-border-radius-bottomright: 0 !important;
             border-bottom-right-radius: 0 !important;
 }
  

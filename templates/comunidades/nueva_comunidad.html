@@ -1,21 +1,21 @@
-{% extends "../base.html" %}
-{% block header_section %}
-<script type="text/javascript" src="{{ static_url("js/shortcuts.min.js") }}"></script>
-<script type="text/javascript" src="{{ static_url("js/apps/communities/newCommunity.min.js") }}"></script>
-{% end %}
-{% block breadcrumbs %}
-<ul id="breadcrumbs" class="breadcrumb" data-key='{"red":{{mup.red_salud.id_red}},"mup":{{mup.id_mup}}}'>
-	<li><a href="/">Inicio</a></li>
-	<li><a href="#" class="networks">Redes de Salud</a></li>
-	<li><a href="#" class="net">Red: {{mup.red_salud}}</a></li>
-	<li><a href="#" class="back">Municipio: {{mup}}</a></li>
-	<li class="active">Nueva Comunidad</li>
-</ul>
-{% end %}
-{% block left-content %}
+<%inherit file="../base.html"/>
+<%block name="header_section">
+	<script type="text/javascript" src="${static_url('js/shortcuts.min.js')}"></script>
+	<script type="text/javascript" src="${static_url('js/apps/communities/newCommunity.min.js')}"></script>
+</%block>
+<%block name="breadcrumbs">
+	<ul id="breadcrumbs" class="breadcrumb" data-key='{"red":${mup.red_salud.id_red},"mup":${mup.id_mup}}'>
+		<li><a href="/">Inicio</a></li>
+		<li><a href="#" class="networks">Redes de Salud</a></li>
+		<li><a href="#" class="net">Red: ${mup.red_salud}</a></li>
+		<li><a href="#" class="back">Municipio: ${mup}</a></li>
+		<li class="active">Nueva Comunidad</li>
+	</ul>
+</%block>
+<%block name="left_content">
 <form>
-	{% module xsrf_form_html() %}
-	<input type="hidden" name="id_mup" value="{{mup.id_mup}}" readonly>
+	${xsrf_form_html()}
+	<input type="hidden" name="id_mup" value="${mup.id_mup}" readonly>
 	<div class="form-group">
 		<legend>Nueva Comunidad</legend>
 	</div>
@@ -39,4 +39,4 @@
 		<button type="submit" class="btn btn-sm btn-primary">Guardar</button>
 	</div>
 </form>
-{% end %}
+</%block>

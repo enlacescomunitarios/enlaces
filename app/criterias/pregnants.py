@@ -136,7 +136,7 @@ class PregnantCriteria:
 			with _db_session:
 				em = _Persona.get(id_per=id_per)
 				if f_conf:
-					#em.telf = None; em.contacto = None
+					em.telf = None #em.contacto = None
 					if not em.embarazadas.is_empty():
 						em.embarazadas.clear()
 					if not em.agendas.is_empty():
@@ -158,7 +158,7 @@ class PregnantCriteria:
 			with _db_session:
 				death = _Defuncion.get(id_def=id_def)
 				death.set(f_conf=_to_yymmdd(f_conf), obs_conf=obs_conf)
-				#death.embarazada.telf = None; death.embarazada.contacto = None
+				death.embarazada.telf = None #death.embarazada.contacto = None
 				if not death.embarazada.embarazadas.is_empty():
 					death.embarazada.embarazadas.clear()
 				if death.embarazo:

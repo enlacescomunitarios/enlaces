@@ -2,6 +2,7 @@
 from . import cdict
 from . import utcDateTime as _utcDateTime
 from tornado.web import RequestHandler as _RequestHandler
+from mako.lookup import TemplateLookup as _TemplateLookup
 from json import loads as _loads
 from datetime import (date as _date, datetime as _datetime)
 
@@ -30,6 +31,14 @@ def _cookie_user2Obj(obj, cookie_name):
 	return _dict2Obj("User", **tmp) if tmp else None
 
 class BaseHandler(_RequestHandler):
+	def initialize(self):
+		self.lookup = _TemplateLookup(directories=[self.get_template_path()], input_encoding='utf-8', output_encoding='utf-8')
+	def render_string(self, template_path, **kwargs):
+		template, namespace = self.lookup.get_template(template_path), self.get_template_namespace()
+		namespace.update(kwargs); namespace.update(dict(format_exceptions=True))
+		return template.render(**namespace)
+	def render(self, template_path, **kwargs):
+		self.finish(self.render_string(template_path, **kwargs))
 	def get_current_user(self):
 		return _cookie_user2Obj(self, "user")
 	def get_utc(self):
