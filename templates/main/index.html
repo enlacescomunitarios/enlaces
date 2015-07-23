@@ -7,7 +7,7 @@
 	<script type="text/javascript">
 		$(function(){
 			$('.home-menu').addClass('active');
-			$('#table-alert-0, #table-alert-1').customPaginator({range:[3,5]});
+			$('[id*=datatable]').customPaginator({range:[3,5]});
 		});
 	</script>
 </%block>
@@ -36,7 +36,7 @@
 		</div>
 	</div>
 	<div class="fix-table">
-		<table id="table-alert-0" class="table table-hover table-bordered" width="99.8%" cellspacing="0">
+		<table id="datatable-0" class="table table-hover table-bordered" width="99.8%" cellspacing="0">
 			<thead>
 				<tr>
 					<th colspan="3" class="text-center">En Gestación</th>

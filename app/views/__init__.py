@@ -16,3 +16,4 @@ from . import (
 	controles,
 	mensajes,
 )
+__all__ = ['main', 'redes_salud', 'municipios', 'comunidades', 'centros_salud', 'prestaciones', 'tipos', 'etnias', 'personas', 'usuarios', 'embarazadas', 'embarazos', 'controles', 'mensajes']

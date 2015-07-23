@@ -8,6 +8,7 @@ from datetime import (date as _date, datetime as _datetime)
 
 def getLocals(obj):
 	#return {k:v for k,v in obj.iteritems() if not(k.startswith('_') or k.startswith('self'))}
+	#print type(obj), dir(obj)
 	return cdict([(k,v) for k,v in obj.iteritems() if not(k.startswith('_') or k.startswith('self'))])
 
 def _form2Dict(obj):

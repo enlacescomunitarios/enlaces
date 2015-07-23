@@ -10,10 +10,10 @@ from json import dumps
 
 @route('/')
 class Index(BaseHandler):
-	@asynchronous
-	@coroutine
 	@authenticated
 	@db_session
+	@asynchronous
+	@coroutine
 	def get(self):
 		params = dict(
 			embarazadas = pregnantCrt.get_all(), emb_status = pregnant_status, mujeres = pregnantCrt.total_womens(),
@@ -24,10 +24,12 @@ class Index(BaseHandler):
 @route('/login')
 class Login(BaseHandler):
 	@asynchronous
+	@coroutine
 	def get(self):
 		self.render('main/login.html')
-	@asynchronous
 	@db_session
+	@asynchronous
+	@coroutine
 	def post(self):
 		self.set_header('Content-type', 'application/json')
 		form = self.form2Dict()
@@ -35,13 +37,14 @@ class Login(BaseHandler):
 			us = usersCrt.granted_access(self.form2Dict())
 			if us:
 				self.set_secure_cookie('user', us.to_json(), expires_days=None)#without persistence
-			self.write(dumps(True if us else False))
+			self.finish(dumps(True if us else False))
 		else:
-			self.write(dumps(False))
-		self.finish()
+			self.finish(dumps(False))
 		
 @route('/logout')
 class Logout(BaseHandler):
+	@asynchronous
+	@coroutine
 	def get(self):
 		self.clear_all_cookies()
 		self.redirect('/')

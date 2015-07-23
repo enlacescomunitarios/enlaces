@@ -18,6 +18,7 @@ class App_Server(_App):
 			static_hash_cache = not _options.debug,
 			template_path = _join(_projdir, 'templates'),
 			compile_template_cache = not _options.debug,
+			#compress_response = True,
 			cookie_secret = 'NGM0NTRkNDIyZDRiNDg0MTU3NDE1ODNhNDU2YzYxNjM2NTcz',
 			xsrf_cookies = True,
 			login_url = '/login',

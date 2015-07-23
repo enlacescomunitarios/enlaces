@@ -8,6 +8,9 @@ class MessagesCriteria:
 	def get_byNumbControl(self, nro_control, tipo=1):
 		return _Mensaje.get(nro_control=nro_control, tipo=tipo, activo=True)
 	@classmethod
+	def get_Catalogo(self):
+		return _select(msg for msg in _Mensaje if(msg.tipo>=1 and msg.tipo<=4)).order_by(lambda msg: (msg.tipo, msg.nro_control))
+	@classmethod
 	def check(self, tipo=None, nro_control=None, titulo=None, id_msj=None):
 		with _db_session:
 			if nro_control:
