@@ -10,6 +10,8 @@ from ..entities import (Persona, Defuncion, Tipo)
 from ..criterias import (pregnantCrt, pregnant_status)
 from json import (dumps,)
 
+utc = utcDateTime()
+
 def find_pregnant(pregnant):
 	tp = Tipo.get(id_tip=1)
 	for tipo in pregnant.tipos:
@@ -19,10 +21,14 @@ def find_pregnant(pregnant):
 		return False
 
 def min_age():
-	today = utcDateTime().now().date()
+	today = utc.now().date()
 	leaps = leapdays((today.year-12), today.year)
 	withoutleaps = 12 - leaps
 	return today - timedelta(days=((withoutleaps*365)+(leaps*364)))
+
+def currentWeek(pregnant):
+	born_dt = pregnantCrt.current_pregnancy(pregnant.id_per).parto_prob
+	return (born_dt - utc.now().date()).days/7
 
 @route('/embarazadas/gestion')
 class Gestion_Embarazadas(BaseHandler):
@@ -31,8 +37,8 @@ class Gestion_Embarazadas(BaseHandler):
 	@asynchronous
 	@coroutine
 	def get(self):
-		embarazadas = pregnantCrt.get_all()
-		self.render('embarazadas/gestion.html', embarazadas=embarazadas, emb_status=pregnant_status)
+		params = dict(embarazadas = pregnantCrt.get_all(), emb_status=pregnant_status, currentWeek=currentWeek)
+		self.render('embarazadas/gestion.html', **params)
 
 @route('/embarazadas/nueva_embarazada')
 class Nueva_Embarazada(BaseHandler):

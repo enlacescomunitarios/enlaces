@@ -61,16 +61,25 @@
 	 					"last": " "//ultimo
 	 				}
 	 			}
- 			};/*,
- 			tmp_dataTable = this.dataTable($cfg).closest('[id$="_wrapper"]').find('.dataTables_filter').find('input').attr({placeholder:'Buscar'}),
-			tmp_total = tmp_dataTable.closest('[id$="_wrapper"]').find('.ttotal');
-		tmp_dataTable.closest('[id$="_wrapper"]').find('.itotal').text(tmp_total.text().length>0?' de '+tmp_total.text():'');
-		tmp_total.remove();
-		return this;*/
+ 			};
+ 		/*
+		var myfilter = $('<select class="form-control input-sm myfilter"/>'), list_options = ['<option value="-1">Todos</option>'];
+		for(var i=0; i<4; i++){
+			var op = $('<option value="'+i+'">Opción '+i+'</option>');
+			list_options.push(op);
+		}
+		myfilter.on({
+			change:function(e){
+				console.log('ok!');
+			}
+		}).html(list_options);
+		*/
 		return this.each(function(){
-			var tmp_dataTable = $(this).dataTable($cfg).closest('[id$="_wrapper"]').find('.dataTables_filter').find('input').attr({placeholder:'Buscar'}),
-				tmp_total = tmp_dataTable.closest('[id$="_wrapper"]').find('.ttotal');
-			tmp_dataTable.closest('[id$="_wrapper"]').find('.itotal').text(tmp_total.text().length>0?' de '+tmp_total.text():'');
+			var custom_dt = $(this).dataTable($cfg).closest('[id$="_wrapper"]'), tmp_total = custom_dt.find('.ttotal');
+			custom_dt
+				.find('.dataTables_filter').find('input').attr({placeholder:'Buscar'}).end().end()
+				.find('.itotal').text(tmp_total.text().length>0?' de '+tmp_total.text():'').end();
+				//.find('.row:first').find('.col-sm-6').removeClass('col-sm-6').addClass('col-xs-6').eq(0).html(myfilter).end().end().end();
 			tmp_total.remove();
 		});
  	};

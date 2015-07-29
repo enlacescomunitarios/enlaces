@@ -1,4 +1,5 @@
 #-*- coding: utf-8 -*-
+from reportlab import rl_config as _rl_config
 from reportlab.lib.units import cm as _cm
 from reportlab.lib.pagesizes import (LETTER as _LETTER, landscape as _landscape, portrait as _portrait)
 #from reportlab.lib.styles import (getSampleStyleSheet as _getSampleStyleSheet,)
@@ -11,6 +12,7 @@ from . import getLocals as _getLocals
 from . import cdict
 from cStringIO import StringIO as _StringIO
 
+_rl_config.defaultImageCaching = 1
 #_style = _getSampleStyleSheet()
 # portrait vars
 _ppagesize = _portrait(_LETTER)
@@ -114,9 +116,6 @@ class ReportMaker(object):
 		tb = _Table(self.__parse_datatable(matrix_content) if fix_content else matrix_content, repeatRows=1, **(dict(colWidths=1.5*_cm) if cellsW else dict()))
 		for idx, val in cellsW.iteritems():
 			tb._argW[idx] = float(val)*_cm
-		#tb._argW[2]=2.5*_cm
-		#tb._argW[3]=6*_cm
-		#tb._argW[4]=5*_cm
 		tb.setStyle(_tbstyle)
 		self.elements += [_PageBreak()] if before_pg else list()
 		self.elements += [tb, _Spacer(1, .3*_cm)]

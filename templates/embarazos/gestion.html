@@ -33,6 +33,10 @@
 					<dd>${pr.comunidad if pr.comunidad else ''}</dd>
 					<dt>Estado:</dt>
 					<dd class'pregStatus'>${pregnant_status(pr)[1]}</dd>
+					% if pregnant_status(pr)[0]==2:
+						<dt>Semana:</dt>
+						<dd>${currentWeek(pr) if pregnant_status(pr)[0]==2 else ""}</dd>
+					% endif
 				</dl>
 			</div>
 			<div class="col-sm-6">

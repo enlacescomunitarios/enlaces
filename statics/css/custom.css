@@ -544,10 +544,6 @@ a:focus {
   padding: 8px 10px;
   font-size: 14px;
 }
-.dataTables_filter input[type="search"] {
-  height: 26px !important;
-  padding: 4px 8px !important;
-}
 .dataTables_scrollHeadInner tr:first-child {
   font-size: 16px;
   background-color: #84c499;
@@ -575,6 +571,12 @@ a:focus {
 .table thead tr th input[type="checkbox"]:checked:after {
   border: 2px solid #8abe9b;
   background-color: #8abe9b;
+}
+[id$="_wrapper"] .row:nth-child(1) [class*="col-xs-"]:last-child {
+  padding-right: 17px !important;
+}
+[id$="_wrapper"] .row:nth-child(1) .myfilter {
+  max-width: 140px !important;
 }
 [id$="_wrapper"] .row:nth-child(2) tbody tr td {
   height: 31.818px !important;
@@ -648,7 +650,7 @@ a:focus {
 }
 [id$="_wrapper"] .row:nth-child(3) [class*="col-sm-"]:nth-child(2) select {
   padding: 0 !important;
-  width: 55px !important;
+  width: 51px !important;
   height: 18px !important;
 }
 [id$="_wrapper"] .row:nth-child(3) [class*="col-sm-"]:nth-child(3) {

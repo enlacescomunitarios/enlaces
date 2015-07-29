@@ -5,3 +5,4 @@ pycurl
 futures
 tornado
 mako
+reportlab

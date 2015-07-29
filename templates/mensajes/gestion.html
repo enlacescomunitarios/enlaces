@@ -4,10 +4,15 @@
 	<script type="text/javascript" charset="iso-8859-1" src="${static_url('js/jquery.dataTables.min.js')}"></script>
 	<script type="text/javascript" src="${static_url('js/dataTables.bootstrap.min.js')}"></script>
 	<script type="text/javascript" src="${static_url('js/customPaginator.min.js')}"></script>
-	<script type="text/javascript" src="${static_url('js/shortcuts.min.js')}"></script>
 	<script type="text/javascript">
 		$(function(){
 			$('.message-menu, .sms-catalog').addClass('active');
+			$('.bpdf').on({
+				click:function(e){
+					e.preventDefault();
+					window.open('/mensajes/pdf_catalogo');
+				}
+			});
 			$('#custom').customPaginator({sort:false});
 		});
 	</script>
@@ -21,12 +26,13 @@
 <%block name="left_content">
 	<div class="btn-actions">
 		<a href="/mensajes/adicionar_msj" class="btn btn-sm btn-primary">Nuevo Mensaje</a>
+		<button type="button" class="btn btn-sm btn-info bpdf">Catálogo PDF</button>
 	</div>
 	<div class="fix-table">
 		<table id="custom" class="table table-hover table-bordered" width="99.8%" cellspacing="0">
 			<thead>
 				<tr>
-					<th colspan="5" class="text-center">Mensajes</th>
+					<th colspan="5" class="text-center">Catálogo de Mensajes</th>
 				</tr>
 				<tr>
 					<th>Tipo</th>

@@ -425,10 +425,10 @@ select.form-control
 	padding 8px 10px
 	font-size 14px
 // Begin dataTables
-.dataTables_filter
-	input[type="search"]
-		height 26px !important
-		padding 4px 8px !important
+//.dataTables_filter
+//	input[type="search"]
+//		height 26px !important
+//		padding 4px 8px !important
 .dataTables_scrollHeadInner
 	tr
 		&:first-child
@@ -463,6 +463,11 @@ select.form-control
 			//&:hover, &:focus
 				//fix_pagination()
 [id$="_wrapper"]
+	.row:nth-child(1)
+		[class*="col-xs-"]:last-child
+			padding-right 17px !important
+		.myfilter
+			max-width 140px !important
 	.row:nth-child(2)
 		tbody
 			tr
@@ -523,7 +528,7 @@ select.form-control
 					position relative !important
 				select
 					padding 0 !important
-					width 55px !important
+					width 51px !important
 					height 18px !important
 			&:nth-child(3)
 				//padding-left 0 !important

@@ -155,25 +155,25 @@ class GetAgenda(BaseHandler):
 			)
 		return dumps([todict(ag) for ag in Agenda.select(lambda ag: ag.enviado==False)])
 
-@route('mensajes/rep_catalogo')
+@route('/mensajes/pdf_catalogo')
 class TestReport(BaseHandler):
 	@authenticated
 	@asynchronous
 	@coroutine
 	def get(self):
+		self.set_header('Content-type', 'application/pdf')
 		params = cdict(
 			img_path = path.join(path.dirname(self.settings['static_path']),'statics{}watermark.png'.format(sep)),
-			title = u'Catálogo', user = self.current_user.persona,
-			odate = to_ddmmyy(utc.now().date()), otime = utc.now().time().isoformat()[:8], portrait=True
+			title = u'Catálogo de Mensajes', user = self.current_user.persona,
+			odate = to_ddmmyy(utc.now().date()), otime = utc.now().time().isoformat()[:8], portrait=False
 		)
 		render_type = lambda tp: 'Pre-Natal' if tp==1 else 'Post-Natal' if tp==2 else 'Pre-Promocional' if tp==3 else 'Post-Promocional' if tp==4 else 'Extraordinario'
-		self.set_header('Content-type', 'application/pdf')
-		self.set_header('Content-Disposition', 'inline; filename="Catálogo_{}-{}.pdf"'.format(params.odate, params.otime))
 		pm = ReportMaker(**params)
 		datas = [['#', 'Tipo', 'Control', 'Tenor', 'Usuario']]
 		with db_session:
 			datas.extend([0, render_type(msg.tipo).upper(), msg.nro_control, msg.tenor, msg.usuario.persona.__str__()] for msg in messagesCrt.get_Catalogo())
-		pm.parse_datatable(datas, cellsW={1:3,2:2.5,3:5,4:5})
+		pm.parse_datatable(datas, cellsW={0:1.5,1:4,2:2.5,3:9,4:6})
+		self.set_header('Content-Disposition', 'inline; filename="Catálogo_{}-{}.pdf"'.format(params.odate, params.otime))
 		self.finish(pm.build_pdf())
 """
 @route('/mensajes/renderpdf', name='renderpdf')
