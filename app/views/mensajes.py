@@ -1,8 +1,7 @@
 #-*- coding: utf-8 -*-
-from __future__ import absolute_import
 from tornado.web import (authenticated, asynchronous)
 from tornado.gen import coroutine
-from ..tools import (route, BaseHandler, utcDateTime, to_ddmmyy, cdict, ReportMaker)
+from ..tools import (route, BaseHandler, utc, to_ddmmyy, cdict, ReportMaker)
 from pony.orm import (db_session, select, desc)
 from ..entities import (Mensaje, Agenda)
 from ..criterias import (messagesCrt, agendaCrt, personsCrt)
@@ -13,7 +12,6 @@ from tornado.httpclient import (AsyncHTTPClient,)
 from os import (path, sep)
 
 AsyncHTTPClient.configure('tornado.curl_httpclient.CurlAsyncHTTPClient')
-utc = utcDateTime()
 
 @route('/mensajes/gestion')
 class MensajesGestion(BaseHandler):
@@ -167,13 +165,9 @@ class TestReport(BaseHandler):
 			title = u'Catálogo de Mensajes', user = self.current_user.persona,
 			odate = to_ddmmyy(utc.now().date()), otime = utc.now().time().isoformat()[:8], portrait=False
 		)
-		render_type = lambda tp: 'Pre-Natal' if tp==1 else 'Post-Natal' if tp==2 else 'Pre-Promocional' if tp==3 else 'Post-Promocional' if tp==4 else 'Extraordinario'
 		pm = ReportMaker(**params)
-		datas = [['#', 'Tipo', 'Control', 'Tenor', 'Usuario']]
-		with db_session:
-			datas.extend([0, render_type(msg.tipo).upper(), msg.nro_control, msg.tenor, msg.usuario.persona.__str__()] for msg in messagesCrt.get_Catalogo())
-		pm.parse_datatable(datas, cellsW={0:1.5,1:4,2:2.5,3:9,4:6})
-		self.set_header('Content-Disposition', 'inline; filename="Catálogo_{}-{}.pdf"'.format(params.odate, params.otime))
+		pm.parse_datatable(messagesCrt.get_Catalogo(), cellsW={0:1.5,1:4,2:2.5,3:9,4:6})
+		self.set_header('Content-Disposition', u'inline; filename="Catálogo_{}-{}.pdf"'.format(params.odate, params.otime))
 		self.finish(pm.build_pdf())
 """
 @route('/mensajes/renderpdf', name='renderpdf')

@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 from . import cdict
-from . import utcDateTime as _utcDateTime
+from . import utc as _utc
 from tornado.web import RequestHandler as _RequestHandler
 from mako.lookup import TemplateLookup as _TemplateLookup
 from json import loads as _loads
@@ -43,7 +43,7 @@ class BaseHandler(_RequestHandler):
 	def get_current_user(self):
 		return _cookie_user2Obj(self, "user")
 	def get_utc(self):
-		return _utcDateTime()
+		return _utc
 	def form2Dict(self):
 		return _form2Dict(self)
 	def obj2Dict(self):

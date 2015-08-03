@@ -1,10 +1,8 @@
 #-*- coding: utf-8 -*-
 from datetime import (date as _date, datetime as _datetime)
-from tools import (utcDateTime as _utcDateTime,)
+from tools import (utc as _utc,)
 from pony.orm import (Database as _Database, PrimaryKey as _PrimaryKey, Required as _Required, Optional as _Optional, Set as _Set)
 from json import dumps as _dumps
-
-utc = _utcDateTime()
 
 db = _Database()
 
@@ -18,10 +16,10 @@ class Red_Salud(db.Entity):
 	operadores = _Set(lambda: Usuario, reverse='red_salud')
 	def before_insert(self):
 		self.nombre = self.nombre.upper()
-		self.creado = self.modificado = utc.now()
+		self.creado = self.modificado = _utc.now()
 	def before_update(self):
 		self.nombre = self.nombre.upper()
-		self.modificado = utc.now()
+		self.modificado = _utc.now()
 	def __str__(self):
 		return u'{}'.format(self.nombre)
 
@@ -37,10 +35,10 @@ class Municipio(db.Entity):
 	operadores = _Set(lambda: Usuario, reverse='municipio')
 	def before_insert(self):
 		self.nombre = self.nombre.upper()
-		self.creado = self.modificado = utc.now()
+		self.creado = self.modificado = _utc.now()
 	def before_update(self):
 		self.nombre = self.nombre.upper()
-		self.modificado = utc.now()
+		self.modificado = _utc.now()
 	def __str__(self):
 		return u'{}'.format(self.nombre)
 
@@ -57,10 +55,10 @@ class Comunidad(db.Entity):
 	personas = _Set(lambda: Persona, reverse='comunidad')
 	def before_insert(self):
 		self.nombre = self.nombre.upper()
-		self.creado = self.modificado = utc.now()
+		self.creado = self.modificado = _utc.now()
 	def before_update(self):
 		self.nombre = self.nombre.upper()
-		self.modificado = utc.now()
+		self.modificado = _utc.now()
 	def __str__(self):
 		return u'{}'.format(self.nombre)
 
@@ -79,10 +77,10 @@ class Centro_Salud(db.Entity):
 	empleados = _Set(lambda: Persona, reverse='centro_trabajo')
 	def before_insert(self):
 		self.nombre = self.nombre.upper()
-		self.creado = self.modificado = utc.now()
+		self.creado = self.modificado = _utc.now()
 	def before_update(self):
 		self.nombre = self.nombre.upper()
-		self.modificado = utc.now()
+		self.modificado = _utc.now()
 	def __str__(self):
 		return u'{}'.format(self.nombre)
 
@@ -97,11 +95,11 @@ class Prestacion(db.Entity):
 	def before_insert(self):
 		self.nombre = self.nombre.upper()
 		self.descrip = self.descrip.upper() if self.descrip else None
-		self.creado = self.modificado = utc.now()
+		self.creado = self.modificado = _utc.now()
 	def before_update(self):
 		self.nombre = self.nombre.upper()
 		self.descrip = self.descrip.upper() if self.descrip else None
-		self.modificado = utc.now()
+		self.modificado = _utc.now()
 	def __str__(self):
 		return u'{}'.format(self.nombre)
 
@@ -116,11 +114,11 @@ class Tipo(db.Entity):
 	def before_insert(self):
 		self.nombre = self.nombre.upper()
 		self.descrip = self.descrip.upper() if self.descrip else None
-		self.creado = self.modificado = utc.now()
+		self.creado = self.modificado = _utc.now()
 	def before_update(self):
 		self.nombre = self.nombre.upper()
 		self.descrip = self.descrip.upper() if self.descrip else None
-		self.modificado = utc.now()
+		self.modificado = _utc.now()
 	def __str__(self):
 		return u'{}'.format(self.nombre)
 
@@ -133,10 +131,10 @@ class Etnia(db.Entity):
 	personas = _Set(lambda: Persona, reverse='etnia')
 	def before_insert(self):
 		self.nombre = self.nombre.upper()
-		self.creado = self.modificado = utc.now()
+		self.creado = self.modificado = _utc.now()
 	def before_update(self):
 		self.nombre = self.nombre.upper()
-		self.modificado = utc.now()
+		self.modificado = _utc.now()
 	def __str__(self):
 		return u'{}'.format(self.nombre)
 
@@ -167,13 +165,13 @@ class Persona(db.Entity):
 	def before_insert(self):
 		self.nombres = self.nombres.upper()
 		self.apellidos = self.apellidos.upper()
-		self.creado = self.modificado = utc.now()
+		self.creado = self.modificado = _utc.now()
 	def before_update(self):
 		self.nombres = self.nombres.upper()
 		self.apellidos = self.apellidos.upper()
-		self.modificado = utc.now()
+		self.modificado = _utc.now()
 	def current_age(self):
-		return utc.now().date().year - self.f_nac.year
+		return _utc.now().date().year - self.f_nac.year
 	def __str__(self):
 		return u'{} {}'.format(self.nombres, self.apellidos).replace('  ',' ')
 
@@ -190,7 +188,7 @@ class Usuario(db.Entity):
 	mensajes = _Set(lambda: Mensaje, reverse='usuario')
 	activo = _Optional(bool, default=True)
 	def before_insert(self):
-		self.passwd = self.passwd.encode('hex').encode('base64')
+		self.passwd = self.passwd.encode('hex').encode('base64').replace('\n','')
 	def to_json(self):
 		f_alcance = lambda key: dict(alcance=self.alcance, **f_asignaciones(key)) if key>=1 else {}
 		f_asignaciones = lambda key: f_red() if key==2 else f_mup() if key==3 else f_cen() if key==4 else {}
@@ -215,9 +213,9 @@ class Embarazo(db.Entity):
 	recien_nacidos = _Set(lambda: Recien_Nacido, reverse='embarazo')
 	controles = _Set(lambda: Control, reverse='embarazo')
 	def before_insert(self):
-		self.creado = self.modificado = utc.now()
+		self.creado = self.modificado = _utc.now()
 	def before_update(self):
-		self.modificado = utc.now()
+		self.modificado = _utc.now()
 
 class Recien_Nacido(db.Entity):
 	id_rcn = _PrimaryKey(int, auto=True)
@@ -236,11 +234,11 @@ class Recien_Nacido(db.Entity):
 		self.nombres = self.nombres.upper()
 		self.apellidos = self.apellidos.upper()
 		self.f_nac = self.embarazo.parto_inst
-		self.creado = self.modificado = utc.now()
+		self.creado = self.modificado = _utc.now()
 	def before_update(self):
 		self.nombres = self.nombres.upper()
 		self.apellidos = self.apellidos.upper()
-		self.modificado = utc.now()
+		self.modificado = _utc.now()
 	def __str__(self):
 		return u'{} {}'.format(self.nombres or '', self.apellidos).strip()
 
@@ -257,9 +255,9 @@ class Defuncion(db.Entity):
 	creado = _Optional(_datetime)
 	modificado = _Optional(_datetime)
 	def before_insert(self):
-		self.creado = self.modificado = utc.now()
+		self.creado = self.modificado = _utc.now()
 	def before_update(self):
-		self.modificado = utc.now()
+		self.modificado = _utc.now()
 
 class Mensaje(db.Entity):
 	id_msj = _PrimaryKey(int, auto=True)
@@ -276,11 +274,11 @@ class Mensaje(db.Entity):
 	def before_insert(self):
 		self.titulo = self.titulo.upper() if self.titulo else None
 		self.tenor = self.tenor.upper()
-		self.creado = self.modificado = utc.now()
+		self.creado = self.modificado = _utc.now()
 	def before_update(self):
 		self.titulo = self.titulo.upper() if self.titulo else None
 		self.tenor = self.tenor.upper()
-		self.modificado = utc.now()
+		self.modificado = _utc.now()
 
 class Control(db.Entity):
 	id_cnt = _PrimaryKey(int, auto=True)
@@ -295,9 +293,9 @@ class Control(db.Entity):
 	recien_nacido = _Optional(Recien_Nacido, reverse='controles', nullable=True)
 	def before_insert(self):
 		self.observacion = self.observacion.upper() if self.observacion else None
-		self.creado = self.modificado = utc.now()
+		self.creado = self.modificado = _utc.now()
 	def before_update(self):
-		self.modificado = utc.now()
+		self.modificado = _utc.now()
 
 class Agenda(db.Entity):
 	id_agd = _PrimaryKey(int, auto=True)
@@ -310,18 +308,17 @@ class Agenda(db.Entity):
 	modificado = _Optional(_datetime)
 	#_PrimaryKey(persona, mensaje)
 	def before_insert(self):
-		self.creado = self.modificado = utc.now()
+		self.creado = self.modificado = _utc.now()
 	def before_update(self):
-		self.modificado = utc.now()
+		self.modificado = _utc.now()
 
 if __name__ == '__main__':
 	def test(developdb):
 		from pony.orm import (sql_debug, commit, db_session, flush)
 		from tools import conf
-		loadconf = lambda: conf.developdb if developdb else conf.productiondb
 		sql_debug(True)
 		#db.bind('sqlite', 'telesalud.sqlite', create_db=True)
-		db.bind('postgres', **loadconf())
+		db.bind('postgres', **conf.dbconf)
 		db.generate_mapping(create_tables=True)
 		with db_session:
 			n_tipos = [u'Embarazada',u'Contacto']

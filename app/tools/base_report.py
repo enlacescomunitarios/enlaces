@@ -3,14 +3,23 @@ from reportlab import rl_config as _rl_config
 from reportlab.lib.units import cm as _cm
 from reportlab.lib.pagesizes import (LETTER as _LETTER, landscape as _landscape, portrait as _portrait)
 #from reportlab.lib.styles import (getSampleStyleSheet as _getSampleStyleSheet,)
-from reportlab.lib.styles import ParagraphStyle as _ParagraphStyle
 from reportlab.lib.enums import (TA_LEFT as _TA_LEFT, TA_CENTER as _TA_CENTER, TA_RIGHT as _TA_RIGHT, TA_JUSTIFY as _TA_JUSTIFY)
 from reportlab.lib import (colors as _colors,)
-from reportlab.platypus import (SimpleDocTemplate as _SimpleDocTemplate, Paragraph as _Paragraph, Spacer as _Spacer, PageBreak as _PageBreak)
-from reportlab.platypus.tables import (Table as _Table, TableStyle as _TableStyle)
+from reportlab.platypus import (SimpleDocTemplate as _SimpleDocTemplate, Spacer as _Spacer, PageBreak as _PageBreak)
+from reportlab.platypus.tables import (LongTable as _Table, TableStyle as _TableStyle)
 from . import getLocals as _getLocals
 from . import cdict
 from cStringIO import StringIO as _StringIO
+
+try:
+	from wordaxe.rl.NewParagraph import Paragraph as _Paragraph
+	from wordaxe.rl.styles import ParagraphStyle as _ParagraphStyle
+	from wordaxe import hyphRegistry
+	from wordaxe.DCWHyphenator import DCWHyphenator
+	hyphRegistry['ES'] = DCWHyphenator('es',5)
+except Exception:
+	from reportlab.lib.styles import ParagraphStyle as _ParagraphStyle
+	from reportlab.platypus import Paragraph as _Paragraph
 
 _rl_config.defaultImageCaching = 1
 #_style = _getSampleStyleSheet()
@@ -19,11 +28,11 @@ _ppagesize = _portrait(_LETTER)
 _ppw, _pph = _ppagesize
 _p_vars = cdict(
 	imgxy = dict(x=.5*_cm, y=4*_cm, anchor="c"),
-	hline = dict(x1=2.5*_cm, y1=_pph-(1.94*_cm), x2=_ppw-(2*_cm), y2=_pph-(1.94*_cm)),
+	hline = dict(x1=2.5*_cm, y1=_pph-(1.94*_cm), x2=_ppw-(1.5*_cm), y2=_pph-(1.94*_cm)),
 	vline = dict(x1=2*_cm, y1=1.5*_cm, x2=2*_cm, y2=_pph-(1.94*_cm)),
 	ctitle = dict(x=_ppw/2.0, y=_pph-(1.94*_cm)),
 	date_time = dict(x=_ppw/2.0, y=1.5*_cm),
-	page_count = dict(x=_ppw-(2*_cm), y=1.5*_cm),
+	page_count = dict(x=_ppw-(1.5*_cm), y=1.5*_cm),
 	name_year = dict(x=_pph-(7.94*_cm), y=-1.15*_cm),
 )
 # end portrait
@@ -32,11 +41,11 @@ _lpagesize = _landscape(_LETTER)
 _lpw, _lph = _lpagesize
 _l_vars = cdict(
 	imgxy = dict(x=5*_cm, y=2*_cm, width=18*_cm, height=18*_cm, anchor="c"),
-	hline = dict(x1=2.5*_cm, y1=_lph-(1.94*_cm), x2=_lpw-(2*_cm), y2=_lph-(1.94*_cm)),
+	hline = dict(x1=2.5*_cm, y1=_lph-(1.94*_cm), x2=_lpw-(1.5*_cm), y2=_lph-(1.94*_cm)),
 	vline = dict(x1=2*_cm, y1=1.5*_cm, x2=2*_cm, y2=_lph-(1.94*_cm)),
 	ctitle = dict(x=_lpw/2.0, y=_lph-(1.94*_cm)),
 	date_time = dict(x=_lpw/2.0, y=1.5*_cm),
-	page_count = dict(x=_lpw-(2*_cm), y=1.5*_cm),
+	page_count = dict(x=_lpw-(1.5*_cm), y=1.5*_cm),
 	name_year = dict(x=_lph-(7.94*_cm), y=-1.15*_cm),
 )
 # end landscape
@@ -48,26 +57,14 @@ _tbstyle = _TableStyle([
 	('LEFTPADDING', (0,0), (-1,-1), 5),
 	('RIGHTPADDING', (0,0), (-1,-1), 5),
 	('FONTSIZE', (0,1), (-1,-1), 8),
-	('BOTTOMPADDING', (0,0), (-1,0), 10),
+	('BOTTOMPADDING', (0,0), (-1,0), 7),
 	('BACKGROUND', (0,0), (-1,0), _colors.Color(0,.352,.612)),
 	('TEXTCOLOR', (0,0), (-1,0), _colors.Color(1,1,1)),
 	('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
-	('FONTSIZE', (0,0), (-1,0), 14),
+	('FONTSIZE', (0,0), (-1,0), 12),
 	('VALIGN', (0,0), (-1,-0), 'MIDDLE'),
 ])
-"""
-_tbstyle = _TableStyle([
-	('ALIGN',(1,1),(-2,-2),'RIGHT'),
-	('TEXTCOLOR',(1,1),(-2,-2),_colors.red),
-	('VALIGN',(0,0),(0,-1),'TOP'),
-	('TEXTCOLOR',(0,0),(0,-1),_colors.blue),
-	('ALIGN',(0,-1),(-1,-1),'CENTER'),
-	('VALIGN',(0,-1),(-1,-1),'MIDDLE'),
-	('TEXTCOLOR',(0,-1),(-1,-1),_colors.green),
-	('INNERGRID', (0,0), (-1,-1), 0.25, _colors.black),
-	('BOX', (0,0), (-1,-1), 0.25, _colors.black),
-])
-"""
+
 def _base_pagemaker(canvas, doc, **kwargs):
 	kwargs = cdict(kwargs)
 	psize = _choice_page(kwargs.portrait)
@@ -95,22 +92,29 @@ def _base_pagemaker(canvas, doc, **kwargs):
 class ReportMaker(object):
 	def __init__(self, title="Reporte", author="Enlaces", subject="Reporte", keywords="Python", creator="Reportlab", img_path=None, user=None, odate=None, otime=None, portrait=True):
 		self.config = _getLocals(locals())
-		self.config.update(dict(leftMargin=2.5*_cm, rightMargin=2*_cm, topMargin=2*_cm, bottomMargin=1.8*_cm, pagesize = _portrait(_LETTER) if portrait else _landscape(_LETTER), pageCompression=1))
+		self.config.update(dict(lang='ES', leftMargin=2.5*_cm, rightMargin=1.5*_cm, topMargin=2*_cm, bottomMargin=1.8*_cm, pagesize = _portrait(_LETTER) if portrait else _landscape(_LETTER), pageCompression=1))
 		self.elements = list()
-	def FirtPage(self, canvas, doc):
+	def __FirtPage(self, canvas, doc):
 		canvas.saveState()
 		_base_pagemaker(canvas, doc, **self.config)
 		canvas.restoreState()
-	def LaterPages(self, canvas, doc):
+	def __LaterPages(self, canvas, doc):
 		canvas.saveState()
 		_base_pagemaker(canvas, doc, **self.config)
 		canvas.restoreState()
-	def parse_content(self, list_content, default_style="body", align="justify", before_pg=False, after_pg=False):
+	def heading_content(self, heading_text, align="left", sep=0):
+		style = _ParagraphStyle("body")
+		style.alignment = _TA_LEFT if align=="left" else _TA_CENTER if align=="center" else _TA_RIGHT if align=="right" else _TA_JUSTIFY
+		style.fontName = "Helvetica-Bold"
+		style.fontSize = 14
+		style.textColor = "black"
+		style.splitLongWords = 1
+		self.elements += [_Paragraph(heading_text, style), _Spacer(0, sep*_cm)]
+	def body_content(self, list_content, default_style="body", align="justify", before_pg=False, after_pg=False):
 		style = _ParagraphStyle(default_style)
 		style.alignment = _TA_LEFT if align=="left" else _TA_CENTER if align=="center" else _TA_RIGHT if align=="right" else _TA_JUSTIFY
 		self.elements += [_PageBreak()] if before_pg else list()
-		for dt in list_content:
-			self.elements += [_Paragraph(dt, style)]
+		self.elements += [_Paragraph(dt, style) for dt in list_content]
 		self.elements += [_PageBreak()] if after_pg else list()
 	def parse_datatable(self, matrix_content, fix_content = True, before_pg=False, after_pg=False, cellsW=dict()):
 		tb = _Table(self.__parse_datatable(matrix_content) if fix_content else matrix_content, repeatRows=1, **(dict(colWidths=1.5*_cm) if cellsW else dict()))
@@ -124,21 +128,26 @@ class ReportMaker(object):
 		thead = _ParagraphStyle("body")
 		thead.alignment = _TA_CENTER
 		thead.fontName = "Helvetica-Bold"
-		thead.fontSize = 14
+		thead.fontSize = 12
 		thead.textColor = "white"
+		thead.language = "ES"
+		thead.hyphenation = True
 		thead.splitLongWords = 1
 		tbody = _ParagraphStyle("body")
 		tbody.fontName = "Helvetica"
 		tbody.fontSize = 8
-		#body.wordWrap = 'CJK'
 		tbody.alignment = _TA_JUSTIFY
+		tbody.language = "ES"
+		tbody.hyphenation = True
 		tbody.splitLongWords = 1
 		parse_head = lambda text: _Paragraph('{}'.format(text), thead)
-		parse_body = lambda text, i=-1, j=-1: _Paragraph('{}'.format(i), tbody) if j==0 and i>=1 else _Paragraph(text, tbody)
-		parse_cell = lambda ctx, idx, jdx=-1: parse_head(ctx) if idx==0 else parse_body(ctx, idx, jdx)
+		#parse_body = lambda text, i=-1, j=-1: _Paragraph('{}'.format(i), tbody) if j==0 and i>=1 else _Paragraph(text, tbody)
+		#parse_cell = lambda ctx, idx, jdx=-1: parse_head(ctx) if idx==0 else parse_body(ctx, idx, jdx)
+		#return [[parse_cell("{}".format(cell), i, j) for j,cell in enumerate(row)] for i,row in enumerate(matrix_content)]
+		parse_cell = lambda ctx, idx, jdx=-1: parse_head(ctx) if idx==0 else _Paragraph(ctx, tbody)
 		return [[parse_cell("{}".format(cell), i, j) for j,cell in enumerate(row)] for i,row in enumerate(matrix_content)]
 	def build_pdf(self):
 		pdf = _StringIO()
 		sdoc = _SimpleDocTemplate(filename=pdf, **self.config)
-		sdoc.build(self.elements, onFirstPage=self.FirtPage, onLaterPages=self.LaterPages)
+		sdoc.build(self.elements, onFirstPage=self.__FirtPage, onLaterPages=self.__LaterPages)
 		return pdf.getvalue()

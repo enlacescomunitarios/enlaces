@@ -1,6 +1,5 @@
 #-*- coding: utf-8 -*-
-from __future__ import absolute_import
-from pony.orm import (db_session as _db_session, commit as _commit, select as _select)
+from pony.orm import (db_session as _db_session, commit as _commit)
 from ..entities import Tipo as _Tipo
 
 class TypeCriteria:

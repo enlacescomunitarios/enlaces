@@ -1,9 +1,8 @@
 #-*- coding: utf-8 -*-
 #from datetime import date, timedelta
-from . import utcDateTime as _utcDateTime
+#from . import utcDateTime as _utcDateTime
+from . import utc as _utc
 from datetime import (date as _date, timedelta as _timedelta)
-
-_utc = _utcDateTime()
 
 def to_date(strDate):
 	tmpDate = lambda dt: _date(int(dt[0]), int(dt[1]), int(dt[2]))

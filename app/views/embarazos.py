@@ -1,14 +1,11 @@
 #-*- coding: utf-8 -*-
-from __future__ import absolute_import
 from tornado.web import asynchronous
 from tornado.gen import coroutine
-from ..tools import (route, BaseHandler, to_ddmmyy, utcDateTime)
+from ..tools import (route, BaseHandler, to_ddmmyy, utc)
 from pony.orm import (db_session, desc)
 from ..entities import (Embarazo, Persona, Recien_Nacido, Defuncion)
 from ..criterias import (pregnantCrt, pregnanciesCrt, pregnancy_status, pregnant_status)
 from json import dumps
-
-utc = utcDateTime()
 
 def currentWeek(pregnant):
 	born_dt = pregnantCrt.current_pregnancy(pregnant.id_per).parto_prob

@@ -1,0 +1,88 @@
+<%inherit file="../base.html"/>
+<%block name="header_section">
+	<style type="text/css" media="all">
+		iframe{
+			width: 100%!important;
+			min-height: 4in!important;
+			border: none!important;
+		}
+		iframe * {
+			background: transparent!important;
+		}
+	</style>
+	<script type="text/javascript" src="${static_url('js/shortcuts.min.js')}"></script>
+	<script type="text/javascript">
+		$(function(){
+			var btn_submit = $('button[type=submit]'), pdf_section = $('iframe');
+			pdf_section.hide();
+			$('form').on({
+				submit:function(e){
+					e.preventDefault();
+					var oform = $(this);
+					$.post(
+						'/reportes',
+						data = oform.form2Dict(),
+						function(response){
+							btn_submit.enable();
+							pdf_section.attr({type:'application/pdf',src:'data:application/pdf;base64,'+response.pdf}).show();
+						}
+					);
+				}
+			});
+		});
+	</script>
+</%block>
+<%block name="breadcrumbs">
+	<ul id="breadcrumbs" class="breadcrumb">
+		<li><a href="/">Inicio</a></li>
+		<li class="active">Reportes</li>
+	</ul>
+</%block>
+<%block name="left_content">
+	<form>
+		${xsrf_form_html()}
+		<fieldset>
+			<legend>Reportes</legend>
+		</fieldset>
+		<div class="row">
+			<fieldset class="col-sm-6 form-group">
+				<label>Tipo</label>
+				<select name="tipo" class="form-control input-sm">
+					<option value="-1" disabled selected>-- Elija Uno --</option>
+					<option value="1">Mujeres Registradas</option>
+					<option value="2">Mujeres en Gestación</option>
+					<option value="3">Controles Pre-Natales</option>
+					<option value="4">Defunciones Maternas</option>
+					<option value="5">Recién Nacidos</option>
+					<option value="6">Controles Post-Natales</option>
+					<option value="7">Defunciones Infantiles</option>
+					<option value="8">Todas las opciones</option>
+				</select>
+			</fieldset>
+			<fieldset class="col-sm-6 form-group">
+				<label>Sub-Tipo</label>
+				<select name="sub_tipo" class="form-control input-sm">
+					<option value="-1" disabled selected>-- Elija Uno --</option>
+					<option value="1">Global</option>
+					<option value="2">Red de Salud</option>
+					<option value="3">Municipio</option>
+					<option value="4">Establecimiento</option>
+				</select>
+			</fieldset>
+		</div>
+		<div class="row">
+			<fieldset class="col-sm-6 form-group">
+				<label>Fecha Inicial:</label>
+				<input type="text" name="f_ini" class="form-control input-sm">
+			</fieldset>
+			<fieldset class="col-sm-6 form-group">
+				<label>Fecha Final:</label>
+				<input type="text" name="f_fin" class="form-control input-sm">
+			</fieldset>
+		</div>
+		<fieldset class="form-group">
+			<button type="submit" class="btn btn-sm btn-primary">Generar</button>
+		</fieldset>
+	</form><br>
+	<iframe frameborder="0"></iframe>
+</%block>

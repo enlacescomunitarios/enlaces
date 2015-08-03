@@ -1,6 +1,6 @@
 #-*- coding:utf-8 -*-
 from pony.orm import (db_session as _db_session, commit as _commit, select as _select)
-from ..entities import (Red_Salud as _Red_Salud, Municipio as _Municipio, Comunidad as _Comunidad)
+from ..entities import (Municipio as _Municipio, Comunidad as _Comunidad)
 
 class TownshipsCriteria:
 	@classmethod

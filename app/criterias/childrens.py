@@ -1,7 +1,6 @@
 #-*- coding: utf-8 -*-
-from __future__ import absolute_import
 from ..tools import (getLocals as _getLocals, to_yymmdd as _to_yymmdd)
-from pony.orm import (db_session as _db_session, commit as _commit, select as _select, count as _count)
+from pony.orm import (db_session as _db_session, commit as _commit, count as _count)
 from ..entities import (Recien_Nacido as _newBorn, Defuncion as _Death)
 from .controls import ControlsCriteria as _controlsCrt
 

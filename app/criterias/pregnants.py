@@ -1,5 +1,4 @@
 #-*- coding: utf-8 -*-
-from __future__ import absolute_import
 #from datetime import (date, timedelta)
 from ..tools import (to_date as _to_date, to_yymmdd as _to_yymmdd, PreNatal as _PreNatal)
 from pony.orm import (db_session as _db_session, commit as _commit, flush as _flush, desc as _desc, select as _select, count as _count)

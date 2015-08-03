@@ -1,5 +1,4 @@
 #-*- coding: utf-8 -*-
-from __future__ import absolute_import
 from ..tools import getLocals
 from pony.orm import (db_session as _db_session, select as _select, commit as _commit)
 from ..entities import (Persona as _Persona,)

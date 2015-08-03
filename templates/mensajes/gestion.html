@@ -10,7 +10,8 @@
 			$('.bpdf').on({
 				click:function(e){
 					e.preventDefault();
-					window.open('/mensajes/pdf_catalogo');
+					var strWindowFeatures = "menubar=no,location=no,resizable=yes,scrollbars=yes,status=no,replace=true";
+					window.open('/mensajes/pdf_catalogo', strWindowFeatures);
 				}
 			});
 			$('#custom').customPaginator({sort:false});
@@ -26,7 +27,7 @@
 <%block name="left_content">
 	<div class="btn-actions">
 		<a href="/mensajes/adicionar_msj" class="btn btn-sm btn-primary">Nuevo Mensaje</a>
-		<button type="button" class="btn btn-sm btn-info bpdf">Catálogo PDF</button>
+		<button type="button" class="btn btn-sm btn-default bpdf">Ver Catálogo</button>
 	</div>
 	<div class="fix-table">
 		<table id="custom" class="table table-hover table-bordered" width="99.8%" cellspacing="0">

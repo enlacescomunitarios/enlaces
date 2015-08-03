@@ -1,5 +1,4 @@
 #-*- coding: utf-8 -*-
-from __future__ import absolute_import
 from pony.orm import (db_session as _db_session, commit as _commit, flush as _flush, select as _select, desc as _desc)
 from ..entities import (Embarazo as _Embarazo, Control as _Control, Recien_Nacido as _NewBorn, Persona as _Persona, Usuario as _Usuario, Defuncion as _Defuncion)
 from ..tools import (to_date as _to_date, to_yymmdd as _to_yymmdd, PreNatal as _PreNatal, PostNatal as _PostNatal)

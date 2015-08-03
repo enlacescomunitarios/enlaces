@@ -1,5 +1,4 @@
 #-*- coding: utf-8 -*-
-from __future__ import absolute_import
 from pony.orm import (db_session as _db_session, commit as _commit)
 from ..entities import Prestacion as _Prestacion
 

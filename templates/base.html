@@ -52,7 +52,7 @@
 					<ul class="nav navbar-nav">
 						% if current_user and current_user.rol in [u'Administrador',u'Op. de Registro']:
 							<li class="pregnant-menu"><a href="/embarazadas/gestion"><i class="fa fa-female"></i>&nbsp;Mujeres</a></li>
-							<li class="report-menu"><a href="#"><i class="fa fa-line-chart"></i>&nbsp;Reportes</a></li>
+							<li class="report-menu"><a href="/reportes"><i class="fa fa-line-chart"></i>&nbsp;Reportes</a></li>
 							<li class="dropdown message-menu">
 								<a href="#" data-toggle="dropdown" class="dropdown-toggle"><i class="fa fa-envelope"></i>&nbsp;Mensajes&nbsp;<b class="caret"></b></a>
 								<ul class="dropdown-menu" rol="menu">
@@ -107,7 +107,7 @@
 						<a href="/centros_salud" class="list-group-item hospitals-menu"><i class="fa fa-hospital-o"></i>&nbsp;Establecimientos</a>
 						<a href="/embarazadas/gestion" class="list-group-item pregnant-menu"><i class="fa fa-female"></i>&nbsp;Mujeres</a>
 						<a href="/personas/gestion" class="list-group-item persons-menu"><i class="fa fa-users"></i>&nbsp;Personas</a>
-						<a href="#" class="list-group-item report-menu"><i class="fa fa-line-chart"></i>&nbsp;Reportes</a>
+						<a href="/reportes" class="list-group-item report-menu"><i class="fa fa-line-chart"></i>&nbsp;Reportes</a>
 					</div>
 				</div>
 			% endif

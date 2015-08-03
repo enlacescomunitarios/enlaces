@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+#-*- coding: utf-8 -*-
 from tornado.gen import coroutine
 from tornado.web import (authenticated, asynchronous)
 from ..tools import (route, BaseHandler)

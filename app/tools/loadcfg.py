@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 import re as _re
 from os.path import (dirname as _dirname, sep as _sep)
-from . import cdict
+from . import cdict as _cdict
 
 _sections = "(?:\[(?P<section>[a-z]+)\](?:\r\n)?)(?P<body>(?:(?:\r\n)?[\s0-9A-Za-z._+\-=\\/?]+)(?:\r\n)?)+"
 _tags = r"(?:(?P<key>(?:[a-z]+))(?:(?: +)?=(?: +)?))(?P<value>(?:[\-+]?[^\s]+))"
@@ -16,6 +16,6 @@ _ofile = _load_file()
 #print _ofile
 _checktype = lambda val: eval(val) if val.isdigit() else val
 
-_paramsDict = lambda match: cdict((k.group('key'),_checktype(k.group('value'))) for k in _re.finditer(_tags, match.group('body')))
+_paramsDict = lambda match: _cdict((k.group('key'),_checktype(k.group('value'))) for k in _re.finditer(_tags, match.group('body')))
 
-conf = cdict((mt.group('section'),_paramsDict(mt)) for mt in _re.finditer(_sections, _ofile))
+conf = _cdict((mt.group('section'),_paramsDict(mt)) for mt in _re.finditer(_sections, _ofile))

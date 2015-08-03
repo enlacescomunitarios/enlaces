@@ -26,7 +26,7 @@ class UserCriteria:
 	@classmethod
 	def granted_access(self, form):
 		if len(form.login) and len(form.passwd):
-			form.activo, form.passwd = True, form.passwd.encode('hex').encode('base64')
+			form.activo, form.passwd = True, form.passwd.encode('hex').encode('base64').replace('\n','')
 			return _Usuario.get(**form)
 		else:
 			return None
@@ -58,7 +58,7 @@ class UserCriteria:
 						us.set(alcance=None, red_salud=None, municipio=None, centro_salud=None, activo=True); _flush()
 						f_usuario = _user_form(form)
 					if len(f_usuario.passwd):
-						f_usuario.passwd = f_usuario.passwd.encode('hex').encode('base64')
+						f_usuario.passwd = f_usuario.passwd.encode('hex').encode('base64').replace('\n','')
 					else:
 						del f_usuario.passwd
 					#print f_usuario

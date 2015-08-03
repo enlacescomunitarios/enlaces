@@ -1,16 +1,13 @@
 #-*- coding: utf-8 -*-
-from __future__ import absolute_import
 from tornado.web import (authenticated, asynchronous)
 from tornado.gen import coroutine
 from calendar import leapdays
 from datetime import timedelta
-from ..tools import (route, BaseHandler, utcDateTime, to_ddmmyy)
+from ..tools import (route, BaseHandler, utc, to_ddmmyy)
 from pony.orm import (db_session,)
 from ..entities import (Persona, Defuncion, Tipo)
 from ..criterias import (pregnantCrt, pregnant_status)
 from json import (dumps,)
-
-utc = utcDateTime()
 
 def find_pregnant(pregnant):
 	tp = Tipo.get(id_tip=1)
