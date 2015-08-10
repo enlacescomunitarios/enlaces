@@ -2,26 +2,10 @@
 from pony.orm import (db_session as _db_session, commit as _commit, select as _select)
 from ..entities import (Mensaje as _Mensaje, Usuario as _Usuario)
 
-class _Index(object):
-	def __init__(self):
-		self.idx = 0
-	def counter(self):
-		self.idx += 1
-		return self.idx
-
 class MessagesCriteria:
 	@classmethod
 	def get_byNumbControl(self, nro_control, tipo=1):
 		return _Mensaje.get(nro_control=nro_control, tipo=tipo, activo=True)
-	@classmethod
-	def get_Catalogo(self):
-		idx = _Index()
-		type_str = lambda tp: 'Pre-Natal' if tp==1 else 'Post-Natal' if tp==2 else 'Pre-Promocional' if tp==3 else 'Post-Promocional' if tp==4 else 'Extraordinario'
-		parse_data = lambda msg: [idx.counter(), type_str(msg.tipo).upper(), msg.nro_control, msg.tenor, msg.usuario.persona.__str__()]
-		data_matrix = [['#', 'Tipo', 'Control', 'Tenor', 'Usuario']]
-		with _db_session:
-			data_matrix.extend([parse_data(msg) for msg in _Mensaje.select(lambda msg: msg.tipo>=1 and msg.tipo<=4).order_by(lambda msg: (msg.tipo, msg.nro_control))])
-		return data_matrix
 	@classmethod
 	def check(self, tipo=None, nro_control=None, titulo=None, id_msj=None):
 		with _db_session:

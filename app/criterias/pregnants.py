@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 #from datetime import (date, timedelta)
 from ..tools import (to_date as _to_date, to_yymmdd as _to_yymmdd, PreNatal as _PreNatal)
-from pony.orm import (db_session as _db_session, commit as _commit, flush as _flush, desc as _desc, select as _select, count as _count)
+from pony.orm import (db_session as _db_session, commit as _commit, flush as _flush, desc as _desc, count as _count)
 from ..entities import (Comunidad as _Comunidad, Tipo as _Tipo, Etnia as _Etnia, Persona as _Persona, Embarazo as _Embarazo, Control as _Control, Defuncion as _Defuncion, Usuario as _Usuario)
 from .controls import ControlsCriteria as _controlsCrt
 from .agendas import AgendasCriteria as _agendasCrt
@@ -9,6 +9,7 @@ from .messages import MessagesCriteria as _messagesCrt
 
 def pregnant_status(pregnant):
 	prg = PregnantCriteria.current_pregnancy(pregnant.id_per)
+	#prg = pregnant.embarazos.select(lambda: _Embarazo.activo==True).order_by(lambda: (_desc(_Embarazo.creado),)).first()
 	if not(pregnant.activo) and not(pregnant.defuncion) and not(prg):
 		return (0, u'Inhabilitada')
 	elif pregnant.activo and not(pregnant.defuncion) and not(prg):
@@ -43,7 +44,8 @@ class PregnantCriteria:
 		return (em for em in _Persona.select(lambda em: tp in em.tipos).order_by(lambda em: (em.comunidad, em.nombres, em.apellidos)))
 	@classmethod
 	def current_pregnancy(self, id_per):
-		return _select(pg for pr in _Persona for pg in pr.embarazos if pr.id_per==id_per and pg.activo).order_by(lambda pg: (_desc(pg.creado),)).first()
+		#return _select(pg for pr in _Persona for pg in pr.embarazos if pr.id_per==id_per and pg.activo).order_by(lambda pg: (_desc(pg.creado),)).first()
+		return _Persona.get(id_per=id_per).embarazos.select(lambda emb: emb.activo).order_by(lambda emb: (_desc(emb.creado),)).first()
 	@classmethod
 	def save(self, form, user_id):
 		try:

@@ -14,7 +14,7 @@
 	</ul>
 </%block>
 <%block name="left_content">
-	<form action="/centros_salud/modificar_establecimiento" method="POST" class="key" data-key="${dumps([dict(id=com.id_com,nombre=com.nombre) for com in cen.ubicado.municipio.comunidades if com.activo and com not in cen.comunidades])}" data-prest="${dumps([pr.id_pst for pr in cen.prestaciones])}">
+	<form action="/centros_salud/modificar_establecimiento" method="POST" class="key" data-key='${dumps([dict(id=com.id_com,nombre=com.nombre) for com in cen.ubicado.municipio.comunidades if com.activo and com not in cen.comunidades])}' data-prest='${dumps([pr.id_pst for pr in cen.prestaciones])}'>
 		${xsrf_form_html()}
 		<input type="hidden" name="id_cen" value="${cen.id_cen}" readonly>
 		<div class="form-group">

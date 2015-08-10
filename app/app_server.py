@@ -19,7 +19,7 @@ class App_Server(_App):
 			cookie_secret = 'NGM0NTRkNDIyZDRiNDg0MTU3NDE1ODNhNDU2YzYxNjM2NTcz',
 			xsrf_cookies = True,
 			login_url = '/login',
-			server_traceback = True,
+			server_traceback = _options.debug,
 			debug = _options.debug
 		)
 		#print url_handlers

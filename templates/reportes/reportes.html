@@ -1,9 +1,27 @@
 <%inherit file="../base.html"/>
 <%block name="header_section">
 	<style type="text/css" media="all">
-		iframe{
+		#left-content .SPbig-form .inner-container .right-side {
+			min-height: 3.53in!important;
+			margin: 0!important;
+			padding-bottom: 0!important;
+			padding: 5px!important;
+		}
+		@media (min-width: 640px) and (max-width: 767px) {
+			[id*="fixfield"] {
+				width: 100%!important;
+			}
+		}
+		@media (min-width: 340px) {
+			iframe, iframe * {
+				width: 100%!important;
+			}
+		}
+		iframe {
+			margin: 0!important;
+			padding: 0!important;
 			width: 100%!important;
-			min-height: 4in!important;
+			min-height: 3.53in!important;
 			border: none!important;
 		}
 		iframe * {
@@ -24,7 +42,7 @@
 						data = oform.form2Dict(),
 						function(response){
 							btn_submit.enable();
-							pdf_section.attr({type:'application/pdf',src:'data:application/pdf;base64,'+response.pdf}).show();
+							pdf_section.attr({title:response.filename, type:'application/pdf', src:'data:application/pdf;base64,'+response.pdf}).show();
 						}
 					);
 				}
@@ -39,50 +57,50 @@
 	</ul>
 </%block>
 <%block name="left_content">
-	<form>
-		${xsrf_form_html()}
-		<fieldset>
-			<legend>Reportes</legend>
-		</fieldset>
-		<div class="row">
-			<fieldset class="col-sm-6 form-group">
-				<label>Tipo</label>
-				<select name="tipo" class="form-control input-sm">
-					<option value="-1" disabled selected>-- Elija Uno --</option>
-					<option value="1">Mujeres Registradas</option>
-					<option value="2">Mujeres en Gestación</option>
-					<option value="3">Controles Pre-Natales</option>
-					<option value="4">Defunciones Maternas</option>
-					<option value="5">Recién Nacidos</option>
-					<option value="6">Controles Post-Natales</option>
-					<option value="7">Defunciones Infantiles</option>
-					<option value="8">Todas las opciones</option>
-				</select>
-			</fieldset>
-			<fieldset class="col-sm-6 form-group">
-				<label>Sub-Tipo</label>
-				<select name="sub_tipo" class="form-control input-sm">
-					<option value="-1" disabled selected>-- Elija Uno --</option>
-					<option value="1">Global</option>
-					<option value="2">Red de Salud</option>
-					<option value="3">Municipio</option>
-					<option value="4">Establecimiento</option>
-				</select>
-			</fieldset>
+	<div class="SPbig-form">
+		<div class="inner-container">
+			<div class="left-side">
+				<form class="customform">
+					${xsrf_form_html()}
+					<fieldset>
+						<legend>Reportes</legend>
+					</fieldset>
+					<div class="row">
+						<fieldset class="col-xs-6 col-sm-12 col-md-12 form-group" id="fixfield0">
+							<label>Tipo</label>
+							<select name="tipo" class="form-control input-sm">
+								<option value="-1" disabled selected>-- Elija Uno --</option>
+								<option value="1">Global</option>
+								<option value="2">Red ...!</option>
+							</select>
+						</fieldset>
+						<fieldset class="col-xs-6 col-sm-12 col-md-12 form-group" id="fixfield1">
+							<label>Sub-Tipo</label>
+							<select name="sub_tipo" class="form-control input-sm">
+								<option value="-1" disabled selected>-- Elija Uno --</option>
+								<option value="1">Municipio</option>
+								<option value="2">Establecimiento</option>
+							</select>
+						</fieldset>
+					</div>
+					<div class="row">
+						<fieldset class="col-xs-6 form-group">
+							<label>Fecha Inicial:</label>
+							<input type="text" name="f_ini" class="form-control input-sm">
+						</fieldset>
+						<fieldset class="col-xs-6 form-group">
+							<label>Fecha Final:</label>
+							<input type="text" name="f_fin" class="form-control input-sm">
+						</fieldset>
+					</div>
+					<fieldset class="form-group">
+						<button type="submit" class="btn btn-sm btn-primary">Generar</button>
+					</fieldset>
+				</form>
+			</div>
+			<div class="right-side">
+				<iframe class="col-sm-12"></iframe>
+			</div>
 		</div>
-		<div class="row">
-			<fieldset class="col-sm-6 form-group">
-				<label>Fecha Inicial:</label>
-				<input type="text" name="f_ini" class="form-control input-sm">
-			</fieldset>
-			<fieldset class="col-sm-6 form-group">
-				<label>Fecha Final:</label>
-				<input type="text" name="f_fin" class="form-control input-sm">
-			</fieldset>
-		</div>
-		<fieldset class="form-group">
-			<button type="submit" class="btn btn-sm btn-primary">Generar</button>
-		</fieldset>
-	</form><br>
-	<iframe frameborder="0"></iframe>
+	</div>
 </%block>

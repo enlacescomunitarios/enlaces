@@ -43,7 +43,7 @@
 						<td>${"Femenino" if pr.sexo=="f" else "Masculino"}</td>
 						<td>${pr.tipos.select().first() if pr.tipos.count()>0 else ''}</td>
 						<td>${to_ddmmyy(pr.defuncion.f_conf) if pr.defuncion else ''}</td>
-						<td>${"Habilitado" if pr.activo and not pr.defuncion else "Inhabilitado"}</td>
+						<td>${"Habilitad{}".format("a" if pr.sexo=='f' else "o") if pr.activo and not pr.defuncion else "Inhabilitad{}".format("a" if pr.sexo=='f' else "o")}</td>
 					</tr>
 				% endfor
 			</tbody>

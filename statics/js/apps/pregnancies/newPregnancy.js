@@ -14,14 +14,18 @@ $(function(){
 		submit:function(e){
 			e.preventDefault();
 			e.stopPropagation();
-			var oform = $(this).form2Dict();
+			var oform = $(this).form2Dict(), btn_submit = $('button[type=submit]');
 			//console.log(oform);
+			btn_submit.disable();
 			$.post(
 				'/embarazos/nuevo_embarazo',
 				data = oform,
 				function(response){
 					if(response){
 						location.href='/embarazos/gestion?id_per='+$('input[name=id_per]').val();
+					} else{
+						btn_submit.enable();
+						$('input[name=parto_prob]').val('');
 					}
 				}
 			);

@@ -4,7 +4,7 @@ from tornado.gen import coroutine
 from ..tools import (route, BaseHandler, utc, to_ddmmyy, cdict, ReportMaker)
 from pony.orm import (db_session, select, desc)
 from ..entities import (Mensaje, Agenda)
-from ..criterias import (messagesCrt, agendaCrt, personsCrt)
+from ..criterias import (messagesCrt, agendaCrt, personsCrt, DatasReport)
 from json import dumps, loads
 
 from urllib import urlencode
@@ -166,7 +166,7 @@ class TestReport(BaseHandler):
 			odate = to_ddmmyy(utc.now().date()), otime = utc.now().time().isoformat()[:8], portrait=False
 		)
 		pm = ReportMaker(**params)
-		pm.parse_datatable(messagesCrt.get_Catalogo(), cellsW={0:1.5,1:4,2:2.5,3:9,4:6})
+		pm.parse_datatable(DatasReport.get_Catalogo(), cellsW={0:1.5,1:4,2:2.5,3:9,4:6})
 		self.set_header('Content-Disposition', u'inline; filename="Catálogo_{}-{}.pdf"'.format(params.odate, params.otime))
 		self.finish(pm.build_pdf())
 """

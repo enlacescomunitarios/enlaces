@@ -5,4 +5,9 @@ pycurl
 futures
 tornado
 mako
+pillow
 reportlab
+pyrxp
+preppy
+pmw
+rlextra
