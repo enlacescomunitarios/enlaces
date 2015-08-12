@@ -131,9 +131,13 @@ $(function(){
 			}
 		}
 	});
-	$.fn.disable = function(){
-		this.enable(false);
-		return this;
+	String.prototype.format = function(){
+		var formated = this;
+		for(var i = 0; i < arguments.length; i++){
+			var regexp = new RegExp('\\{'+i+'\\}', 'gi');
+			formated = formated.replace(regexp, arguments[i]);
+		};
+		return formated;
 	};
 	$.fn.enable = function(opt_enable){
 		//console.log(arguments);
@@ -158,6 +162,10 @@ $(function(){
 			}
 		}
 		return tmp_obj;
+	};
+	$.fn.disable = function(){
+		this.enable(false);
+		return this;
 	};
 	$.fn.form2Dict = function(opt){
 		if(arguments.length && opt){

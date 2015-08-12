@@ -172,6 +172,11 @@ class Persona(db.Entity):
 		self.modificado = _utc.now()
 	def current_age(self):
 		return _utc.now().date().year - self.f_nac.year
+	def to_dict(self):
+		return dict(
+				id_per = self.id_per, telf = self.telf or None, nombres = self.nombres, apellidos = self.apellidos,
+				contacto = (self.contacto.id_per if self.contacto else None), activo = self.activo
+			)
 	def __str__(self):
 		return u'{} {}'.format(self.nombres, self.apellidos).replace('  ',' ')
 
@@ -279,6 +284,11 @@ class Mensaje(db.Entity):
 		self.titulo = self.titulo.upper() if self.titulo else None
 		self.tenor = self.tenor.upper()
 		self.modificado = _utc.now()
+	def to_dict(self):
+		return dict(
+				id_msj = self.id_msj, nro_control = self.nro_control or None,
+				titulo = self.titulo or None, tipo = self.tipo, tenor = self.tenor, audio = self.audio or None
+			)
 
 class Control(db.Entity):
 	id_cnt = _PrimaryKey(int, auto=True)
@@ -311,6 +321,8 @@ class Agenda(db.Entity):
 		self.creado = self.modificado = _utc.now()
 	def before_update(self):
 		self.modificado = _utc.now()
+	def to_dict(self):
+		return dict(id_agd = self.id_agd, mensaje = self.mensaje.id_msj, persona = self.persona.id_per, fecha_msj = self.fecha_msj.isoformat(), fecha_con = self.fecha_con.isoformat())
 
 if __name__ == '__main__':
 	def test(developdb):

@@ -42,7 +42,7 @@
 						data = oform.form2Dict(),
 						function(response){
 							btn_submit.enable();
-							pdf_section.attr({title:response.filename, type:'application/pdf', src:'data:application/pdf;base64,'+response.pdf}).show();
+							pdf_section.attr({title:response.filename, type:'application/pdf', src:'data:application/pdf;base64,{0}'.format(response.pdf)}).show();
 						}
 					);
 				}

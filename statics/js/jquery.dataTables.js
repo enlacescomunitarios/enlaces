@@ -700,7 +700,7 @@
 	
 		oCol.fnGetData = function (rowData, type, meta) {
 			var innerData = mData( rowData, type, undefined, meta );
-	
+			//console.log($.type(innerData), innerData);//custombyme
 			return mRender && type ?
 				mRender( innerData, type, rowData, meta ) :
 				innerData;

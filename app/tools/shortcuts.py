@@ -13,7 +13,7 @@ def getLocals(obj):
 
 def _form2Dict(obj):
 	#return {k:obj.get_argument(k) for k in obj.request.arguments.iterkeys() if(k != '_xsrf')}
-	return cdict([(k,obj.get_argument(k)) for k in obj.request.arguments.iterkeys() if not(k.startswith('_'))])
+	return cdict([(k,obj.get_argument(k, None)) for k in obj.request.arguments.iterkeys() if not(k.startswith('_'))])
 
 def _dict2Obj(o_name, **params):
 	return type(o_name, (object,), params)

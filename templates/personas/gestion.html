@@ -8,6 +8,8 @@
 		$(function(){
 			$('.persons-menu').addClass('active');
 			$('#custom').customPaginator();
+			//var otest = $('#custom').dataTable();
+			//otest.fnClearTable();
 		});
 	</script>
 </%block>
@@ -22,15 +24,15 @@
 		<table id="custom" class="table table-hover table-bordered" width="99.8%" cellspacing="0">
 			<thead>
 				<tr>
-					<th colspan="7" class="text-center">Personas</th>
+					<th colspan="5" class="text-center">Personas</th>
 				</tr>
 				<tr>
 					<th>Nombres y Apellidos</th>
 					<th>Celular</th>
 					<th>CI</th>
 					<th>Sexo</th>
-					<th>Tipo</th>
-					<th>Defunción</th>
+					##<th>Tipo</th>
+					##<th>Defunción</th>
 					<th>Estado</th>
 				</tr>
 			</thead>
@@ -41,8 +43,8 @@
 						<td>${pr.telf or ''}</td>
 						<td>${pr.ci or ''}</td>
 						<td>${"Femenino" if pr.sexo=="f" else "Masculino"}</td>
-						<td>${pr.tipos.select().first() if pr.tipos.count()>0 else ''}</td>
-						<td>${to_ddmmyy(pr.defuncion.f_conf) if pr.defuncion else ''}</td>
+						##<td>${pr.tipos.select().first() if pr.tipos.count()>0 else ''}</td>
+						##<td>${to_ddmmyy(pr.defuncion.f_conf) if pr.defuncion else ''}</td>
 						<td>${"Habilitad{}".format("a" if pr.sexo=='f' else "o") if pr.activo and not pr.defuncion else "Inhabilitad{}".format("a" if pr.sexo=='f' else "o")}</td>
 					</tr>
 				% endfor

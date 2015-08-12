@@ -38,3 +38,9 @@ class PersonCriteria:
 	@classmethod
 	def get_All(self, status=True):
 		return _select(pr for pr in _Persona if pr.activo==status and not pr.defuncion).order_by(lambda pr: (pr.nombres, pr.apellidos))
+	@classmethod
+	def get_api(self):
+		for pr in _Persona.select(lambda pr: not pr.contacto).order_by(lambda pr: pr.id_per):
+			yield pr
+		for pr in _Persona.select().order_by(lambda pr: pr.id_per):
+			yield pr

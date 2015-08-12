@@ -8,7 +8,16 @@
 		$(function(){
 			$('.pregnant-menu').addClass('active');
 			$('#back').on({click:function(e){e.preventDefault();location.href='/embarazadas/gestion';}});
-			$('#custom').customPaginator();
+			var c_filter = [
+				{val:'Gestando', label:'Embarazadas', def:true},
+				{val:'Habilitada', label:'Habilitadas'},
+				{val:'Advertencia de interrupción', label:'Advertencias de interrupciones'},
+				{va:'Embarazo interrumpido', label:'Embarazos interrumpidos'},
+				{val:'Advertencia de defunción', label:'Advertencias de defunciones'},
+				{val: 'Defunción con interrupción de embarazo', label:'Defunciones con interrupciones'},
+				{val:'Fallecida', label:'Defunciones'},
+			];
+			$('#custom').customPaginator().cfilter(c_filter);
 		});
 	</script>
 </%block>

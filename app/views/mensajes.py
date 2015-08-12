@@ -119,40 +119,6 @@ class Agendas(BaseHandler):
 		agendas = select(ag for ag in Agenda).order_by(lambda ag: (ag.mensaje.usuario, ag.creado))
 		self.render('mensajes/agendas.html', agendas=agendas)
 
-@route('/api/getagenda')
-class GetAgenda(BaseHandler):
-	@db_session
-	@asynchronous
-	@coroutine
-	def get(self):
-		self.set_header('Content-type', 'application/json')
-		apikey = self.application.settings['cookie_secret']
-		x_real_ip = self.request.headers.get("X-Real-IP")
-		remote_ip = self.request.remote_ip if not x_real_ip else x_real_ip
-		print remote_ip
-		try:
-			query = self.form2Dict().apikey.encode('utf-8')
-			if query == apikey:
-				self.finish(self.parse_agenda())
-			else:
-				self.finish('Error')
-		except Exception, e:
-			print e
-			self.finish('Error')
-		
-	def parse_agenda(self):
-		contact = lambda pr: dict(contacto=pr.contacto.__str__(), ctelf=pr.contacto.telf) if not pr.telf else dict()
-		person = lambda pr: dict(nombre=pr.__str__(), telf=(pr.telf if pr.telf else None), **contact(pr))
-		todict = lambda agenda: dict(
-				id_agd = agenda.id_agd,
-				fecha_msj = agenda.fecha_msj.isoformat(),
-				fecha_con = agenda.fecha_con.isoformat(),
-				tenor = agenda.mensaje.tenor,
-				audio = agenda.mensaje.audio,
-				**person(agenda.persona)
-			)
-		return dumps([todict(ag) for ag in Agenda.select(lambda ag: ag.enviado==False)])
-
 @route('/mensajes/pdf_catalogo')
 class TestReport(BaseHandler):
 	@authenticated
