@@ -325,7 +325,7 @@ class Agenda(db.Entity):
 		return dict(id_agd = self.id_agd, mensaje = self.mensaje.id_msj, persona = self.persona.id_per, fecha_msj = self.fecha_msj.isoformat(), fecha_con = self.fecha_con.isoformat())
 
 if __name__ == '__main__':
-	def test(developdb):
+	def load(developdb):
 		from pony.orm import (sql_debug, commit, db_session, flush)
 		from tools import conf
 		sql_debug(True)
@@ -333,12 +333,8 @@ if __name__ == '__main__':
 		db.bind('postgres', **conf.dbconf)
 		db.generate_mapping(create_tables=True)
 		with db_session:
-			n_tipos = [u'Embarazada',u'Contacto']
-			tipos = [Tipo(nombre=nm) for nm in n_tipos]; flush()
+			tipos = [Tipo(nombre=nm) for nm in [u'Embarazada',u'Contacto']]; flush()
 			pr = Persona(telf='76180435',ci='5669297',nombres=u'Luis Eduardo',apellidos=u'Miranda Barja',sexo='m')
 			us = Usuario(persona=pr, login=u'eduardo',passwd=u'Mast3R',rol=u'Administrador')
-			#us = Usuario.get(persona=1)
-			#us.set(passwd=u'Mast3R'.encode('hex').encode('bas'))
 			commit()
-	print u'True for developdb or False for productiondb'
-	test(input('>>> '))
+	load()

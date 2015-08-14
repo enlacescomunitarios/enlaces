@@ -54,21 +54,12 @@ $(function(){
 				}
 			};
 		return this.each(function(){
-			var o_table = $(this);
-			o_table.find('tbody').find('a, .link').each(function(){
-				var olink = $(this);
-				olink.data('link', olink.attr('href')).removeAttr('href').on({
-					click:function(e){
-						e.preventDefault();
-						location.href = $(this).data('link');
-					}
-				});
-			});
-			var custom_dt = o_table.dataTable($cfg).closest('[id$="_wrapper"]'), tmp_total = custom_dt.find('.ttotal');
+			var custom_dt = $(this).dataTable($cfg).closest('[id$="_wrapper"]'), tmp_total = custom_dt.find('.ttotal');
 			custom_dt
 				.find('.dataTables_filter').find('input').attr({placeholder:'Buscar'}).end().end()
 				.find('.itotal').text(tmp_total.text().length>0?' de '+tmp_total.text():'').end();
 			//tmp_total.remove();
+			hide_tablelinks(custom_dt);
 		});
 	};
 	$.fn.cfilter = function(data_list){
@@ -95,5 +86,17 @@ $(function(){
 				}
 			});
 		});
+	};
+	var hide_tablelinks = function(o_table){
+		var tb = o_table.find('.row').eq(1).find('tbody');
+		tb
+			.on('mouseover, mouseenter', 'a, .link', function(e){
+				var anchor = $(this);
+				anchor.data('lnk', anchor.attr('href')).removeAttr('href');
+			})
+			.on('click', 'a, .link', function(e){
+				e.preventDefault();
+				location.href = $(this).data('lnk');
+			});
 	};
 });

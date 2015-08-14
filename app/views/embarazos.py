@@ -1,15 +1,11 @@
 #-*- coding: utf-8 -*-
 from tornado.web import asynchronous
 from tornado.gen import coroutine
-from ..tools import (route, BaseHandler, to_ddmmyy, utc)
+from ..tools import (route, BaseHandler, to_ddmmyy)
 from pony.orm import (db_session, desc)
 from ..entities import (Embarazo, Persona, Recien_Nacido, Defuncion)
-from ..criterias import (pregnantCrt, pregnanciesCrt, pregnancy_status, pregnant_status)
+from ..criterias import (pregnanciesCrt, pregnancy_status, pregnant_status, pregnancyWeek)
 from json import dumps
-
-def currentWeek(pregnant):
-	born_dt = pregnantCrt.current_pregnancy(pregnant.id_per).parto_prob
-	return (born_dt - utc.now().date()).days/7
 
 @route('/embarazos/gestion')
 class Embarazos_Gestion(BaseHandler):
@@ -29,7 +25,7 @@ class Embarazos_Gestion(BaseHandler):
 			pregnant_status=pregnant_status,
 			pregnancy_status=pregnancy_status,
 			to_ddmmyy = to_ddmmyy,
-			currentWeek = currentWeek
+			pregnancyWeek = pregnancyWeek
 		)
 		self.render('embarazos/gestion.html', **params)
 

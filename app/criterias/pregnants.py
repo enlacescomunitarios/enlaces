@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 #from datetime import (date, timedelta)
-from ..tools import (to_date as _to_date, to_yymmdd as _to_yymmdd, PreNatal as _PreNatal)
+from ..tools import (utc as utc, to_date as _to_date, to_yymmdd as _to_yymmdd, PreNatal as _PreNatal)
 from pony.orm import (db_session as _db_session, commit as _commit, flush as _flush, desc as _desc, count as _count)
 from ..entities import (Comunidad as _Comunidad, Tipo as _Tipo, Etnia as _Etnia, Persona as _Persona, Embarazo as _Embarazo, Control as _Control, Defuncion as _Defuncion, Usuario as _Usuario)
 from .controls import ControlsCriteria as _controlsCrt
@@ -29,6 +29,12 @@ def pregnant_status(pregnant):
 		return (7, u'Fallecida')
 	else:
 		return (-1, '')
+
+def pregnancyWeek(pregnant):
+	pp = PregnantCriteria.current_pregnancy(pregnant.id_per).parto_prob
+	#d_date = pp - timedelta(days=280)
+	days_left = (pp - utc.now().date()).days
+	return (40 - (days_left/7))
 
 class PregnantCriteria:
 	@classmethod

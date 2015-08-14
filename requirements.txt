@@ -7,7 +7,7 @@ tornado
 mako
 pillow
 reportlab
-pyrxp
-preppy
-pmw
-rlextra
+#pyrxp
+#preppy
+#pmw
+#rlextra

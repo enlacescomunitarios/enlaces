@@ -6,7 +6,7 @@ from datetime import timedelta
 from ..tools import (route, BaseHandler, utc, to_ddmmyy)
 from pony.orm import (db_session,)
 from ..entities import (Persona, Defuncion, Tipo)
-from ..criterias import (pregnantCrt, pregnant_status)
+from ..criterias import (pregnantCrt, pregnant_status, pregnancyWeek)
 from json import (dumps,)
 
 def find_pregnant(pregnant):
@@ -23,10 +23,6 @@ def min_age():
 	withoutleaps = 12 - leaps
 	return today - timedelta(days=((withoutleaps*365)+(leaps*364)))
 
-def currentWeek(pregnant):
-	born_dt = pregnantCrt.current_pregnancy(pregnant.id_per).parto_prob
-	return (born_dt - utc.now().date()).days/7
-
 @route('/embarazadas/gestion')
 class Gestion_Embarazadas(BaseHandler):
 	@authenticated
@@ -34,7 +30,7 @@ class Gestion_Embarazadas(BaseHandler):
 	@asynchronous
 	@coroutine
 	def get(self):
-		params = dict(embarazadas = pregnantCrt.get_all(), emb_status=pregnant_status, currentWeek=currentWeek)
+		params = dict(embarazadas = pregnantCrt.get_all(), emb_status=pregnant_status, pregnancyWeek=pregnancyWeek)
 		self.render('embarazadas/gestion.html', **params)
 
 @route('/embarazadas/nueva_embarazada')

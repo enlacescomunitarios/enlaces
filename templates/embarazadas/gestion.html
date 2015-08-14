@@ -17,7 +17,7 @@
 				{val: 'Defunción con interrupción de embarazo', label:'Defunciones con interrupciones'},
 				{val:'Fallecida', label:'Defunciones'},
 			];
-			$('#custom').customPaginator().cfilter(c_filter);
+			$('#custom').customPaginator({sort:true}).cfilter(c_filter);
 		});
 	</script>
 </%block>
@@ -32,6 +32,15 @@
 		<a href="/embarazadas/nueva_embarazada" class="btn btn-sm btn-primary">Nueva Embarazada</a>
 	</div>
 	<div class="fix-table">
+		<%def name="checkWeek(pregnant)">
+			<%
+				if emb_status(pregnant)[0]==2:
+					currweek = pregnancyWeek(pregnant)
+					return (currweek, '' if 1<=currweek<=29 else 'info' if 30<=currweek<=35 else 'success' if 36<=currweek<=40 else 'danger')
+				else:
+					return ('','')
+			%>
+		</%def>
 		<table id="custom" class="table table-hover table-bordered" width="99.8%" cellspacing="0">
 			<thead>
 				<tr>
@@ -48,14 +57,14 @@
 			</thead>
 			<tbody>
 				% for em in embarazadas:
-				<tr>
-					<td><a href="/embarazos/gestion?id_per=${em.id_per}">${em}</a></td>
-					<td>${'{}'.format(em.telf or (em.contacto.telf if em.contacto else ''))}</td>
-					<td>${em.contacto if em.contacto else ""}</td>
-					<td>${em.comunidad}</td>
-					<td>${emb_status(em)[1]}</td>
-					<td>${currentWeek(em) if emb_status(em)[0]==2 else ""}</td>
-				</tr>
+					<tr class="${checkWeek(em)[1]}">
+						<td><a href="/embarazos/gestion?id_per=${em.id_per}">${em}</a></td>
+						<td>${'{}'.format(em.telf or (em.contacto.telf if em.contacto else ''))}</td>
+						<td>${em.contacto if em.contacto else ""}</td>
+						<td>${em.comunidad}</td>
+						<td>${emb_status(em)[1]}</td>
+						<td>${checkWeek(em)[0]}</td>
+					</tr>
 				% endfor
 			</tbody>
 		</table>
